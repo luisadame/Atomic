@@ -141,6 +141,30 @@ eval("\n/**\n * When source maps are enabled, `style-loader` uses a link element
 
 /***/ }),
 
+/***/ "./src/category.js":
+/*!*************************!*\
+  !*** ./src/category.js ***!
+  \*************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"default\", function() { return Category; });\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\nvar Category =\n/*#__PURE__*/\nfunction () {\n  function Category(name) {\n    _classCallCheck(this, Category);\n\n    this.name = name;\n    this.sources = [];\n  }\n\n  _createClass(Category, [{\n    key: \"addSource\",\n    value: function addSource(source) {\n      this.sources.push(source);\n    }\n  }, {\n    key: \"title\",\n    set: function set(title) {\n      this._title = title;\n    },\n    get: function get() {\n      return this._title;\n    }\n  }, {\n    key: \"sources\",\n    get: function get() {\n      return this.sources;\n    }\n  }]);\n\n  return Category;\n}();\n\n\n\n//# sourceURL=webpack:///./src/category.js?");
+
+/***/ }),
+
+/***/ "./src/database.js":
+/*!*************************!*\
+  !*** ./src/database.js ***!
+  \*************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"default\", function() { return Database; });\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\nvar Database =\n/*#__PURE__*/\nfunction () {\n  function Database(repository) {\n    _classCallCheck(this, Database);\n\n    this.repository = repository;\n  }\n\n  _createClass(Database, [{\n    key: \"category\",\n    value: function category(name) {\n      return this.repository.categories.find(name);\n    }\n  }, {\n    key: \"posts\",\n    get: function get() {\n      return this.repository.posts;\n    }\n  }, {\n    key: \"categories\",\n    get: function get() {\n      return this.repository.categories;\n    }\n  }, {\n    key: \"sources\",\n    get: function get() {\n      return this.repository.sources;\n    }\n  }]);\n\n  return Database;\n}();\n\n\n\n//# sourceURL=webpack:///./src/database.js?");
+
+/***/ }),
+
 /***/ "./src/index.js":
 /*!**********************!*\
   !*** ./src/index.js ***!
@@ -149,7 +173,43 @@ eval("\n/**\n * When source maps are enabled, `style-loader` uses a link element
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _assets_css_app_scss__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../assets/css/app.scss */ \"./assets/css/app.scss\");\n/* harmony import */ var _assets_css_app_scss__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_assets_css_app_scss__WEBPACK_IMPORTED_MODULE_0__);\n // eslint-disable-next-line no-console\n\nconsole.log('Hello World!');\n\n//# sourceURL=webpack:///./src/index.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _assets_css_app_scss__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../assets/css/app.scss */ \"./assets/css/app.scss\");\n/* harmony import */ var _assets_css_app_scss__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_assets_css_app_scss__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _repository_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./repository.js */ \"./src/repository.js\");\n/* harmony import */ var _database__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./database */ \"./src/database.js\");\n // database\n\n\n\nvar db = new _database__WEBPACK_IMPORTED_MODULE_2__[\"default\"](_repository_js__WEBPACK_IMPORTED_MODULE_1__[\"default\"]); //eslint-disable-next-line no-console\n\nconsole.log(db);\n\n//# sourceURL=webpack:///./src/index.js?");
+
+/***/ }),
+
+/***/ "./src/post.js":
+/*!*********************!*\
+  !*** ./src/post.js ***!
+  \*********************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"default\", function() { return Post; });\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\nvar Post =\n/*#__PURE__*/\nfunction () {\n  function Post(title) {\n    _classCallCheck(this, Post);\n\n    this.title = title;\n  }\n\n  _createClass(Post, [{\n    key: \"title\",\n    set: function set(title) {\n      this._title = title;\n    },\n    get: function get() {\n      return this._title;\n    }\n  }, {\n    key: \"content\",\n    set: function set(content) {\n      this._content = content;\n    },\n    get: function get() {\n      return this._content;\n    }\n  }, {\n    key: \"source\",\n    set: function set(source) {\n      this._source = source;\n    },\n    get: function get() {\n      return this._source;\n    }\n  }, {\n    key: \"image\",\n    set: function set(image) {\n      this._image = image;\n    },\n    get: function get() {\n      return this._image;\n    }\n  }]);\n\n  return Post;\n}();\n\n\n\n//# sourceURL=webpack:///./src/post.js?");
+
+/***/ }),
+
+/***/ "./src/repository.js":
+/*!***************************!*\
+  !*** ./src/repository.js ***!
+  \***************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _post__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./post */ \"./src/post.js\");\n/* harmony import */ var _category__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./category */ \"./src/category.js\");\n/* harmony import */ var _source__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./source */ \"./src/source.js\");\n\n\n\nvar source1 = new _source__WEBPACK_IMPORTED_MODULE_2__[\"default\"]('https://lifehacker.com/');\nsource1.title = 'Life Hacker';\nvar post1 = new _post__WEBPACK_IMPORTED_MODULE_0__[\"default\"]('How to Stretch If You Hate Stretching');\npost1.content = 'Luckily for me, I don’t find physical activity to be a chore. I genuinely enjoy biking, running and playing soccer, and do all of those things on the regular. But when it comes to stretching—well, I just hate it! My mantra is basically, “I’ll stretch when I’m dead.” The appealing part of playing sports and working out…';\npost1.source = source1;\npost1.image = 'https://i.kinja-img.com/gawker-media/image/upload/s--acGKjLiq--/c_scale,f_auto,fl_progressive,q_80,w_800/qxfzgh10cm4bjnelmoii.jpg';\nvar category1 = new _category__WEBPACK_IMPORTED_MODULE_1__[\"default\"]('Exercise');\ncategory1.addSource(source1);\n/* harmony default export */ __webpack_exports__[\"default\"] = ({\n  posts: [post1],\n  categories: [category1],\n  sources: [source1]\n});\n\n//# sourceURL=webpack:///./src/repository.js?");
+
+/***/ }),
+
+/***/ "./src/source.js":
+/*!***********************!*\
+  !*** ./src/source.js ***!
+  \***********************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"default\", function() { return Source; });\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\nvar Source =\n/*#__PURE__*/\nfunction () {\n  function Source(url) {\n    _classCallCheck(this, Source);\n\n    this.url = url;\n  }\n\n  _createClass(Source, [{\n    key: \"url\",\n    set: function set(url) {\n      this._url = url;\n    },\n    get: function get() {\n      return this._url;\n    }\n  }, {\n    key: \"title\",\n    set: function set(title) {\n      this._title = title;\n    },\n    get: function get() {\n      return this._title;\n    }\n  }]);\n\n  return Source;\n}();\n\n\n\n//# sourceURL=webpack:///./src/source.js?");
 
 /***/ })
 

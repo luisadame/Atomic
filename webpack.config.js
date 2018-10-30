@@ -40,6 +40,7 @@ module.exports = {
     },
     devServer: {
         contentBase: path.join(__dirname, 'docs'),
+        publicPath: '/docs/',
         compress: true,
         port: 9000
     }
