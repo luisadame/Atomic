@@ -6,7 +6,6 @@
     border: none;
 
     &-primary {
-        --bg: #F75C0E;
-        background: var(--bg);
+        background: var(--accent-orange);
     }
 }
