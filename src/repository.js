@@ -14,14 +14,24 @@ post1.image = 'https://i.kinja-img.com/gawker-media/image/upload/s--acGKjLiq--/c
 let category1 = new Category('Exercise');
 category1.addSource(source1);
 
+let source2 = new Source('https://theboringcompany.com/');
+source2.title = 'The Boring Company';
+
+let post2 = new Post('This is a sample title');
+post2.content = 'Luckily for me, I don’t find physical activity to be a chore. I genuinely enjoy biking, running and playing soccer, and do all of those things on the regular. But when it comes to stretching—well, I just hate it! My mantra is basically, “I’ll stretch when I’m dead.” The appealing part of playing sports and working out…';
+post2.source = source2;
+post2.image = 'http://1.bp.blogspot.com/-hNC-oT6f-fY/TeXxO26yjvI/AAAAAAAAAOY/qfkOqdKkBi8/s1600/platon-photographer-putin-man-of-the-year-portrait.jpg';
+
 export default {
 	posts: [
-		post1
+		post1,
+		post2
 	],
 	categories: [
 		category1
 	],
 	sources: [
-		source1
+		source1,
+		source2
 	]
 };
