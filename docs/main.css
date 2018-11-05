@@ -1,0 +1,107 @@
+:root {
+  --bg: #E7E7E7;
+  --main-padding: 20px;
+  --accent-orange: #F75C0E;
+  --gradient: linear-gradient(to bottom right, #4D008F, #802BC9); }
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  padding: var(--main-padding); }
+
+.header {
+  display: flex;
+  margin-bottom: 1.5em; }
+
+.logo,
+.toolbar {
+  box-shadow: 0 5px 30px rgba(77, 0, 143, 0.65); }
+  .logo .left,
+  .toolbar .left {
+    display: grid;
+    grid-column-gap: 5px;
+    grid-auto-flow: column; }
+
+.logo {
+  display: block;
+  height: 55px;
+  background: var(--gradient);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: white;
+  margin-right: 20px;
+  flex: 1 0 55px; }
+
+.toolbar {
+  display: flex;
+  align-items: left;
+  justify-content: space-between;
+  background: var(--gradient);
+  border-radius: 50px;
+  width: 100%;
+  padding: 15px; }
+
+.btn {
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none; }
+  .btn-primary {
+    background: var(--accent-orange); }
+
+.posts {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-column-gap: 1em;
+  grid-row-gap: 1.25em; }
+
+.post {
+  display: flex;
+  flex-direction: column;
+  background: var(--gradient);
+  border-radius: 25px;
+  overflow: hidden;
+  box-shadow: 0 10px 15px rgba(77, 0, 143, 0.7); }
+  .post__img {
+    width: 100%; }
+  .post__content {
+    padding: 10px; }
+  .post__title {
+    color: white;
+    font-size: 1.1em;
+    margin: 0;
+    margin-bottom: 1em; }
+  .post__source {
+    color: #FB5E0C;
+    margin: 0;
+    font-size: .7em; }
+  .post.wide {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    border-radius: 15px;
+    box-shadow: 0 5px 10px rgba(77, 0, 143, 0.7);
+    background: linear-gradient(to left, #4D008F, #802BC9); }
+    .post.wide .post__content {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      flex: 1 0 60%; }
+    .post.wide .post__title {
+      margin: 0; }
+  .post.long {
+    grid-row: span 2;
+    flex-direction: column; }
+    .post.long .post__content {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      flex: 1; }
+    .post.long .post__title {
+      margin: 0; }
+
+.align-right {
+  align-self: right; }
+
