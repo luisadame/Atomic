@@ -16,7 +16,7 @@ export default class Category {
 		this.sources.push(source);
 	}
 
-	get sources() {
+	sources() {
 		return this.sources;
 	}
 }
