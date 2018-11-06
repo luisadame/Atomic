@@ -25,7 +25,14 @@ post2.image = 'http://1.bp.blogspot.com/-hNC-oT6f-fY/TeXxO26yjvI/AAAAAAAAAOY/qfk
 export default {
 	posts: [
 		post1,
-		post2
+		post2,
+		post1,
+		post1,
+		post2,
+		post1,
+		post1,
+		post1,
+		post1,
 	],
 	categories: [
 		category1
