@@ -25,11 +25,12 @@
     color: white;
     margin-right: 20px;
     flex: 1 0 55px;
-    transition: all 150ms ease-in-out;
+    transition: all 150ms var(--easing);
     z-index: 1;
     outline: none;
 
-    &:hover {
+    &:hover,
+    &:focus {
         transform: scale(1.1);
         box-shadow: 0 5px 30px 1px rgb(77, 0, 143);
 
@@ -40,7 +41,7 @@
 
     img {
         width: 100%;
-        transition: all 200ms ease-in-out;
+        transition: all 200ms var(--easing);
     }
 }
 
@@ -62,7 +63,7 @@
     bottom: 0;
     left: 0;
     padding: var(--main-padding);
-    transition: all 200ms ease-in-out;
+    transition: all 200ms var(--easing);
     color: white;
 
     &--opened {
@@ -118,6 +119,6 @@
         background: rgba(0, 0, 0, .4);
         visibility: hidden;
         opacity: 0;
-        transition: all 200ms ease;
+        transition: all 200ms var(--easing);
     }
 }
