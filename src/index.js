@@ -8,6 +8,7 @@ import Post from './post';
 import Sidebar from './components/sidebar';
 import Category from './category';
 const db = new Database(repository);
+window.db = db;
 //eslint-disable-next-line no-console
 Post.render(db.posts);
 Category.render(db.categories);
