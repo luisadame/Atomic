@@ -18,4 +18,8 @@ export default class Database {
 	category(name) {
 		return this.repository.categories.find(name);
 	}
+
+	post(name) {
+		return this.repository.posts.find(post => post.title === name);
+	}
 }
