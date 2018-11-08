@@ -6,17 +6,49 @@ export default class Sidebar {
 		this.cloak = document.querySelector('.sidebar__cloak');
 	}
 
-	toggle() {
-		this.header.classList.toggle('sidebar--opened');
-		this.opened = !this.opened;
+	toggle(e) {
+		e.preventDefault();
+		debugger;
+		if (!this.opened) {
+			this.open();
+		} else {
+			this.close();
+		}
+	}
+
+	open() {
+		this.header.classList.add('sidebar--opened');
+		this.addListeners();
+		this.opened = true;
+	}
+
+	close() {
+		this.header.classList.remove('sidebar--opened');
+		this.removeListeners();
+		this.opened = false;
+	}
+
+	handleKeys(e) {
+		if (e.key === 'Escape' && this.opened) {
+			this.close();
+		}
+	}
+
+	removeListeners() {
+		this.cloak.removeEventListener('click', this.close.bind(this));
+		window.removeEventListener('keypress', this.handleKeys.bind(this));
+	}
+
+	addListeners() {
+		this.cloak.addEventListener('click', this.close.bind(this));
+		window.addEventListener('keypress', this.handleKeys.bind(this));
 	}
 
 	static listen() {
 		const sidebar = new Sidebar();
 		sidebar.btn.addEventListener('click', sidebar.toggle.bind(sidebar));
-		sidebar.cloak.addEventListener('click', sidebar.toggle.bind(sidebar));
-		window.addEventListener('keypress', key => {
-			if (key.key === 'Escape') sidebar.toggle.call(sidebar);
+		sidebar.btn.addEventListener('keypress', e => {
+			if (e.key === 'Enter') sidebar.toggle.bind(sidebar);
 		});
 	}
 }
