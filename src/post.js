@@ -1,3 +1,5 @@
+import Modal from './modal';
+
 export default class Post {
 	constructor(title) {
 		this.title = title;
@@ -72,54 +74,25 @@ export default class Post {
 		`;
 	}
 
-	buildModal(rects) {
-		this.closing = false;
-		return `
-			<article class="post--modal" style="top: ${rects.top}px; left: ${
-	rects.left
-}px; width: ${rects.width}px; height: ${rects.height}px">
-				<button class="post--modal__back">Back</button>
-				<img class="post__img" src="${this.image}" alt="Article featured image">
-				<h2 class="post__title">${this.title}</h2>
-				<div class="post__content">${this.content}</div>
-				<p class="post__source">${this.source.title}</p>
-			</article>
-	`;
-	}
-
-	destroyModal() {
-		this.closing = true;
-		let back = document.querySelector('.post--modal .post--modal__back');
-		back.removeEventListener('click', this.destroyModal, false);
-		document.querySelector('.post--modal').classList.remove('active');
-		document.body.classList.remove('modal-opened');
-	}
-
-	listenModal() {
-		let modal = document.querySelector('.post--modal');
-		modal.addEventListener('transitionend', () => {
-			if (this.closing) modal.remove();
-		});
-		let back = document.querySelector('.post--modal .post--modal__back');
-		back.addEventListener('click', this.destroyModal.bind(this), false);
-	}
-
+	// todo: refactor name to getPostElement
 	static getParent(e) {
 		let parent = e.target.parentElement;
 		while (!parent.classList.contains('post')) parent = parent.parentElement;
 		return parent;
 	}
 
+	/**
+	 * When a post title is clicked this is fired, we'll
+	 * look in the database for the post, retrieve it.
+	 * Then, we get the post element to calculate rects.
+	 * Build the markup to be injected in the page in order
+	 * to show the detailed version of the post.
+	 */
 	static loadPost(e) {
 		e.preventDefault();
-		let post = db.post(e.target.textContent.trim());
-		let parentRect = Post.getParent(e).getBoundingClientRect();
-		document.body.insertAdjacentHTML('beforeend', post.buildModal(parentRect));
-		post.listenModal();
-		document.body.classList.add('modal-opened');
-		setTimeout(() => {
-			document.querySelector('.post--modal').classList.add('active');
-		}, 20);
+		let post = window.db.post(e.target.textContent.trim());
+		let position = Post.getParent(e).getBoundingClientRect();
+		Modal.from(post, position).init();
 	}
 
 	static render(posts) {
