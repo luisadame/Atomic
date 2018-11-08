@@ -8,7 +8,6 @@ export default class Sidebar {
 
 	toggle(e) {
 		e.preventDefault();
-		debugger;
 		if (!this.opened) {
 			this.open();
 		} else {
