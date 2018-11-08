@@ -96,12 +96,20 @@
         left: 10px;
     }
 
+    &__container {
+        padding: 10px;
+    }
+
     .post__title {
         color: #111;
+        transition: all 250ms var(--easing) 100ms;
     }
 
     .post__content {
+        opacity: 0;
+        transform: translate3d(0%, -40%, 0);
         color: #222;
+        transition: all 250ms var(--easing) 300ms;
     }
 
     &.active {
@@ -114,5 +122,19 @@
         width: 100vw !important;
         min-height: 100vh !important;
         overflow-y: auto;
+
+        & .post__content {
+            opacity: 1;
+            transform: none;
+        }
+    }
+
+    &.closing {
+        & .post__title {
+            color: white;
+        }
+        & .post__content {
+            transition: none;
+        }
     }
 }
