@@ -1,4 +1,4 @@
-export default class Modal  {
+export default class Modal {
 	constructor() {
 
 	}
@@ -32,19 +32,25 @@ export default class Modal  {
 
 	async setProperties() {
 		this.modal = document.body.querySelector('.post--modal');
-		this.events = [
-			{
-				el: this.modal.querySelector('.post--modal__back'),
-				event: 'click',
-				fn: this.destroy
-			},
-			{
-				el: this.modal,
-				event: 'transitionend',
-				fn: () => {
-					if (!this.open) this.modal.remove();
-				}
+		this.events = [{
+			el: this.modal.querySelector('.post--modal__back'),
+			event: 'click',
+			fn: this.destroy
+		},
+		{
+			el: this.modal,
+			event: 'transitionend',
+			fn: () => {
+				if (!this.open) this.modal.remove();
 			}
+		},
+		{
+			el: window,
+			event: 'keypress',
+			fn: e => {
+				if (e.key === 'Escape') this.destroy();
+			}
+		}
 		];
 	}
 
