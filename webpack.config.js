@@ -5,9 +5,12 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = (env, options) => {
 	const isDevMode = options.mode !== 'production';
+	const publicURL = 'https://mrluissan.github.io/Atomic';
 	return {
 		mode: 'development',
-		entry: __dirname + '/src/index.js',
+		entry: {
+			app: './src/index.js'
+		},
 		plugins: [
 			new MiniCssExtractPlugin({
 				filename: isDevMode ? '[name].css' : '[name].[hash].css',
@@ -15,46 +18,54 @@ module.exports = (env, options) => {
 			}),
 			new HtmlWebpackPlugin({
 				template: './src/index.html',
-				filename: './index.html'
+				filename: './index.html',
+				url: isDevMode ? '' : publicURL
 			})
 		],
 		output: {
 			path: path.resolve(__dirname, 'docs'),
-			publicPath: isDevMode ? '/docs/' : '/',
-			filename: 'app.js'
+			publicPath: isDevMode ? '/docs/' : publicURL,
+			filename: isDevMode ? '[name].js' : '[name].[hash].js'
 		},
 		module: {
-			rules: [
-				{
-					enforce: 'pre',
-					test: /\.js$/,
-					exclude: /node_modules/,
-					loader: 'eslint-loader'
-				},
-				{
-					test: /\.js$/,
-					exclude: /node_modules/,
-					use: 'babel-loader'
-				},
-				{
-					test: /\.(sa|sc|c)ss$/,
-					use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader']
-				},
-				{
-					test: /\.(png|jpg|gif|woff(2)?)$/,
-					use: [
-						{
-							loader: 'file-loader',
-							options: {
-								name: '[path][name].[ext]'
+			rules: [{
+				enforce: 'pre',
+				test: /\.js$/,
+				exclude: /node_modules/,
+				loader: 'eslint-loader'
+			},
+			{
+				test: /\.js$/,
+				exclude: /node_modules/,
+				use: 'babel-loader'
+			},
+			{
+				test: /\.(sa|sc|c)ss$/,
+				use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader']
+			},
+			{
+				test: /\.(png|jpg|gif|woff(2)?)$/,
+				use: [{
+					loader: 'file-loader',
+					options: {
+						name(file) {
+							if (isDevMode) {
+								return '[path][name].[ext]';
 							}
+							return '[path][name].[hash].[ext]';
 						}
-					]
-				},
-				{
-					test: /\.svg$/,
-					use: 'svg-inline-loader'
+					}
+				}]
+			},
+			{
+				test: /\.svg$/,
+				use: {
+					loader: 'file-loader',
+					options: {
+						name: '[path][name].[ext]'
+					}
 				}
+			}
 			]
 		},
 		devServer: {
