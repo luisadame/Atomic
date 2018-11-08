@@ -1,3 +1,4 @@
+import 'babel-polyfill';
 import '../assets/css/app.scss';
 import '../assets/img/logo.svg';
 
