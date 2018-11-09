@@ -16,10 +16,10 @@ export default class Database {
 	}
 
 	category(name) {
-		return this.repository.categories.find(name);
+		return this.categories.find(category => category.name === name);
 	}
 
 	post(name) {
-		return this.repository.posts.find(post => post.title === name);
+		return this.posts.find(post => post.title === name);
 	}
 }
