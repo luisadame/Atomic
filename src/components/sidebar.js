@@ -17,12 +17,14 @@ export default class Sidebar {
 
 	open() {
 		this.header.classList.add('sidebar--opened');
+		this.btn.blur();
 		this.addListeners();
 		this.opened = true;
 	}
 
 	close() {
 		this.header.classList.remove('sidebar--opened');
+		this.btn.blur();
 		this.removeListeners();
 		this.opened = false;
 	}
