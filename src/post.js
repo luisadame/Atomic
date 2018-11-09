@@ -1,4 +1,5 @@
 import Modal from './modal';
+import Source from './source';
 
 export default class Post {
 	constructor(title) {
@@ -22,6 +23,8 @@ export default class Post {
 	}
 
 	set source(source) {
+		if (!(source instanceof Source))
+			throw new Error('Invalid source object given');
 		this._source = source;
 	}
 
@@ -37,12 +40,18 @@ export default class Post {
 		return this._image;
 	}
 
+	/**
+	 * It loads an image.
+	 */
 	loadImage() {
 		let image = new Image();
 		image.src = this.image;
 		return image;
 	}
 
+	/**
+	 * Returns the natural size of an image.
+	 */
 	getImageSize() {
 		// Load image
 		let image = this.loadImage();
@@ -52,12 +61,19 @@ export default class Post {
 		};
 	}
 
+	/**
+	 * Calculate the aspect ratio of the image
+	 * and returns whether a post is "long" or wide.
+	 */
 	getPostSize() {
 		let imageSize = this.getImageSize();
 		let ratio = +(imageSize.w / imageSize.h).toFixed(2);
 		return ratio < 1 ? 'long' : '';
 	}
 
+	/**
+	 * It returns the markup to be injected in the posts section.
+	 */
 	render() {
 		return `
 			<article class="post ${this.getPostSize()}">
@@ -74,7 +90,10 @@ export default class Post {
 		`;
 	}
 
-	// todo: refactor name to getPostElement
+	/**
+	 * It returns the node element with class "post"
+	 * that is a parent of the element where the event occurs.
+	 */
 	static getParent(e) {
 		let parent = e.target.parentElement;
 		while (!parent.classList.contains('post')) parent = parent.parentElement;
