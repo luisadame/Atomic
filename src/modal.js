@@ -45,11 +45,11 @@ export default class Modal {
 			el: this.modal,
 			event: 'transitionend',
 			fn: () => {
-				if (!this.open) this.modal.remove();
+				if (!this.opened) this.modal.remove();
 			}
 		},
 		{
-			el: window,
+			el: this.modal,
 			event: 'keypress',
 			fn: e => {
 				if (e.key === 'Escape') this.destroy();
@@ -68,7 +68,7 @@ export default class Modal {
 	}
 
 	async open() {
-		this.open = true;
+		this.opened = true;
 		document.body.classList.add('modal-opened');
 		setTimeout(() => {
 			this.modal.classList.add('active');
@@ -76,7 +76,7 @@ export default class Modal {
 	}
 
 	async close() {
-		this.open = false;
+		this.opened = false;
 		document.body.classList.remove('modal-opened');
 		this.modal.classList.remove('active');
 		this.modal.classList.add('closing');
