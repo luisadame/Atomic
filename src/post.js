@@ -93,9 +93,10 @@ export default class Post {
 	/**
 	 * It returns the node element with class "post"
 	 * that is a parent of the element where the event occurs.
+	 * Todo: maybe this should be in other file.
 	 */
-	static getParent(e) {
-		let parent = e.target.parentElement;
+	static getParent(node) {
+		let parent = node.parentElement;
 		while (!parent.classList.contains('post')) parent = parent.parentElement;
 		return parent;
 	}
@@ -110,7 +111,7 @@ export default class Post {
 	static loadPost(e) {
 		e.preventDefault();
 		let post = window.db.post(e.target.textContent.trim());
-		let position = Post.getParent(e).getBoundingClientRect();
+		let position = Post.getParent(e.target).getBoundingClientRect();
 		Modal.from(post, position).init();
 	}
 
