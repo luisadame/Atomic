@@ -12,18 +12,21 @@ export default class Category {
 		return this._name;
 	}
 
+	set sources(sources) {
+		this._sources = sources;
+	}
+
+	get sources() {
+		return this._sources;
+	}
+
 	addSource(source) {
 		this.sources.push(source);
 	}
 
-	sources() {
-		return this.sources;
-	}
-
 	render() {
-		return `
-			<li>${this.name}</li>
-		`;
+		let markup = `<li>${this.name}</li>`;
+		return markup;
 	}
 
 	static render(categories) {
