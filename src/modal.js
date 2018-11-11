@@ -1,9 +1,12 @@
+import Post from '../src/post';
+
 export default class Modal {
 	constructor() {
 
 	}
 
 	set from(position) {
+		if (!(['width', 'height', 'top', 'left'].every(p => position.hasOwnProperty(p)))) throw new Error('position should be of type DOMRect');
 		this._from = {
 			width: position.width,
 			height: position.height,
@@ -17,6 +20,7 @@ export default class Modal {
 	}
 
 	setFromPost(post) {
+		if (!(post instanceof Post)) throw new Error('post should be of type Post');
 		for (let property in post) {
 			this[property.substr(1)] = post[property];
 		}
