@@ -1387,7 +1387,6 @@ caniuse-lite@^1.0.30000890:
 canvas@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/canvas/-/canvas-2.1.0.tgz#9abbfee6051b16666332ad0a8a2fd142e29039a1"
-  integrity sha512-cpQtc8fjVl4Puus/t/X1Zc0r+tVWJcsRAQvZ7pu1mSAqZgkbgoCv1CEnLTCPD0YA358G0G20kvzZMQDUpcvmFg==
   dependencies:
     nan "^2.11.1"
     node-pre-gyp "^0.11.0"
@@ -4506,7 +4505,6 @@ node-pre-gyp@^0.10.0:
 node-pre-gyp@^0.11.0:
   version "0.11.0"
   resolved "https://registry.yarnpkg.com/node-pre-gyp/-/node-pre-gyp-0.11.0.tgz#db1f33215272f692cd38f03238e3e9b47c5dd054"
-  integrity sha512-TwWAOZb0j7e9eGaf9esRx3ZcLaE5tQ2lvYy1pb5IAaG1a2e2Kv5Lms1Y4hpj+ciXJRofIxxlt5haeQ/2ANeE0Q==
   dependencies:
     detect-libc "^1.0.2"
     mkdirp "^0.5.1"
