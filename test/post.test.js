@@ -106,7 +106,7 @@ describe('it renders a post correctly', () => {
 	beforeEach(() => {
 		post = new Post('Example');
 		post.content = 'Example content';
-		post.source = new Source('example.com');
+		post.source = new Source('http://example.com');
 		post.source.title = 'News';
 		post.image = 'http://image.com';
 	});
