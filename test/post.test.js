@@ -2,6 +2,8 @@ import Post from '../src/post';
 import { expect } from 'chai';
 import Source from '../src/source';
 
+jest.useFakeTimers();
+
 test('post can be instantiated correctly', () => {
 	const post = new Post('Hello World!');
 	expect(post).to.be.instanceOf(Post);
@@ -139,7 +141,7 @@ describe('it renders a post correctly', () => {
 		expect(post.nodeName).to.be.equals('ARTICLE');
 	});
 
-	test('it loads post correctly from db', () => {
+	test('it loads post correctly from db', async () => {
 		document.body.innerHTML = `
     <html>
       <head></head>
@@ -171,13 +173,11 @@ describe('it renders a post correctly', () => {
     title.addEventListener('click', Post.loadPost, false);
 
 		// fire click event
-    title.click();
+    await title.click();
 
-		// queue this to the event loop and run after the markup is actually inserted.
-    setTimeout(() => {
-      const injected = document.body.querySelector('.post--modal');
-      expect(injected).to.not.be.equals(null);
-    }, 0);
+		jest.runAllTimers();
+		const injected = document.body.querySelector('.post--modal');
+		expect(injected).to.not.be.equals(null);
 	});
 
 	test('it returns a correct markup to be injected', () => {
@@ -210,9 +210,8 @@ describe('it renders a post correctly', () => {
 
 		let posts = [post, post, post];
 		Post.render(posts);
-		setTimeout(() => {
-			let postsInDom = document.querySelectorAll('.post');
-			expect(postsInDom.length).to.be.equal(posts.length);
-		}, 0);
+		jest.runAllTimers();
+		let postsInDom = document.querySelectorAll('.post');
+		expect(postsInDom.length).to.be.equal(posts.length);
 	});
 });

@@ -13,6 +13,7 @@ describe('properties can be set and retrieved correctly', () => {
     });
 
     test('url can be retrieved', () => {
+        const source = new Source('http://example.com');
         expect(source.url).to.be.equals('http://example.com');
     });
 
