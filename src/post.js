@@ -87,7 +87,7 @@ export default class Post {
 				<img class="post__img" src="${this.image}" alt="Article featured image">
 				<div class="post__content">
 					<h2 class="post__title">
-						<a href="/post/${this.title}">
+						<a href="/post/${this.slug()}">
 							${this.title}
 						</a>
 					</h2>

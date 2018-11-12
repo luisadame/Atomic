@@ -191,7 +191,7 @@ describe('it renders a post correctly', () => {
 				<img class="post__img" src="http://image.com" alt="Article featured image">
 				<div class="post__content">
 					<h2 class="post__title">
-						<a href="/post/Example">
+						<a href="/post/example">
 							Example
 						</a>
 					</h2>
