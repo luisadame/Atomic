@@ -47,6 +47,11 @@ describe('post properties can be set and got correctly', () => {
 		post.image = image;
 		expect(post.image).to.be.equals(image);
 	});
+
+	test('slug can be retrieved correctly', () => {
+		let post = new Post('My example post');
+		expect(post.slug()).to.be.equals('my-example-post');
+	});
 });
 
 describe('Get the post size depending on the image set', () => {

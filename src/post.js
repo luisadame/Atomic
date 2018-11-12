@@ -41,6 +41,13 @@ export default class Post {
 	}
 
 	/**
+	 * It creates an sluggified version from the title.
+	 */
+	slug() {
+		return this.title.split(' ').map(slice => slice.toLowerCase()).join('-');
+	}
+
+	/**
 	 * It loads an image.
 	 */
 	loadImage() {
