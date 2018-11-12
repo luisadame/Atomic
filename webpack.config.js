@@ -5,7 +5,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = (env, options) => {
 	const isDevMode = options.mode !== 'production';
-	const publicURL = 'https://mrluissan.github.io/Atomic';
+	const publicURL = 'https://mrluissan.github.io/Atomic/';
 	return {
 		mode: 'development',
 		entry: {

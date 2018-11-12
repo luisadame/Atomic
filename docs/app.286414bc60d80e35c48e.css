@@ -1,4 +1,4 @@
-/*! normalize.css v8.0.0 | MIT License | github.com/necolas/normalize.css */
+/*! normalize.css v8.0.1 | MIT License | github.com/necolas/normalize.css */
 
 /* Document
    ========================================================================== */
@@ -22,6 +22,14 @@ html {
 
 body {
   margin: 0;
+}
+
+/**
+ * Render the `main` element consistently in IE.
+ */
+
+main {
+  display: block;
 }
 
 /**
@@ -350,56 +358,56 @@ template {
 
 @font-face {
   font-family: 'Nunito';
-  src: url(https://mrluissan.github.io/Atomicassets/fonts/Nunito-ExtraLight.deb863c6a86627c8635b951d4f6b3e21.woff2) format("woff2"), url(https://mrluissan.github.io/Atomicassets/fonts/Nunito-ExtraLight.47729ac946767cd465a196ade2a7676b.woff) format("woff");
+  src: url(https://mrluissan.github.io/Atomic/assets/fonts/Nunito-ExtraLight.deb863c6a86627c8635b951d4f6b3e21.woff2) format("woff2"), url(https://mrluissan.github.io/Atomic/assets/fonts/Nunito-ExtraLight.47729ac946767cd465a196ade2a7676b.woff) format("woff");
   font-weight: 200;
   font-style: normal;
   font-display: swap; }
 
 @font-face {
   font-family: 'Nunito';
-  src: url(https://mrluissan.github.io/Atomicassets/fonts/Nunito-Black.fca9bf08fc15c9dbe595be801eb4b76c.woff2) format("woff2"), url(https://mrluissan.github.io/Atomicassets/fonts/Nunito-Black.817b61ee3a5f3f4d8f268c4a02fdb2d1.woff) format("woff");
+  src: url(https://mrluissan.github.io/Atomic/assets/fonts/Nunito-Black.fca9bf08fc15c9dbe595be801eb4b76c.woff2) format("woff2"), url(https://mrluissan.github.io/Atomic/assets/fonts/Nunito-Black.817b61ee3a5f3f4d8f268c4a02fdb2d1.woff) format("woff");
   font-weight: 900;
   font-style: normal;
   font-display: swap; }
 
 @font-face {
   font-family: 'Nunito';
-  src: url(https://mrluissan.github.io/Atomicassets/fonts/Nunito-Regular.a03cd0b2c05eeb059575a57b4a6cdced.woff2) format("woff2"), url(https://mrluissan.github.io/Atomicassets/fonts/Nunito-Regular.1df2c2be2c4dca4ebcc80d4d6efb29d7.woff) format("woff");
+  src: url(https://mrluissan.github.io/Atomic/assets/fonts/Nunito-Regular.a03cd0b2c05eeb059575a57b4a6cdced.woff2) format("woff2"), url(https://mrluissan.github.io/Atomic/assets/fonts/Nunito-Regular.1df2c2be2c4dca4ebcc80d4d6efb29d7.woff) format("woff");
   font-weight: normal;
   font-style: normal;
   font-display: swap; }
 
 @font-face {
   font-family: 'Nunito';
-  src: url(https://mrluissan.github.io/Atomicassets/fonts/Nunito-ExtraBold.9954f5a24657f3b40aea9c61dad04419.woff2) format("woff2"), url(https://mrluissan.github.io/Atomicassets/fonts/Nunito-ExtraBold.5edbafeb62c438556892f063cdc86988.woff) format("woff");
+  src: url(https://mrluissan.github.io/Atomic/assets/fonts/Nunito-ExtraBold.9954f5a24657f3b40aea9c61dad04419.woff2) format("woff2"), url(https://mrluissan.github.io/Atomic/assets/fonts/Nunito-ExtraBold.5edbafeb62c438556892f063cdc86988.woff) format("woff");
   font-weight: 800;
   font-style: normal;
   font-display: swap; }
 
 @font-face {
   font-family: 'Nunito';
-  src: url(https://mrluissan.github.io/Atomicassets/fonts/Nunito-Bold.df2d9ac92182a36fafa85efa99f91d76.woff2) format("woff2"), url(https://mrluissan.github.io/Atomicassets/fonts/Nunito-Bold.3cc9adb0b077ea433eec15925971a3cc.woff) format("woff");
+  src: url(https://mrluissan.github.io/Atomic/assets/fonts/Nunito-Bold.df2d9ac92182a36fafa85efa99f91d76.woff2) format("woff2"), url(https://mrluissan.github.io/Atomic/assets/fonts/Nunito-Bold.3cc9adb0b077ea433eec15925971a3cc.woff) format("woff");
   font-weight: bold;
   font-style: normal;
   font-display: swap; }
 
 @font-face {
   font-family: 'Nunito';
-  src: url(https://mrluissan.github.io/Atomicassets/fonts/Nunito-Italic.f4788b73f4c20a605f84f35065137d44.woff2) format("woff2"), url(https://mrluissan.github.io/Atomicassets/fonts/Nunito-Italic.d2f4dab3b3a30e84f9d4cb552ce05e17.woff) format("woff");
+  src: url(https://mrluissan.github.io/Atomic/assets/fonts/Nunito-Italic.f4788b73f4c20a605f84f35065137d44.woff2) format("woff2"), url(https://mrluissan.github.io/Atomic/assets/fonts/Nunito-Italic.d2f4dab3b3a30e84f9d4cb552ce05e17.woff) format("woff");
   font-weight: normal;
   font-style: italic;
   font-display: swap; }
 
 @font-face {
   font-family: 'Nunito';
-  src: url(https://mrluissan.github.io/Atomicassets/fonts/Nunito-SemiBold.ee03e82202d132616724af60a0b01aef.woff2) format("woff2"), url(https://mrluissan.github.io/Atomicassets/fonts/Nunito-SemiBold.0c2243b44bd64e35b8f1d3916f3e0e9c.woff) format("woff");
+  src: url(https://mrluissan.github.io/Atomic/assets/fonts/Nunito-SemiBold.ee03e82202d132616724af60a0b01aef.woff2) format("woff2"), url(https://mrluissan.github.io/Atomic/assets/fonts/Nunito-SemiBold.0c2243b44bd64e35b8f1d3916f3e0e9c.woff) format("woff");
   font-weight: 600;
   font-style: normal;
   font-display: swap; }
 
 @font-face {
   font-family: 'Nunito';
-  src: url(https://mrluissan.github.io/Atomicassets/fonts/Nunito-Light.142fcf252e74e1282379a5df4ae429b3.woff2) format("woff2"), url(https://mrluissan.github.io/Atomicassets/fonts/Nunito-Light.4c28d82e397d9458c51a01095e17ac4f.woff) format("woff");
+  src: url(https://mrluissan.github.io/Atomic/assets/fonts/Nunito-Light.142fcf252e74e1282379a5df4ae429b3.woff2) format("woff2"), url(https://mrluissan.github.io/Atomic/assets/fonts/Nunito-Light.4c28d82e397d9458c51a01095e17ac4f.woff) format("woff");
   font-weight: 300;
   font-style: normal;
   font-display: swap; }
@@ -591,7 +599,9 @@ body {
   left: 0;
   height: 100vh;
   width: 100vw;
-  z-index: 1200; }
+  z-index: 1200;
+  transform: translate3d(0, 0, 0);
+  will-change: top, left, width, height; }
   .post--modal__back {
     position: absolute;
     top: 10px;
