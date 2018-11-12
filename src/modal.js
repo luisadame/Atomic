@@ -6,7 +6,7 @@ export default class Modal {
 	}
 
 	set from(position) {
-		if (!(['width', 'height', 'top', 'left'].every(p => position[p] !== null))) throw new Error('position should be of type DOMRect');
+		if (!(['width', 'height', 'top', 'left'].every(p => position[p] != null))) throw new Error('position should be of type DOMRect');
 		this._from = {
 			width: position.width,
 			height: position.height,
