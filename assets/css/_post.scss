@@ -73,6 +73,33 @@
             margin: 0;
         }
     }
+
+    &.loading {
+        &.long {
+            .post__img {
+                height: 290px;
+                background: radial-gradient(at 50% 50%, #333, #111);
+            }
+        }
+        .post__img {
+            height: 120px;
+            background: radial-gradient(at 50% 50%, #333, #111);
+        }
+
+        .post__title {
+            height: 20px;
+            width: 80%;
+            background: #e1e1e1;
+            border-radius: 30px;
+        }
+
+        .post__source {
+            height: 10px;
+            background: #fb5e0c;
+            border-radius: 50px;
+            width: 35%;
+        }
+    }
 }
 
 .post--modal {
