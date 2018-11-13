@@ -45,12 +45,26 @@ describe('position can be set and retrieved', () => {
 describe('modal can be redered', () => {
     let post;
 
+    const LOAD_FAILURE_SRC = 'LOAD_FAILURE_SRC';
+    const LOAD_SUCCESS_SRC = 'LOAD_SUCCESS_SRC';
+
     beforeEach(() => {
+
+        Object.defineProperty(global.Image.prototype, 'src', {
+            set(src) {
+                if (src === LOAD_FAILURE_SRC) {
+                    setTimeout(() => this.onerror(new Error('mocked error')));
+                } else if (src === LOAD_SUCCESS_SRC) {
+                    setTimeout(() => this.onload());
+                }
+            },
+        });
+
         post = new Post('Example');
         post.content = 'Example content';
         post.source = new Source('http://example.com');
         post.source.title = 'News';
-        post.image = 'http://image.com';
+        post.image = LOAD_SUCCESS_SRC;
     });
 
     test('its gets injected and opened', async () => {
@@ -73,7 +87,7 @@ describe('modal can be redered', () => {
         `;
 
         // Render post to body and save the title
-        Post.render([post]);
+        await Post.render([post]);
         let title = document.body.querySelector('.post__title');
 
         // Click the title and wait for the modal to be injected
@@ -106,7 +120,7 @@ describe('modal can be redered', () => {
         `;
 
         // Render post to body and save the title
-        Post.render([post]);
+        await Post.render([post]);
         let title = document.body.querySelector('.post__title');
 
         // Click the title and wait for the modal to be injected
@@ -145,7 +159,7 @@ describe('modal can be redered', () => {
         `;
 
         // Render post to body and save the title
-        Post.render([post]);
+        await Post.render([post]);
         let title = document.body.querySelector('.post__title');
 
         // Click the title and wait for the modal to be injected
@@ -178,7 +192,7 @@ describe('modal can be redered', () => {
         `;
 
         // Render post to body and save the title
-        Post.render([post]);
+        await Post.render([post]);
         let title = document.body.querySelector('.post__title');
 
         // Click the title and wait for the modal to be injected
@@ -215,7 +229,7 @@ describe('modal can be redered', () => {
         `;
 
         // Render post to body and save the title
-        Post.render([post]);
+        await Post.render([post]);
         let title = document.body.querySelector('.post__title');
 
         // Click the title and wait for the modal to be injected

@@ -63,54 +63,71 @@ describe('Get the post size depending on the image set', () => {
 
 	test('it loads an image', () => {
 		post.image = 'http://example.com/image.png';
-		expect(post.loadImage()).to.have.property('naturalWidth');
+		post.loadImage().then(image => {
+			expect(image).to.have.property('naturalWidth');
+		});
 	});
 
 	test('it gets an image size', () => {
-    post.image = 'http://example.com/image.png';
-		expect(post.getImageSize())
-			.to.have.property('w')
-			.equals(0);
-		expect(post.getImageSize())
-			.to.have.property('h')
-			.equals(0);
+		post.image = 'http://example.com/image.png';
+		post.getImageSize().then(size => {
+			expect(size)
+				.to.have.property('w')
+				.equals(0);
+			expect(size)
+				.to.have.property('h')
+				.equals(0);
+
+		});
 	});
 
-	test('it retrieves long post size', () => {
+	test('it retrieves long post size', async () => {
 		post.image = 'http://example.com/image.png';
-
-		expect(
-			post.getPostSize.call({
-				getImageSize: () => {
-					return {
-						w: 600,
-						h: 1200
-					};
-				}
-			})
-		).to.equals('long');
+		let mock = {
+			getImageSize: async () => {
+				return {
+					w: 600,
+					h: 1200
+				};
+			}
+		};
+		let size = await post.getPostSize.call(mock);
+		expect(size).to.equals('long');
 	});
 
-	test('it retrieves wide post size', () => {
+	test('it retrieves wide post size', async () => {
 		post.image = 'http://example.com/image.png';
-
-		expect(
-			post.getPostSize.call({
-				getImageSize: () => {
-					return {
-						w: 1200,
-						h: 600
-					};
-				}
-			})
-		).to.equals('');
+		let mock = {
+			getImageSize: async () => {
+				return {
+					w: 1200,
+					h: 600
+				};
+			}
+		};
+		let size = await post.getPostSize.call(mock);
+		expect(size).to.equals('');
 	});
 });
 
 describe('it renders a post correctly', () => {
 	let post;
 
+	const LOAD_FAILURE_SRC = 'LOAD_FAILURE_SRC';
+	const LOAD_SUCCESS_SRC = 'LOAD_SUCCESS_SRC';
+
 	beforeEach(() => {
+
+		Object.defineProperty(global.Image.prototype, 'src', {
+			set(src) {
+				if (src === LOAD_FAILURE_SRC) {
+					setTimeout(() => this.onerror(new Error('mocked error')));
+				} else if (src === LOAD_SUCCESS_SRC) {
+					setTimeout(() => this.onload());
+				}
+			},
+		});
+
 		post = new Post('Example');
 		post.content = 'Example content';
 		post.source = new Source('http://example.com');
@@ -185,8 +202,8 @@ describe('it renders a post correctly', () => {
 		expect(injected).to.not.be.equals(null);
 	});
 
-	test('it returns a correct markup to be injected', () => {
-		let markup = `
+	test('it returns a correct markup to be injected', async () => {
+		let expected = `
 			<article class="post ">
 				<img class="post__img" src="http://image.com" alt="Article featured image">
 				<div class="post__content">
@@ -199,24 +216,8 @@ describe('it renders a post correctly', () => {
 				</div>
 			</article>
 		`;
-		expect(post.render()).to.be.equal(markup);
-	});
-
-	test('it renders all posts', () => {
-
-		document.body.innerHTML = `
-			<html>
-				<head></head>
-				<body>
-					<div class="posts"></div>
-				</body>
-			</html>
-		`;
-
-		let posts = [post, post, post];
-		Post.render(posts);
-		jest.runAllTimers();
-		let postsInDom = document.querySelectorAll('.post');
-		expect(postsInDom.length).to.be.equal(posts.length);
+		post.getPostSize = async () => '';
+		let actual = await post.render();
+		expect(actual).to.be.equal(expected);
 	});
 });

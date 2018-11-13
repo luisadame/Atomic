@@ -586,6 +586,22 @@ body {
       flex: 1; }
     .post.long .post__title {
       margin: 0; }
+  .post.loading.long .post__img {
+    height: 290px;
+    background: radial-gradient(at 50% 50%, #333, #111); }
+  .post.loading .post__img {
+    height: 120px;
+    background: radial-gradient(at 50% 50%, #333, #111); }
+  .post.loading .post__title {
+    height: 20px;
+    width: 80%;
+    background: #e1e1e1;
+    border-radius: 30px; }
+  .post.loading .post__source {
+    height: 10px;
+    background: #fb5e0c;
+    border-radius: 50px;
+    width: 35%; }
 
 .post--modal {
   position: fixed;
