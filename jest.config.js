@@ -1,5 +1,5 @@
 module.exports = {
 	testEnvironmentOptions: {
-		resoures: 'usable'
+		resources: 'usable'
 	}
 };
