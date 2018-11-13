@@ -54,9 +54,11 @@ export default class Post {
 	 * It loads an image.
 	 */
 	loadImage() {
-		let image = new Image();
-		image.src = this.image;
-		return image;
+		return new Promise(res => {
+			let image = new Image();
+			image.onload = () => res(image);
+			image.src = this.image;
+		});
 	}
 
 	/**
@@ -64,19 +66,20 @@ export default class Post {
 	 */
 	getImageSize() {
 		// Load image
-		let image = this.loadImage();
-		return {
-			w: image.naturalWidth,
-			h: image.naturalHeight
-		};
+		return this.loadImage().then(image => {
+			return {
+				w: image.naturalWidth,
+				h: image.naturalHeight
+			};
+		});
 	}
 
 	/**
 	 * Calculate the aspect ratio of the image
 	 * and returns whether a post is "long" or wide.
 	 */
-	getPostSize() {
-		let imageSize = this.getImageSize();
+	async getPostSize() {
+		let imageSize = await this.getImageSize();
 		let ratio = +(imageSize.w / imageSize.h).toFixed(2);
 		return ratio < 1 ? 'long' : '';
 	}
@@ -84,9 +87,10 @@ export default class Post {
 	/**
 	 * It returns the markup to be injected in the posts section.
 	 */
-	render() {
+	async render() {
+		const size = await this.getPostSize();
 		return `
-			<article class="post ${this.getPostSize()}">
+			<article class="post ${size}">
 				<img class="post__img" src="${this.image}" alt="Article featured image">
 				<div class="post__content">
 					<h2 class="post__title">
@@ -125,9 +129,12 @@ export default class Post {
 		Modal.from(post, position).init();
 	}
 
-	static render(posts) {
+	static async render(posts) {
 		let fragment = [];
-		posts.forEach(post => fragment.push(post.render()));
+		for (let post of posts) {
+			let markup = await post.render();
+			fragment.push(markup);
+		}
 		let $posts = document.querySelector('.posts');
 		$posts.innerHTML = fragment.join('');
 		const postTitles = document.querySelectorAll('.post__title');
