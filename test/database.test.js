@@ -32,6 +32,13 @@ describe('Database', () => {
 		expect(post).to.have.property('title').which.is.equals(title);
 	});
 
+	test('it should search for a post by slug', () => {
+		let slug = 'how-to-stretch-if-you-hate-stretching';
+		let post = db.postBySlug(slug);
+		expect(post).to.be.an.instanceOf(Post);
+		expect(post.slug()).to.be.equals(slug);
+	});
+
 	test('it should search for a category', () => {
 		let name = 'Exercise';
 		let category = db.category(name);
