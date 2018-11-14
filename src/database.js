@@ -22,4 +22,8 @@ export default class Database {
 	post(name) {
 		return this.posts.find(post => post.title === name);
 	}
+
+	postBySlug(slug) {
+		return this.posts.find(post => post.slug() === slug);
+	}
 }
