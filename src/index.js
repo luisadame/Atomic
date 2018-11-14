@@ -6,11 +6,16 @@ import '../assets/img/logo.svg';
 import repository from './repository.js';
 import Database from './database';
 import Router from './router';
+import routes from './router/routes';
 import Post from './post';
 import Sidebar from './components/sidebar';
 import Category from './category';
 const db = new Database(repository);
 window.db = db;
+window.app = {
+	name: 'Atomic',
+	state: null
+};
 //eslint-disable-next-line no-console
 Post.render(db.posts);
 Category.render(db.categories);
@@ -19,4 +24,4 @@ Category.render(db.categories);
 Sidebar.listen();
 
 // Listen url changes
-Router.listen([]);
+Router.listen(routes);
