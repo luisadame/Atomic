@@ -129,6 +129,21 @@ export default class Post {
 		Modal.from(post, position).init();
 	}
 
+	/**
+	 * Open a post screen when a slug is passed.
+	 * @param {string} slug
+	 */
+	static openPost(slug) {
+		let post = window.db.postBySlug(slug);
+		let position = {
+			width: 0,
+			height: 0,
+			top: 0,
+			left: 0
+		};
+		Modal.from(post, position).init();
+	}
+
 	static async render(posts) {
 		let fragment = [];
 		for (let post of posts) {
