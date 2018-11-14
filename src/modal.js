@@ -1,4 +1,5 @@
 import Post from '../src/post';
+import Router from './router';
 
 export default class Modal {
 	constructor() {
@@ -24,6 +25,7 @@ export default class Modal {
 		for (let property in post) {
 			this[property.substr(1)] = post[property];
 		}
+		this.post = post;
 	}
 
 	async init() {
@@ -45,7 +47,7 @@ export default class Modal {
 			el: this.modal,
 			event: 'transitionend',
 			fn: () => {
-				if (!this.opened) this.modal.remove();
+				if (!this.opened) Array.from(document.querySelectorAll('.post--modal')).forEach(modal => modal.remove());
 			}
 		},
 		{
@@ -61,6 +63,7 @@ export default class Modal {
 	async destroy() {
 		await this.close();
 		await this.removeListeners();
+		await Router.go(window.app.name, '/');
 	}
 
 	async inject(markup) {
@@ -73,6 +76,7 @@ export default class Modal {
 		setTimeout(() => {
 			this.modal.classList.add('active');
 		}, 20);
+		Router.go(`${this.title} - ${window.app.name}`, `#/post/${this.post.slug()}`);
 	}
 
 	async close() {
