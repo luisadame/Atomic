@@ -8,10 +8,13 @@ describe('properties can be set and retrieved', () => {
     let router;
 
     beforeEach(() => {
-        router = new Router([{
-            url: '',
-            handler: () => {}
-        }]);
+        let routes = [
+            {
+                url: '',
+                handler: () => {}
+            }
+        ];
+        router = new Router(routes);
     });
 
     test('routes can be set and retrieved', () => {
@@ -27,25 +30,44 @@ describe('properties can be set and retrieved', () => {
             router.routes = ''
         }).to.throw();
 
-        // expect(() => {
-        //     router.routes = [1];
-        // }).to.throw();
+        expect(() => {
+            router.routes = [1];
+        }).to.throw();
 
-        // expect(() => {
-        //     router.routes = [{}];
-        // }).to.throw();
+        expect(() => {
+            router.routes = [{}];
+        }).to.throw();
 
-        // expect(() => {
-        //     router.routes = [{
-        //         url: 1
-        //     }];
-        // }).to.throw();
+        expect(() => {
+            router.routes = [{
+                url: 1
+            }];
+        }).to.throw();
 
-        // expect(() => {
-        //     router.routes = [{
-        //         url: 'asd',
-        //         handler: ''
-        //     }];
-        // }).to.throw();
+        expect(() => {
+            router.routes = [{
+                url: 'asd',
+                handler: ''
+            }];
+        }).to.throw();
     });
+});
+
+describe('it listens to events', () => {
+    let routes;
+
+    beforeEach(() => {
+        routes = [
+            {
+                url: '',
+                handler: () => {}
+            }
+        ];
+    });
+
+    test('it listens to popstate event', () => {
+        Router.listen(routes);
+        window.location.hash = '#/post/example';
+    });
+
 });

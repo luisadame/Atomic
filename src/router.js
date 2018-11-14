@@ -24,13 +24,8 @@ export default class Router {
                     typeof route.handler === 'function';
 			};
 
-			if (routes.every(validSchema)) throw new Error('Routes have to be an object with url and handler properties');
+			if (!routes.every(validSchema)) throw new Error('Routes have to be an object with url and handler properties');
 		}
-	}
-
-	handle(e) {
-		debugger;
-		console.log(e);
 	}
 
 	init() {
@@ -38,9 +33,16 @@ export default class Router {
 		this.handleCurrentRoute();
 	}
 
+	handle(e) {
+		console.log("HELLOOWWWWW");
+		console.log(e);
+	}
+
 	match(url) {
 		this.routes.forEach(route => {
-
+			if (url.match(route.url)) {
+				route.handler(url);
+			}
 		});
 	}
 
