@@ -1,3 +1,5 @@
+import Modal from '../modal';
+
 export default class Router {
 
 	constructor(routes = []) {
@@ -52,7 +54,7 @@ export default class Router {
 		// get urls hash
 		const route = e.target.location.hash.substr(1);
 
-		// todo: what happens if the hash is non existen??
+		if (route === '') Modal.close();
 
 		// hand the hash to the matcher
 		this.match(route);
