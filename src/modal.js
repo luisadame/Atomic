@@ -76,7 +76,13 @@ export default class Modal {
 		setTimeout(() => {
 			this.modal.classList.add('active');
 		}, 20);
+		Router.opened = this;
 		Router.go(`${this.title} - ${window.app.name}`, `#/post/${this.post.slug()}`);
+	}
+
+	static close() {
+		Router.opened.destroy();
+		Router.opened = null;
 	}
 
 	async close() {
