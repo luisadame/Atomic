@@ -10,12 +10,10 @@ import routes from './router/routes';
 import Post from './post';
 import Sidebar from './components/sidebar';
 import Category from './category';
+import config from './config';
 const db = new Database(repository);
 window.db = db;
-window.app = {
-	name: 'Atomic',
-	state: null
-};
+window.app = config;
 //eslint-disable-next-line no-console
 Post.render(db.posts);
 Category.render(db.categories);
