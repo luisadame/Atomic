@@ -39,10 +39,10 @@ export default class Router {
 	static async go(title, url) {
 		// first lets save the current url to localStorage
 		localStorage.setItem('previous_url', JSON.stringify(window.location));
-		// then modify history
-		window.history.pushState({}, '', url);
 		// set document title
 		document.title = title;
+		// then modify history
+		window.history.pushState({}, '', url);
 	}
 
 	init() {
