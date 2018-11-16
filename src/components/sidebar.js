@@ -1,9 +1,13 @@
+import Post from '../post';
+import Router from '../router';
+
 export default class Sidebar {
 	constructor() {
 		this.opened = false;
 		this.header = document.querySelector('.header');
 		this.btn = document.querySelector('.logo');
 		this.cloak = document.querySelector('.sidebar__cloak');
+		this.title = document.querySelector('.sidebar__header a');
 	}
 
 	toggle(e) {
@@ -43,10 +47,24 @@ export default class Sidebar {
 	addListeners() {
 		this.cloak.addEventListener('click', this.close.bind(this));
 		window.addEventListener('keypress', this.handleKeys.bind(this));
+		this.title.addEventListener('click', e => {
+			e.preventDefault();
+			if (window.app.state !== 'home') {
+				Post.render(window.db.posts);
+				document.querySelector('.current-section').textContent = 'All articles';
+				Sidebar.get().close();
+				Router.home();
+			}
+		});
+	}
+
+	static get() {
+		return Sidebar._sidebar;
 	}
 
 	static listen() {
 		const sidebar = new Sidebar();
+		Sidebar._sidebar = sidebar;
 		sidebar.btn.addEventListener('click', sidebar.toggle.bind(sidebar));
 		sidebar.btn.addEventListener('keypress', e => {
 			if (e.key === 'Enter') sidebar.toggle.bind(sidebar);
