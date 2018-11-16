@@ -63,7 +63,7 @@ export default class Modal {
 	async destroy() {
 		await this.close();
 		await this.removeListeners();
-		await Router.go(window.app.name, '/');
+		await Router.go(window.app.name, window.location.href.replace(/#.+/, ''));
 	}
 
 	async inject(markup) {
@@ -76,13 +76,15 @@ export default class Modal {
 		setTimeout(() => {
 			this.modal.classList.add('active');
 		}, 20);
-		Router.opened = this;
+		Modal.opened = this;
 		Router.go(`${this.title} - ${window.app.name}`, `#/post/${this.post.slug()}`);
 	}
 
 	static close() {
-		Router.opened.destroy();
-		Router.opened = null;
+		if (Modal.opened instanceof Modal) {
+			Modal.opened.destroy();
+			Modal.opened = null;
+		}
 	}
 
 	async close() {
