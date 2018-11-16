@@ -63,7 +63,7 @@ export default class Modal {
 	async destroy() {
 		await this.close();
 		await this.removeListeners();
-		await Router.go(window.app.name, window.location.href.replace(/#.+/, ''));
+		await Router.back();
 	}
 
 	async inject(markup) {
