@@ -1,12 +1,16 @@
-import {expect} from 'chai';
+import {
+    expect
+} from 'chai';
 import Modal from '../src/modal';
 import Post from '../src/post';
 import Source from '../src/source';
+import config from '../src/config';
 
 let modal;
 
 beforeEach(() => {
     modal = new Modal();
+    window.app = config;
 });
 
 test('opened can be set and retrieved', () => {
@@ -27,7 +31,9 @@ describe('position can be set and retrieved', () => {
         document.body.innerHTML = `<div class="post"></div>`;
         let rect = document.body.querySelector('.post').getBoundingClientRect();
         delete rect.width;
-        expect(() => {modal.from = rect}).to.throw();
+        expect(() => {
+            modal.from = rect
+        }).to.throw();
     });
 
     test('post can be set and retrieved', () => {
@@ -38,7 +44,9 @@ describe('position can be set and retrieved', () => {
 
     test('post fails to be set and retrieved', () => {
         const post = 'Example';
-        expect(() => {modal.setFromPost(post)}).to.throw();
+        expect(() => {
+            modal.setFromPost(post)
+        }).to.throw();
     });
 });
 
@@ -49,6 +57,8 @@ describe('modal can be redered', () => {
     const LOAD_SUCCESS_SRC = 'LOAD_SUCCESS_SRC';
 
     beforeEach(() => {
+
+        window.app = config;
 
         Object.defineProperty(global.Image.prototype, 'src', {
             set(src) {
@@ -65,6 +75,8 @@ describe('modal can be redered', () => {
         post.source = new Source('http://example.com');
         post.source.title = 'News';
         post.image = LOAD_SUCCESS_SRC;
+
+        window.app = config;
     });
 
     test('its gets injected and opened', async () => {
@@ -201,7 +213,9 @@ describe('modal can be redered', () => {
 
         // Create a keyboard event and fire it
         let $modal = document.body.querySelector('.post--modal');
-        let ev = new KeyboardEvent('keypress', {key: 'Escape'});
+        let ev = new KeyboardEvent('keypress', {
+            key: 'Escape'
+        });
         $modal.dispatchEvent(ev);
 
         // Wait for things to run and classes to be added

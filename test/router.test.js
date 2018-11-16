@@ -3,6 +3,7 @@ import Router from "../src/router";
 import mainRoutes from '../src/router/routes';
 import Post from "../src/post";
 import Source from '../src/source';
+import config from "../src/config";
 
 global.jestExpect = global.expect;
 global.expect = chai.expect;
@@ -68,6 +69,8 @@ describe("it listens to events", () => {
         post.content = 'Example content';
         post.source = new Source('http://example.com');
         post.source.title = 'News';
+
+        window.app = config;
     });
 
     test("it listens to popstate event", () => {
