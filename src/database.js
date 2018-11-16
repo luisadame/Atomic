@@ -19,11 +19,18 @@ export default class Database {
 		return this.categories.find(category => category.name === name);
 	}
 
+	categoryBySlug(slug) {
+		return this.categories.find(category => category.slug() === slug);
+	}
+
 	post(name) {
 		return this.posts.find(post => post.title === name);
 	}
 
 	postBySlug(slug) {
 		return this.posts.find(post => post.slug() === slug);
+	}
+	postsBySource(source) {
+		return this.posts.filter(post => post.source === source);
 	}
 }
