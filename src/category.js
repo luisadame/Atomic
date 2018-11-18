@@ -39,7 +39,12 @@ export default class Category {
 	}
 
 	render() {
-		let markup = `<li><a class="category__link" href="#/category/${this.slug()}">${this.name}</a></li>`;
+		let markup = `<li>
+			<a class="category__link" href="#/category/${this.slug()}">${this.name}</a>
+			<ul>
+				${this.sources.map(source => `<li>${source.title}</li>`).join('')}
+			</ul>
+		</li>`;
 		return markup;
 	}
 
