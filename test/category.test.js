@@ -1,4 +1,6 @@
-import {expect} from 'chai';
+import {
+    expect
+} from 'chai';
 import Category from '../src/category';
 import Source from '../src/source';
 
@@ -36,7 +38,7 @@ describe('it can be rendered', () => {
     });
 
     test('category can be redered', () => {
-        expect(category.render()).to.be.equals('<li>Technology</li>');
+        expect(category.render().trim().replace(/(\n|\t)/gm, '')).to.be.equals('<li><a class="category__link" href="#/category/technology">Technology</a><ul></ul></li>');
     });
 
     test('categories can be rendered and injected', () => {
@@ -52,7 +54,7 @@ describe('it can be rendered', () => {
         Category.render(categories);
 
         // Assert render was correct
-        let expectedMarkup = '<div class="categories"><ul><li>Technology</li><li>Politics</li><li>Music</li></ul></div>';
-        expect(document.body.innerHTML.trim()).to.be.equals(expectedMarkup.trim());
+        let expectedMarkup = `<div class="categories"><ul><li><a class="category__link" href="#/category/technology">Technology</a><ul></ul></li><li><a class="category__link" href="#/category/politics">Politics</a><ul></ul></li><li><a class="category__link" href="#/category/music">Music</a><ul></ul></li></ul></div>`;
+        expect(document.body.innerHTML.trim().replace(/(\n|\t)/gm, '')).to.be.equals(expectedMarkup.trim().replace(/(\n|\t)/gm, ''));
     });
 })
