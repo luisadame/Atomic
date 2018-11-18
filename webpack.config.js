@@ -1,7 +1,7 @@
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = (env, options) => {
 	const isDevMode = options.mode !== 'production';
@@ -75,6 +75,17 @@ module.exports = (env, options) => {
 			compress: true,
 			port: 9000,
 			disableHostCheck: true
+		},
+		optimization: {
+			minimizer: [
+				new UglifyJsPlugin({
+					uglifyOptions: {
+						compress: {
+							collapse_vars: false
+						}
+					}
+				})
+			]
 		}
 	};
 };
