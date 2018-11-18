@@ -21,4 +21,15 @@ export default class Source {
 	get title() {
 		return this._title;
 	}
+
+	/**
+	 * Sluggify the title.
+	 */
+	slug() {
+		return this.title.split(' ').map(slice => slice.toLowerCase()).join('-');
+	}
+
+	render() {
+		return `<a href="#/source/${this.slug()}">${this.title}</a>`;
+	}
 }

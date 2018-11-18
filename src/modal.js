@@ -114,7 +114,9 @@ export default class Modal {
 				<div class="post--modal__container">
 					<h2 class="post__title">${this.title}</h2>
 					<div class="post__content">${this.content}</div>
-					<p class="post__source">${this.source.title}</p>
+					<p class="post__source">
+						${this.source.render()} - <a href="${this.source.url}" target="_blank">${this.source.url}</a>
+					</p>
 				</div>
 			</article>
 	    `;
