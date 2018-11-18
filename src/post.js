@@ -98,7 +98,7 @@ export default class Post {
 							${this.title}
 						</a>
 					</h2>
-					<p class="post__source">${this.source.title}</p>
+					<p class="post__source">${this.source.render()}</p>
 				</div>
 			</article>
 		`;
