@@ -42,7 +42,7 @@ export default class Category {
 		let markup = `<li>
 			<a class="category__link" href="#/category/${this.slug()}">${this.name}</a>
 			<ul>
-				${this.sources.map(source => `<li>${source.title}</li>`).join('')}
+				${this.sources.map(source => '<li>' + source.render() + '</li>').join('')}
 			</ul>
 		</li>`;
 		return markup;
