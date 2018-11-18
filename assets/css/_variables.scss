@@ -5,4 +5,6 @@
     --deep-purple: #300159;
     --gradient: linear-gradient(to bottom right, #4D008F, #802BC9);
     --easing: cubic-bezier(0.23, 1, 0.32, 1);
+    --logo-size: 55px;
+    --btn-size: calc(var(--logo-size) / 1.5);
 }

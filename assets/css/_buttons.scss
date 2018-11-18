@@ -4,6 +4,16 @@
     justify-content: center;
     align-items: center;
     border: none;
+    width: var(--btn-size);
+    height: var(--btn-size);
+    cursor: pointer;
+    transition: all 250ms var(--easing);
+    box-shadow: 0 0 3px rgba(0, 0, 0, .1);
+
+    &:hover,
+    &:focus {
+        box-shadow: 0 3px 7px rgba(0, 0, 0, .3)
+    }
 
     &-primary {
         background: var(--accent-orange);
