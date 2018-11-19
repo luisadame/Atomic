@@ -1,6 +1,7 @@
 import {
 	debounce
 } from '../utils';
+import Post from '../post';
 
 export default class Search {
 
@@ -37,8 +38,9 @@ export default class Search {
 	}
 
 	onKeyUp(e) {
-		//eslint-disable-next-line
-        console.log(e);
+		const title = e.target.value;
+		let posts = window.db.searchPosts(title);
+		Post.render(posts);
 	}
 
 	listen() {

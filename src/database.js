@@ -27,6 +27,11 @@ export default class Database {
 		return this.posts.find(post => post.title === name);
 	}
 
+	searchPosts(title) {
+		const pattern = new RegExp(`.*${title}.*`, 'i');
+		return this.posts.filter(post => post.title.match(pattern));
+	}
+
 	source(title) {
 		return this.sources.find(source => source.title === title);
 	}
