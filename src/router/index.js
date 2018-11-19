@@ -72,11 +72,11 @@ export default class Router {
 		this.handleCurrentRoute();
 	}
 
-	handle(e) {
+	async handle(e) {
 		// get urls hash
 		const route = e.target.location.hash.substr(1);
 
-		if (route === '') Modal.close();
+		if (route === '') await Modal.close();
 
 		// hand the hash to the matcher
 		this.match(route);
