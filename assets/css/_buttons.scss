@@ -4,7 +4,7 @@
     justify-content: center;
     align-items: center;
     border: none;
-    width: var(--btn-size);
+    flex: 0 0 var(--btn-size);
     height: var(--btn-size);
     cursor: pointer;
     transition: all 250ms var(--easing);

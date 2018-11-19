@@ -8,9 +8,8 @@
     box-shadow: 0 5px 30px rgba(77, 0, 143, 0.65);
 
     .left {
-        display: grid;
-        grid-column-gap: 5px;
-        grid-auto-flow: column;
+        display: flex;
+        width: 100%;
     }
 }
 
@@ -58,6 +57,7 @@
 .search {
     color: white;
     position: relative;
+    margin: 0 5px;
 
     &__icon {
         position: absolute;
@@ -79,7 +79,7 @@
     }
 
     &.active {
-        width: 100%;
+        flex: 1 0;
         border-radius: 50px;
 
         .search__icon {
