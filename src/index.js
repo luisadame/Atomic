@@ -13,6 +13,7 @@ import Sidebar from './components/sidebar';
 import Search from './components/search';
 import Category from './category';
 import config from './config';
+import Source from './source';
 const db = new Database(repository);
 window.db = db;
 window.app = config;
@@ -25,5 +26,6 @@ Router.listen(routes);
 
 // we'll split this later
 Category.render(db.categories);
+Source.render(db.sources);
 Sidebar.listen();
 Search.listen();

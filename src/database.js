@@ -27,6 +27,10 @@ export default class Database {
 		return this.posts.find(post => post.title === name);
 	}
 
+	source(title) {
+		return this.sources.find(source => source.title === title);
+	}
+
 	postBySlug(slug) {
 		return this.posts.find(post => post.slug() === slug);
 	}

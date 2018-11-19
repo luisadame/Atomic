@@ -1,5 +1,6 @@
 import Post from '../post';
 import Category from '../category';
+import Source from '../source';
 
 export default [{
 	url: '^/post/([a-z-]+)$',
@@ -8,6 +9,10 @@ export default [{
 {
 	url: '^/category/([a-z-]+)$',
 	handler: Category.openCategory
+},
+{
+	url: '^/source/([a-z-]+)$',
+	handler: Source.openSource
 },
 {
 	url: '^/example$',

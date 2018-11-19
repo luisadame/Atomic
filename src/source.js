@@ -1,3 +1,7 @@
+import Sidebar from '../src/components/sidebar';
+import Router from '../src/router';
+import Post from '../src/post';
+
 export default class Source {
 	constructor(url) {
 		this.url = url;
@@ -31,5 +35,47 @@ export default class Source {
 
 	render() {
 		return `<a href="#/source/${this.slug()}">${this.title}</a>`;
+	}
+
+	renderToSidebar() {
+		let markup = `
+		<li>
+			<a class="source__link" href="#/source/${this.slug()}">${this.title}</a>
+		</li>`;
+		return markup;
+	}
+
+	static openSource(title) {
+		let source = window.db.source(title);
+
+		// fetch all posts by source
+		Post.render(window.db.postsBySource(source));
+		document.querySelector('.current-section').textContent = `Source: ${title}`;
+
+		// change app state
+		window.app.state = 'source';
+	}
+
+	static loadSource(e) {
+		e.preventDefault();
+		let title = e.target.textContent;
+		Source.openSource(title);
+		Sidebar.get().close();
+		Router.go(`${title} - ${window.app.name}`, e.target.href);
+	}
+
+	static addListeners() {
+		let source_link = document.querySelectorAll('.source__link');
+		source_link.forEach(link => {
+			link.addEventListener('click', Source.loadSource, false);
+		});
+	}
+
+	static render(sources) {
+		let fragment = [];
+		sources.forEach(sources => fragment.push(sources.renderToSidebar()));
+		let $sources = document.querySelector('.sources');
+		$sources.innerHTML = `<ul>${fragment.join('')}</ul>`;
+		Source.addListeners();
 	}
 }
