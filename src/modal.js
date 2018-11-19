@@ -47,7 +47,11 @@ export default class Modal {
 			el: this.modal,
 			event: 'transitionend',
 			fn: () => {
-				if (!this.opened) Array.from(document.querySelectorAll('.post--modal')).forEach(modal => modal.remove());
+				if (!this.opened) {
+					setTimeout(() => {
+						Array.from(document.querySelectorAll('.post--modal')).forEach(modal => modal.remove());
+					}, 50);
+				}
 			}
 		},
 		{
@@ -80,9 +84,9 @@ export default class Modal {
 		Router.go(`${this.title} - ${window.app.name}`, `#/post/${this.post.slug()}`);
 	}
 
-	static close() {
+	static async close() {
 		if (Modal.opened instanceof Modal) {
-			Modal.opened.destroy();
+			await Modal.opened.destroy();
 			Modal.opened = null;
 		}
 	}
@@ -108,8 +112,14 @@ export default class Modal {
 
 	async render() {
 		return `
-            <article class="post--modal" style="${this.from}">
-				<button class="post--modal__back">Back</button>
+			<article class="post--modal" style="${this.from}">
+				<div class="post--modal__toolbar">
+					<button class="btn post--modal__back"><i class="fas fa-arrow-left"></i></button>
+					<div class="align-right d-flex">
+						<button class="btn post--modal__favorite"><i class="fas fa-heart"></i></button>
+						<button class="btn post--modal__offline"><i class="fas fa-hdd"></i></button>
+					</div>
+				</div>
 				<img class="post__img" src="${this.image}" alt="Article featured image">
 				<div class="post--modal__container">
 					<h2 class="post__title">${this.title}</h2>
