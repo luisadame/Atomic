@@ -138,8 +138,12 @@
             width: var(--btn-size);
             height: var(--btn-size);
 
-            &:last-child {
-                margin-left: 5px;
+            &.checked {
+                color: red;
+            }
+
+            &:nth-child(2) {
+                margin: 0 5px;
             }
         }
     }

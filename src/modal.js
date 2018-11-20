@@ -60,7 +60,33 @@ export default class Modal {
 			fn: e => {
 				if (e.key === 'Escape') this.destroy();
 			}
-		}
+		},
+		{
+			el: this.modal.querySelector('.post--modal__read'),
+			event: 'click',
+			fn: e => {
+				e.preventDefault();
+				this.post.isRead = !this.post.isRead;
+				if (this.post.isRead) {
+					e.target.classList.add('checked');
+				} else {
+					e.target.classList.remove('checked');
+				}
+			}
+		},
+		{
+			el: this.modal.querySelector('.post--modal__favorite'),
+			event: 'click',
+			fn: e => {
+				e.preventDefault();
+				this.post.isFavorite = !this.post.isFavorite;
+				if (this.post.isFavorite) {
+					e.target.classList.add('checked');
+				} else {
+					e.target.classList.remove('checked');
+				}
+			}
+		},
 		];
 	}
 
@@ -114,10 +140,11 @@ export default class Modal {
 		return `
 			<article class="post--modal" style="${this.from}">
 				<div class="post--modal__toolbar">
-					<button class="btn post--modal__back"><i class="fas fa-arrow-left"></i></button>
+					<button title="Go back" class="btn post--modal__back"><i class="fas fa-arrow-left"></i></button>
 					<div class="align-right d-flex">
-						<button class="btn post--modal__favorite"><i class="fas fa-heart"></i></button>
-						<button class="btn post--modal__offline"><i class="fas fa-hdd"></i></button>
+						<button title="Mark as read" class="btn post--modal__read ${this.post.isRead ? 'checked' : ''}"><i class="fas fa-check-circle"></i></button>
+						<button title="Mark as favorite" class="btn post--modal__favorite ${this.post.isFavorite ? 'checked' : ''}"><i class="fas fa-heart"></i></button>
+						<button title="Save to read offline" class="btn post--modal__offline"><i class="fas fa-hdd"></i></button>
 					</div>
 				</div>
 				<img class="post__img" src="${this.image}" alt="Article featured image">

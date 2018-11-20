@@ -4,6 +4,8 @@ import Source from './source';
 export default class Post {
 	constructor(title) {
 		this.title = title;
+		this.isRead = false;
+		this.isFavorite = false;
 	}
 
 	set title(title) {
@@ -38,6 +40,24 @@ export default class Post {
 
 	get image() {
 		return this._image;
+	}
+
+	set isRead(state) {
+		if (typeof state !== 'boolean') throw new Error('Only booleans are allowed for setting read status');
+		this._read = state;
+	}
+
+	get isRead() {
+		return this._read;
+	}
+
+	set isFavorite(state) {
+		if (typeof state !== 'boolean') throw new Error('Only booleans are allowed for setting favorite status');
+		this._favorite = state;
+	}
+
+	get isFavorite() {
+		return this._favorite;
 	}
 
 	/**
