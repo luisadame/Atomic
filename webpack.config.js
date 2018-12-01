@@ -68,6 +68,7 @@ module.exports = (env, options) => {
 			}
 			]
 		},
+		devtool: 'eval-source-map',
 		devServer: {
 			contentBase: path.join(__dirname, 'docs'),
 			publicPath: '/docs/',
