@@ -8,3 +8,7 @@ export const debounce = (fn, time) => {
 		timeout = setTimeout(functionCall, time);
 	};
 };
+
+export const desluggify = slug => {
+	return slug.substr(0, 1).toUpperCase() + slug.substr(1).replace('-', ' ');
+};
