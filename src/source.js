@@ -1,10 +1,21 @@
 import Sidebar from '../src/components/sidebar';
 import Router from '../src/router';
 import Post from '../src/post';
+import Model from './model';
 
-export default class Source {
-	constructor(url) {
+export default class Source extends Model {
+	constructor(url = 'http://example.com') {
+		super();
+		this._database = 'sources';
+		this.attributes = ['url', 'title'];
 		this.url = url;
+	}
+
+	static get attributes() {
+		return {
+			url: 'string',
+			title: 'string'
+		};
 	}
 
 	set url(url) {
@@ -45,6 +56,13 @@ export default class Source {
 		return markup;
 	}
 
+	static fromObject(object) {
+		if (!object.title || !object.url) return;
+		let source = new Source(object.url);
+		source.title = object.title;
+		return source;
+	}
+
 	static openSource(title) {
 		let source = window.db.source(title);
 
@@ -72,10 +90,15 @@ export default class Source {
 	}
 
 	static render(sources) {
-		let fragment = [];
-		sources.forEach(sources => fragment.push(sources.renderToSidebar()));
 		let $sources = document.querySelector('.sources');
-		$sources.innerHTML = `<ul>${fragment.join('')}</ul>`;
-		Source.addListeners();
+		if (sources.length) {
+			let fragment = [];
+			sources.forEach(source => fragment.push(source.renderToSidebar()));
+			$sources.innerHTML = `<ul>${fragment.join('')}</ul>`;
+			Source.addListeners();
+		} else {
+			$sources.innerText = 'No sources added... yet :)';
+			throw new Error('No sources');
+		}
 	}
 }
