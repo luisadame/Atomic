@@ -1,4 +1,5 @@
 export default {
 	name: 'Atomic',
-	state: 'home'
+	state: 'home',
+	proxy: 'http://localhost:3000/?url='
 };
