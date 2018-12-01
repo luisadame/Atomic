@@ -3,7 +3,7 @@ import Category from './category';
 import Source from './source';
 
 
-let source1 = new Source('https://lifehacker.com/');
+let source1 = new Source('https://lifehacker.com/rss');
 source1.title = 'Life Hacker';
 
 let post1 = new Post('How to Stretch If You Hate Stretching');
