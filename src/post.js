@@ -1,11 +1,26 @@
+import Model from './model';
 import Modal from './modal';
 import Source from './source';
 
-export default class Post {
-	constructor(title) {
+export default class Post extends Model {
+	constructor(title = null) {
+		super();
+		this._database = 'posts';
 		this.title = title;
 		this.isRead = false;
 		this.isFavorite = false;
+		this.attributes = ['title', 'image', 'timestamp', 'link', 'content', 'source', 'isRead', 'isFavorite'];
+	}
+
+	static get attributes() {
+		return {
+			title: 'string',
+			image: 'string',
+			timestamp: 'string',
+			link: 'string',
+			content: 'string',
+			source: Source
+		};
 	}
 
 	set title(title) {
@@ -60,6 +75,22 @@ export default class Post {
 		return this._favorite;
 	}
 
+	set link(link) {
+		this._link = link;
+	}
+
+	get link() {
+		return this._link;
+	}
+
+	set timestamp(time) {
+		this._timestamp = time;
+	}
+
+	get timestamp() {
+		return this._timestamp;
+	}
+
 	/**
 	 * It creates an sluggified version from the title.
 	 */
@@ -74,9 +105,10 @@ export default class Post {
 	 * It loads an image.
 	 */
 	loadImage() {
-		return new Promise(res => {
+		return new Promise((res, rej) => {
 			let image = new Image();
 			image.onload = () => res(image);
+			image.onerror = () => rej(new Error(`Failed to load image: ${this.image}`));
 			image.src = this.image;
 		});
 	}
@@ -99,9 +131,13 @@ export default class Post {
 	 * and returns whether a post is "long" or wide.
 	 */
 	async getPostSize() {
-		let imageSize = await this.getImageSize();
-		let ratio = +(imageSize.w / imageSize.h).toFixed(2);
-		return ratio < 1 ? 'long' : '';
+		try {
+			let imageSize = await this.getImageSize();
+			let ratio = +(imageSize.w / imageSize.h).toFixed(2);
+			return ratio < 1 ? 'long' : '';
+		} catch (e) {
+			return 'wide';
+		}
 	}
 
 	/**
@@ -111,7 +147,7 @@ export default class Post {
 		const size = await this.getPostSize();
 		return `
 			<article class="post ${size}">
-				<img class="post__img" src="${this.image}" alt="Article featured image">
+				${size !== 'wide' ? `<img class="post__img" src="${this.image}" alt="Article featured image">` : ''}
 				<div class="post__content">
 					<h2 class="post__title">
 						<a href="/post/${this.slug()}">
@@ -135,6 +171,22 @@ export default class Post {
 		return parent;
 	}
 
+	static fromObject2(object) {
+		let post = new Post();
+		post._id = object._id;
+		post.title = object.title;
+		post.content = object.content;
+		post.image = object.image;
+		post.link = object.link;
+		post.timestamp = object.timestamp;
+		let source = new Source(object.url);
+		source.title = object.title;
+		post.source = source;
+		post.isFavorite = object.isFavorite;
+		post.isRead = object.isRead;
+		return post;
+	}
+
 	/**
 	 * When a post title is clicked this is fired, we'll
 	 * look in the database for the post, retrieve it.
@@ -144,9 +196,11 @@ export default class Post {
 	 */
 	static loadPost(e) {
 		e.preventDefault();
-		let post = window.db.post(e.target.textContent.trim());
-		let position = Post.getParent(e.target).getBoundingClientRect();
-		Modal.from(post, position).init();
+		window.db.post(e.target.textContent.trim()).then(post => {
+			post = Post.fromObject2(post);
+			let position = Post.getParent(e.target).getBoundingClientRect();
+			Modal.from(post, position).init();
+		});
 	}
 
 	/**
@@ -165,16 +219,20 @@ export default class Post {
 	}
 
 	static async render(posts) {
-		let fragment = [];
-		for (let post of posts) {
-			let markup = await post.render();
-			fragment.push(markup);
-		}
 		let $posts = document.querySelector('.posts');
-		$posts.innerHTML = fragment.join('');
-		const postTitles = document.querySelectorAll('.post__title');
-		postTitles.forEach(title =>
-			title.addEventListener('click', Post.loadPost, false)
-		);
+		if (!posts.length) {
+			$posts.innerText = 'Hi! Please add a source of news if you want to see them :)';
+			return;
+		}
+		let reg = new RegExp(/\r\n|\n|\r|\t|\\/, 'gm');
+		let promises = posts.map(post => post.render());
+		let fragment = Promise.all(promises);
+		fragment.then(result => {
+			$posts.innerHTML = result.join('').trim().replace(reg, '');
+			const postTitles = document.querySelectorAll('.post__title');
+			postTitles.forEach(title =>
+				title.addEventListener('click', Post.loadPost, false)
+			);
+		});
 	}
 }
