@@ -1,0 +1,49 @@
+#modal {
+    background: var(--shade-6);
+    color: white;
+    position: absolute;
+    max-width: 400px;
+    width: 80%;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 10px;
+    box-shadow: 0 4px 16px -3px var(--deep-purple);
+
+    header {
+        padding: 18px 1em;
+        h2 {margin: 0;}
+    }
+
+    .container {
+        padding: 1em;
+        background: var(--shade-0);
+        color: hsl(272, 8%, 40%);
+
+        input {
+            border-radius: 25px;
+            border: none;
+            padding: 10px 1em;
+            caret-color: inherit;
+            color: inherit;
+        }
+    }
+
+    .submit {
+        padding: 10px 1em;
+    }
+
+    .modal__btn {
+        border-radius: 70px;
+        border: none;
+        padding: 7px 1em;
+        cursor: pointer;
+        background: var(--shade-7);
+        color: white;
+
+        &--link {
+            background: none;
+            color: hsl(272, 8%, 85%);
+        }
+    }
+}
