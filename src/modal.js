@@ -22,9 +22,9 @@ export default class Modal {
 
 	setFromPost(post) {
 		if (!(post instanceof Post)) throw new Error('post should be of type Post');
-		for (let property in post) {
-			this[property.substr(1)] = post[property];
-		}
+		// for (let property in post) {
+		// 	this[property.substr(1)] = post[property];
+		// }
 		this.post = post;
 	}
 
@@ -147,12 +147,12 @@ export default class Modal {
 						<button title="Save to read offline" class="btn post--modal__offline"><i class="fas fa-hdd"></i></button>
 					</div>
 				</div>
-				<img class="post__img" src="${this.image}" alt="Article featured image">
+				<img class="post__img" src="${this.post.image}" alt="Article featured image">
 				<div class="post--modal__container">
-					<h2 class="post__title">${this.title}</h2>
-					<div class="post__content">${this.content}</div>
+					<h2 class="post__title">${this.post.title}</h2>
+					<div class="post__content">${this.post.content}</div>
 					<p class="post__source">
-						${this.source.render()} - <a href="${this.source.url}" target="_blank">${this.source.url}</a>
+						${this.post.source.render()} - <a href="${this.post.source.url}" target="_blank">${this.post.source.url}</a>
 					</p>
 				</div>
 			</article>
