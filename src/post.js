@@ -146,7 +146,7 @@ export default class Post extends Model {
 	async render() {
 		const size = await this.getPostSize();
 		return `
-			<article class="post ${size}">
+			<article class="post ${size}" data-id="${this._id}">
 				${size !== 'wide' ? `<img class="post__img" src="${this.image}" alt="Article featured image">` : ''}
 				<div class="post__content">
 					<h2 class="post__title">
@@ -196,9 +196,11 @@ export default class Post extends Model {
 	 */
 	static loadPost(e) {
 		e.preventDefault();
-		window.db.post(e.target.textContent.trim()).then(post => {
+		let parent = Post.getParent(e.target);
+		let id = parent.dataset.id;
+		window.db.postById(id).then(post => {
 			post = Post.fromObject2(post);
-			let position = Post.getParent(e.target).getBoundingClientRect();
+			let position = parent.getBoundingClientRect();
 			Modal.from(post, position).init();
 		});
 	}
