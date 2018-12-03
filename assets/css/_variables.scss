@@ -7,4 +7,9 @@
     --easing: cubic-bezier(0.23, 1, 0.32, 1);
     --logo-size: 55px;
     --btn-size: calc(var(--logo-size) / 1.5);
+
+    @for $i from 0 through 9 {
+        $percent: 95 - (10 * $i);
+        --shade-#{$i}: hsl(272, 100%, #{$percent}%);
+    }
 }
