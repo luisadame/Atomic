@@ -87,6 +87,15 @@ export default class Database {
 		return this.sources.find(source => source.title === title);
 	}
 
+	postById(id) {
+		return this.posts.get(id)
+			.then(function (doc) {
+				return doc;
+			}).catch(function (err) {
+				console.error(err);
+			});
+	}
+
 	postBySlug(slug) {
 		let name = desluggify(slug);
 		return this.posts.find({
