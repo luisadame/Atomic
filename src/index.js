@@ -47,6 +47,7 @@ async function init() {
 	});
 	let posts = parser.posts();
 	db.posts.bulkDocs(posts.map(post => post.toObject())).then(result => {
+		posts = posts.sort(Post.sortByDate);
 		Post.render(posts).catch(e => console.error(e));
 	}).catch(e => {
 		console.error(e);

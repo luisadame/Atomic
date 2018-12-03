@@ -146,7 +146,7 @@ export default class Post extends Model {
 	async render() {
 		const size = await this.getPostSize();
 		return `
-			<article class="post ${size}">
+			<article class="post ${size}" data-id="${this._id}">
 				${size !== 'wide' ? `<img class="post__img" src="${this.image}" alt="Article featured image">` : ''}
 				<div class="post__content">
 					<h2 class="post__title">
@@ -179,12 +179,28 @@ export default class Post extends Model {
 		post.image = object.image;
 		post.link = object.link;
 		post.timestamp = object.timestamp;
-		let source = new Source(object.url);
-		source.title = object.title;
+		let source = new Source(object.source.url);
+		source.title = object.source.title;
 		post.source = source;
 		post.isFavorite = object.isFavorite;
 		post.isRead = object.isRead;
 		return post;
+	}
+
+	static sortByDate(post1, post2, rev = false) {
+		return !rev ? new Date(post2.timestamp) - new Date(post1.timestamp) : new Date(post1.timestamp) - new Date(post2.timestamp);
+	}
+
+	static all() {
+		return window.db.posts.allDocs({
+			include_docs: true
+		})
+			.then(result => {
+				let posts = result.docs.map(Post.fromObject2);
+				posts = posts.sort(Post.sortByDate);
+				return posts;
+			})
+			.catch(error => console.error(error));
 	}
 
 	/**
@@ -196,9 +212,11 @@ export default class Post extends Model {
 	 */
 	static loadPost(e) {
 		e.preventDefault();
-		window.db.post(e.target.textContent.trim()).then(post => {
+		let parent = Post.getParent(e.target);
+		let id = parent.dataset.id;
+		window.db.postById(id).then(post => {
 			post = Post.fromObject2(post);
-			let position = Post.getParent(e.target).getBoundingClientRect();
+			let position = parent.getBoundingClientRect();
 			Modal.from(post, position).init();
 		});
 	}

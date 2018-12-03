@@ -3,6 +3,7 @@ import find from 'pouchdb-find';
 import {
 	desluggify
 } from '../src/utils';
+import Post from './post';
 
 export default class Database {
 	constructor(repository) {
@@ -80,11 +81,29 @@ export default class Database {
 
 	searchPosts(title) {
 		const pattern = new RegExp(`.*${title}.*`, 'i');
-		return this.posts.filter(post => post.title.match(pattern));
+		return this.posts.find({
+			selector: {
+				title: {
+					$regex: pattern
+				}
+			}
+		}).then(result => {
+			let posts = result.docs.map(Post.fromObject2);
+			return posts;
+		}).catch(error => console.error(error));
 	}
 
 	source(title) {
 		return this.sources.find(source => source.title === title);
+	}
+
+	postById(id) {
+		return this.posts.get(id)
+			.then(function (doc) {
+				return doc;
+			}).catch(function (err) {
+				console.error(err);
+			});
 	}
 
 	postBySlug(slug) {
