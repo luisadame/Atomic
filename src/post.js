@@ -196,7 +196,9 @@ export default class Post extends Model {
 			include_docs: true
 		})
 			.then(result => {
-				let posts = result.docs.map(Post.fromObject2);
+				let posts = result.rows.map(row => {
+					return Post.fromObject2(row.doc);
+				});
 				posts = posts.sort(Post.sortByDate);
 				return posts;
 			})
