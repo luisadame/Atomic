@@ -16,18 +16,27 @@ export default class Feed {
 		return feed ? Promise.resolve(feed.href) : Promise.reject();
 	}
 
+	static mergeURLS(host, feed) {
+		if(!feed.includes(host)) {
+			return host.replace(/\/$/, '') + '/' + feed.replace(/^\//, '');
+		}
+		return feed;
+	}
+
 	static async validate(url) {
 		return this.fetch(config.proxy + url)
 			.then(data => {
 				if (this.isXML(data)) {
 					return data;
 				} else {
-					this.containsFeedUrl(data)
-						.then(url => {
-							this.fetch(url)
+					return this.containsFeedUrl(data)
+						.then(feed => {
+							feed = new URL(feed);
+							let feedURL = this.mergeURLS(url, feed.pathname);
+							return this.fetch(config.proxy + feedURL)
 								.then(data => {
 									if (this.isXML(data)) {
-										return data;
+										return {url: feedURL, data: data};
 									} else {
 										Promise.reject('The feed type is not compatible.');
 									}

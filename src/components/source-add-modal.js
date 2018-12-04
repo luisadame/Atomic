@@ -35,10 +35,15 @@ export default class SourceModal extends Modal {
 		if ($sourceInput.checkValidity()) {
 			FeedValidator.validate($sourceInput.value)
 				.then(data => {
+					let url;
+					if (typeof data === 'object') {
+						url = data.url;
+						data = data.data;
+					}
 					this.getFeedInfo(data)
 						.then(info => {
 							this.info = Object.assign({}, info, {
-								url: $sourceInput.value
+								url: url ? url : $sourceInput.value
 							});
 							let markup = `${info.title} - ${info.description}`;
 							$feedInfo.innerHTML = markup;
