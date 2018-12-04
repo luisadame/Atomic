@@ -90,7 +90,9 @@ export default class Database {
 		}).then(result => {
 			let posts = result.docs.map(Post.fromObject2);
 			return posts;
-		}).catch(error => console.error(error));
+		}).catch(error => {
+			throw new Error(error);
+		});
 	}
 
 	source(title) {
@@ -102,7 +104,7 @@ export default class Database {
 			.then(function (doc) {
 				return doc;
 			}).catch(function (err) {
-				console.error(err);
+				throw new Error(err);
 			});
 	}
 
