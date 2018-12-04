@@ -147,8 +147,8 @@ export default class Modal {
 						<button title="Save to read offline" class="btn post--modal__offline"><i class="fas fa-hdd"></i></button>
 					</div>
 				</div>
-				<img class="post__img" src="${this.post.image}" alt="Article featured image">
-				<div class="post--modal__container">
+				${ this.post.image ? `<img class="post__img" src="${this.post.image}" alt="Article featured image">` : '' }
+				<div class="post--modal__container ${!this.post.image ? 'no-image' : ''}">
 					<h2 class="post__title">${this.post.title}</h2>
 					<div class="post__content">${this.post.content}</div>
 					<p class="post__source">

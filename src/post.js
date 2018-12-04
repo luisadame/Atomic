@@ -179,8 +179,8 @@ export default class Post extends Model {
 		post.image = object.image;
 		post.link = object.link;
 		post.timestamp = object.timestamp;
-		let source = new Source(object.source.url);
-		source.title = object.source.title;
+		let source = new Source(object.source._url);
+		source.title = object.source._title;
 		post.source = source;
 		post.isFavorite = object.isFavorite;
 		post.isRead = object.isRead;
@@ -200,7 +200,9 @@ export default class Post extends Model {
 				posts = posts.sort(Post.sortByDate);
 				return posts;
 			})
-			.catch(error => console.error(error));
+			.catch(error => {
+				throw new Error(error);
+			});
 	}
 
 	/**
