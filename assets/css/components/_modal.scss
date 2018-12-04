@@ -12,7 +12,10 @@
 
     header {
         padding: 18px 1em;
-        h2 {margin: 0;}
+
+        h2 {
+            margin: 0;
+        }
     }
 
     .container {
@@ -40,6 +43,11 @@
         cursor: pointer;
         background: var(--shade-7);
         color: white;
+
+        &:disabled {
+            color: #8c8a8a;
+            cursor: not-allowed;
+        }
 
         &--link {
             background: none;
