@@ -119,7 +119,9 @@ export default class Database {
 		});
 	}
 	postsBySource(source) {
-		return this.posts.filter(post => post.source === source);
+		return Post.all().then(posts => {
+			return posts.filter(post => post.source === source);
+		});
 	}
 
 	static async save(data, database) {

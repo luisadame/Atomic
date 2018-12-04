@@ -11,7 +11,7 @@ import routes from './router/routes';
 import Post from './post';
 import Sidebar from './components/sidebar';
 import Search from './components/search';
-// import Category from './category';
+import Category from './category';
 import config from './config';
 import Source from './source';
 import Parser from './parser';
@@ -65,7 +65,7 @@ init();
 Router.listen(routes);
 
 // we'll split this later
-// Category.render(db.categories);
+Category.render(db.categories);
 Sidebar.listen();
 Search.listen();
 SourceModal.listen();
