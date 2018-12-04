@@ -53,7 +53,7 @@ export default class Parser extends DOMParser {
 		return data;
 	}
 
-	static feedInfo() {
+	feedInfo() {
 		const dom = this.parseFromString(this.data, 'text/xml');
 		return {
 			title: dom.querySelector('title'),
