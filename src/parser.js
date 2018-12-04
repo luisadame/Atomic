@@ -19,7 +19,7 @@ export default class Parser extends DOMParser {
 	}
 
 	strip(html) {
-		let doc = new DOMParser().parseFromString(html, 'text/html');
+		let doc = this.parseFromString(html, 'text/html');
 		return doc.body.textContent || '';
 	}
 
@@ -51,6 +51,14 @@ export default class Parser extends DOMParser {
 		data.source.title = this.source.title;
 		// return it
 		return data;
+	}
+
+	static feedInfo() {
+		const dom = this.parseFromString(this.data, 'text/xml');
+		return {
+			title: dom.querySelector('title'),
+			description: dom.querySelector('description')
+		};
 	}
 
 	parsePosts() {
