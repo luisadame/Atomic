@@ -3,31 +3,54 @@ import {
 	debounce
 } from '../utils';
 import FeedValidator from '../validation/feed';
+import Source from '../source';
 
 export default class SourceModal extends Modal {
 
-	async getFeedInfo(xml) {
-		try {
-			const dom = new DOMParser().parseFromString(xml, 'text/xml');
-			let info = {
-				title: dom.querySelector('title'),
-				description: dom.querySelector('description')
-			};
-			Promise.resolve(info);
-		} catch(error) {
-			Promise.reject(error);
-		}
+	getFeedInfo(xml) {
+		return new Promise((resolve, reject) => {
+			try {
+				const dom = new DOMParser().parseFromString(xml, 'text/xml');
+				let info = {
+					title: dom.querySelector('title').textContent,
+					description: dom.querySelector('description').textContent
+				};
+				resolve(info);
+			} catch (error) {
+				reject(error);
+			}
+		});
 	}
 
 	proceed() {
-		let $sourceInput = document.getElementById('source-url');
-		if($sourceInput.checkValidity()) {
+		let source = new Source(this.info.url);
+		source.title = this.info.title;
+		source.save();
+		this.close();
+	}
 
+	validate() {
+		let $sourceInput = document.getElementById('source-url');
+		let $feedInfo = document.querySelector('.feed-info');
+		if ($sourceInput.checkValidity()) {
 			FeedValidator.validate($sourceInput.value)
 				.then(data => {
 					this.getFeedInfo(data)
-						.then()
-				})
+						.then(info => {
+							this.info = Object.assign({}, info, {
+								url: $sourceInput.value
+							});
+							let markup = `${info.title} - ${info.description}`;
+							$feedInfo.innerHTML = markup;
+							this.$ok.removeAttribute('disabled');
+						})
+						.catch(error => {
+							throw new Error(error);
+						});
+				}).catch(error => {
+					throw new Error(error);
+				});
+
 		} else {
 			alert('show errors');
 		}
@@ -36,7 +59,7 @@ export default class SourceModal extends Modal {
 	open() {
 		super.open();
 		let $sourceInput = document.getElementById('source-url');
-		$sourceInput.addEventListener('input', debounce(this.displaySourceInfo, 200));
+		$sourceInput.addEventListener('input', debounce(this.validate.bind(this), 300));
 	}
 
 	static listen() {
@@ -66,7 +89,7 @@ export default class SourceModal extends Modal {
 			</div>
 			<div class="feed-info"></div>
             <div class="submit">
-                <button class="js-ok modal__btn">Add</button>
+                <button disabled class="js-ok modal__btn">Add</button>
                 <button class="js-cancel modal__btn modal__btn--link">Cancel</button>
             </div>
         `;
