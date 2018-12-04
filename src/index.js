@@ -11,7 +11,7 @@ import routes from './router/routes';
 import Post from './post';
 import Sidebar from './components/sidebar';
 import Search from './components/search';
-import Category from './category';
+// import Category from './category';
 import config from './config';
 import Source from './source';
 import Parser from './parser';
@@ -22,6 +22,7 @@ window.app = config;
 
 async function init() {
 	let sources;
+
 	try {
 		sources = await db.sources.allDocs({
 			include_docs: true
@@ -36,21 +37,25 @@ async function init() {
 			return;
 		}
 	}
-	let source = sources[0];
-	let data = await fetch(config.proxy + source.url, {
-		mode: 'cors',
-	});
-	data = await data.text();
-	let parser = new Parser({
-		data: data,
-		source: source
-	});
-	let posts = parser.posts();
-	db.posts.bulkDocs(posts.map(post => post.toObject())).then(result => {
+	let posts = [];
+	for (let source of sources) {
+		let data = await fetch(config.proxy + source.url, {
+			mode: 'cors',
+		});
+		data = await data.text();
+		let parser = new Parser({
+			data: data,
+			source: source
+		});
+		posts.push(...parser.posts());
+	}
+	db.posts.bulkDocs(posts.map(post => post.toObject())).then(() => {
 		posts = posts.sort(Post.sortByDate);
-		Post.render(posts).catch(e => console.error(e));
+		Post.render(posts).catch(e => {
+			throw new Error(e);
+		});
 	}).catch(e => {
-		console.error(e);
+		throw new Error(e);
 	});
 }
 
