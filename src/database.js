@@ -101,7 +101,17 @@ export default class Database {
 	}
 
 	source(title) {
-		return this.sources.find(source => source.title === title);
+		title = desluggify(title);
+		return this.sources.find({
+			selector: {
+				$or: [
+					{ title: { $regex: new RegExp(title, 'gi') } },
+					{ url: { $regex: new RegExp(title, 'gi') } }
+				]
+			}
+		}).then(result => {
+			return result.docs[0];
+		});
 	}
 
 	postById(id) {
@@ -126,8 +136,14 @@ export default class Database {
 		});
 	}
 	postsBySource(source) {
-		return Post.all().then(posts => {
-			return posts.filter(post => post.source === source);
+		return this.posts.find({
+			selector: {
+				'source._url': source.url
+			}
+		}).then(results => {
+			return results.docs.map(Post.fromObject);
+		}).catch(e => {
+			throw new Error(e);
 		});
 	}
 

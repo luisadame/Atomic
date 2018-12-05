@@ -77,14 +77,16 @@ export default class Source extends Model {
 	}
 
 	static openSource(title) {
-		let source = window.db.source(title);
+		window.db.source(title).then(source => {
+			// fetch all posts by source
+			window.db.postsBySource(source).then(posts => {
+				Post.render(posts);
+				document.querySelector('.current-section').textContent = `Source: ${title}`;
 
-		// fetch all posts by source
-		Post.render(window.db.postsBySource(source));
-		document.querySelector('.current-section').textContent = `Source: ${title}`;
-
-		// change app state
-		window.app.state = 'source';
+				// change app state
+				window.app.state = 'source';
+			});
+		});
 	}
 
 	static loadSource(e) {
