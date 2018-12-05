@@ -1,6 +1,6 @@
 export default class Modal {
 	constructor(html) {
-		this.cloak = document.querySelector('.sidebar__cloak');
+		this.cloak = document.querySelector('.cloak');
 		this.content = html;
 	}
 
@@ -9,6 +9,7 @@ export default class Modal {
 		this.$cancel = document.querySelector('.modal__btn.js-cancel');
 		this.$cancel.addEventListener('click', this.close);
 		this.$ok.addEventListener('click', this.proceed.bind(this));
+		this.cloak.addEventListener('click', this.close);
 	}
 
 	proceed() {
@@ -33,6 +34,10 @@ export default class Modal {
 		this.cloak.classList.toggle('open');
 		let markup = this.wrapper(this.content);
 		document.body.insertAdjacentHTML('beforeend', markup);
+		let modal = document.getElementById('modal');
+		setTimeout(() => {
+			modal.classList.add('open');
+		}, 10);
 		Modal.instance = this;
 		this.addlisteners();
 	}
@@ -40,8 +45,12 @@ export default class Modal {
 	close() {
 		// get modal
 		let modal = document.getElementById('modal');
+		modal.classList.remove('open');
 		// close it
-		modal.remove();
-		Modal.instance = null;
+		setTimeout(() => {
+			Modal.instance.cloak.classList.toggle('open');
+			modal.remove();
+			Modal.instance = null;
+		}, 270);
 	}
 }
