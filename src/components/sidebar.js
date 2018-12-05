@@ -1,5 +1,5 @@
-import Post from '../post';
 import Router from '../router';
+import Home from '../pages/home';
 
 export default class Sidebar {
 	constructor() {
@@ -50,12 +50,10 @@ export default class Sidebar {
 		this.title.addEventListener('click', e => {
 			e.preventDefault();
 			if (window.app.state !== 'home') {
-				Post.all().then(posts => {
-					Post.render(posts);
-					document.querySelector('.current-section').textContent = 'All articles';
-					Sidebar.get().close();
-					Router.home();
-				});
+				document.querySelector('.current-section').textContent = 'All articles';
+				Sidebar.get().close();
+				Router.home();
+				Home.init();
 			}
 		});
 	}

@@ -4,6 +4,7 @@ import {
 } from '../utils';
 import FeedValidator from '../validation/feed';
 import Source from '../source';
+import Home from '../pages/home';
 
 export default class SourceModal extends Modal {
 
@@ -26,7 +27,9 @@ export default class SourceModal extends Modal {
 		let source = new Source(this.info.url);
 		source.title = this.info.title;
 		if (source.isUnique()) {
-			source.save();
+			source.save().then(() => {
+				Home.init();
+			});
 		}
 		this.close();
 	}
