@@ -173,6 +173,10 @@
         transition: all 250ms var(--easing) 300ms;
     }
 
+    .post__source {
+        color: var(--accent-orange);
+    }
+
     &.active {
         border-radius: 0;
         background: rgb(243, 243, 243);
