@@ -7,8 +7,12 @@ export default class Source extends Model {
 	constructor(url = 'http://example.com') {
 		super();
 		this._database = 'sources';
-		this.attributes = ['url', 'title'];
+		this.attributes = ['_id', 'url', 'title'];
 		this.url = url;
+	}
+
+	get _id() {
+		return this.url;
 	}
 
 	static get attributes() {
@@ -52,13 +56,8 @@ export default class Source extends Model {
 	 * Check if a source is unique in the database.
 	 */
 	isUnique() {
-		return window.db[this._database].find({
-			selector: {
-				title: this.title,
-				url: this.url
-			}
-		}).then(results => {
-			return results.docs.length > 0;
+		return window.db[this._database].get(this._id).then(doc => {
+			return !!doc;
 		});
 	}
 

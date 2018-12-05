@@ -9,7 +9,11 @@ export default class Post extends Model {
 		this.title = title;
 		this.isRead = false;
 		this.isFavorite = false;
-		this.attributes = ['title', 'image', 'timestamp', 'link', 'content', 'source', 'isRead', 'isFavorite'];
+		this.attributes = ['_id', 'title', 'image', 'timestamp', 'link', 'content', 'source', 'isRead', 'isFavorite'];
+	}
+
+	get _id() {
+		return this.link;
 	}
 
 	static get attributes() {
@@ -160,6 +164,13 @@ export default class Post extends Model {
 		`;
 	}
 
+	/** Check if post is unique in the database */
+	isUnique() {
+		return window.db[this._database].get(this._id()).then(doc => {
+			return !!doc;
+		});
+	}
+
 	/**
 	 * It returns the node element with class "post"
 	 * that is a parent of the element where the event occurs.
@@ -171,9 +182,8 @@ export default class Post extends Model {
 		return parent;
 	}
 
-	static fromObject2(object) {
+	static fromObject(object) {
 		let post = new Post();
-		post._id = object._id;
 		post.title = object.title;
 		post.content = object.content;
 		post.image = object.image;
@@ -182,8 +192,8 @@ export default class Post extends Model {
 		let source = new Source(object.source._url);
 		source.title = object.source._title;
 		post.source = source;
-		post.isFavorite = object.isFavorite;
-		post.isRead = object.isRead;
+		post.isFavorite = object.isFavorite ? object.isFavorite : false;
+		post.isRead = object.isRead ? object.isRead : false;
 		return post;
 	}
 
@@ -197,7 +207,7 @@ export default class Post extends Model {
 		})
 			.then(result => {
 				let posts = result.rows.map(row => {
-					return Post.fromObject2(row.doc);
+					return Post.fromObject(row.doc);
 				});
 				posts = posts.sort(Post.sortByDate);
 				return posts;
@@ -219,7 +229,7 @@ export default class Post extends Model {
 		let parent = Post.getParent(e.target);
 		let id = parent.dataset.id;
 		window.db.postById(id).then(post => {
-			post = Post.fromObject2(post);
+			post = Post.fromObject(post);
 			let position = parent.getBoundingClientRect();
 			Modal.from(post, position).init();
 		});
