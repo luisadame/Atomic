@@ -1,11 +1,12 @@
 import Post from '../post';
 import Source from '../source';
 import Parser from '../parser';
+import Loader from '../components/Loader';
 
 export default class Home {
 	static async init() {
 		let sources;
-
+		Loader.toggle();
 		try {
 			sources = await window.db.sources.allDocs({
 				include_docs: true
@@ -16,6 +17,7 @@ export default class Home {
 			// eslint-disable-next-line no-console
 			console.error(e);
 			if (!sources.length) {
+				Loader.toggle();
 				Post.render([]);
 				return;
 			}
@@ -35,9 +37,11 @@ export default class Home {
 
 		window.db.posts.bulkDocs(posts.map(post => post.toObject())).then(() => {
 			posts = posts.sort(Post.sortByDate);
-			Post.render(posts).catch(e => {
-				throw new Error(e);
-			});
+			Post.render(posts)
+				.then(Loader.toggle())
+				.catch(e => {
+					throw new Error(e);
+				});
 		}).catch(e => {
 			throw new Error(e);
 		});

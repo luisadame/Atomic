@@ -2,6 +2,7 @@ import {
 	debounce
 } from '../utils';
 import Post from '../post';
+import Loader from './Loader';
 
 export default class Search {
 
@@ -39,15 +40,16 @@ export default class Search {
 
 	onKeyUp(e) {
 		const title = e.target.value;
-		// if (title.length > 0) {
-		window.db.searchPosts(title).then(posts => {
-			Post.render(posts);
-		});
-		// } else {
-		// 	Post.all().then(posts => {
-		// 		Post.render(posts);
-		// 	});
-		// }
+		Loader.toggle();
+		if (title.length > 0) {
+			window.db.searchPosts(title).then(posts => {
+				Post.render(posts).then(Loader.toggle());
+			});
+		} else {
+			Post.all().then(posts => {
+				Post.render(posts).then(Loader.toggle());
+			});
+		}
 	}
 
 	listen() {
