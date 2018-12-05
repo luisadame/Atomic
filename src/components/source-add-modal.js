@@ -25,7 +25,9 @@ export default class SourceModal extends Modal {
 	proceed() {
 		let source = new Source(this.info.url);
 		source.title = this.info.title;
-		source.save();
+		if (source.isUnique()) {
+			source.save();
+		}
 		this.close();
 	}
 

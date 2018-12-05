@@ -48,6 +48,20 @@ export default class Source extends Model {
 		return `<a href="#/source/${this.slug()}">${this.title}</a>`;
 	}
 
+	/**
+	 * Check if a source is unique in the database.
+	 */
+	isUnique() {
+		return window.db[this._database].find({
+			selector: {
+				title: this.title,
+				url: this.url
+			}
+		}).then(results => {
+			return results.docs.length > 0;
+		});
+	}
+
 	renderToSidebar() {
 		let markup = `
 		<li>

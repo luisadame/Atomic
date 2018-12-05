@@ -16,7 +16,13 @@ export default class Database {
 		});
 		this.posts.createIndex({
 			index: {
-				fields: ['title']
+				fields: ['title', 'timestamp', 'source']
+			}
+		});
+
+		this.sources.createIndex({
+			index: {
+				fields: ['title', 'url']
 			}
 		});
 	}
