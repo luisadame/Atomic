@@ -201,3 +201,11 @@
         transition: all 200ms var(--easing);
     }
 }
+
+.cloak {
+    @extend .sidebar__cloak;
+    &.open {
+        visibility: visible;
+        opacity: 1;
+    }
+}
