@@ -6,8 +6,7 @@ import {
 import Post from './post';
 
 export default class Database {
-	constructor(repository) {
-		this.repository = repository;
+	constructor() {
 		this.driver = PouchDB;
 		const models = ['posts', 'categories', 'sources'];
 		PouchDB.plugin(find);
@@ -16,7 +15,7 @@ export default class Database {
 		});
 		this.posts.createIndex({
 			index: {
-				fields: ['title', 'timestamp', 'source']
+				fields: ['title', 'timestamp', 'source', 'link']
 			}
 		});
 
@@ -64,7 +63,7 @@ export default class Database {
 	}
 
 	get categories() {
-		return this.repository.categories;
+		return [];
 	}
 
 	category(name) {
@@ -94,7 +93,7 @@ export default class Database {
 				}
 			}
 		}).then(result => {
-			let posts = result.docs.map(Post.fromObject2);
+			let posts = result.docs.map(Post.fromObject);
 			return posts;
 		}).catch(error => {
 			throw new Error(error);
