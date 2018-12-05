@@ -19,6 +19,10 @@
 
     &__content {
         padding: 10px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
     }
 
     &__title {
@@ -34,8 +38,9 @@
     }
 
     &__source {
-        color: #FB5E0C;
+        color: #FFD01D;
         margin: 0;
+        font-weight: bold;
         font-size: .7em;
 
         a {
