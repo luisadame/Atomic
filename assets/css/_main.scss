@@ -12,6 +12,7 @@ body {
     font-family: 'Nunito', Arial, Helvetica, sans-serif;
     background: var(--bg);
     padding: var(--main-padding);
+    min-width: 350px;
 
     &.modal-opened {
         overflow-y: hidden;
