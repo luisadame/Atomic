@@ -138,6 +138,9 @@
         background: linear-gradient(to bottom, rgba(0, 0, 0, .3), transparent);
         display: flex;
         justify-content: space-between;
+        opacity: 0;
+        transform: translate3d(-40%, 0%, 0);
+        transition: all 250ms var(--easing) 370ms;
 
         button {
             width: var(--btn-size);
@@ -188,7 +191,7 @@
         min-height: 100vh !important;
         overflow-y: auto;
 
-        & .post__content {
+        & .post__content, & .post--modal__toolbar {
             opacity: 1;
             transform: none;
         }
@@ -201,6 +204,11 @@
 
         & .post__content {
             transition: none;
+        }
+
+        & .post--modal__toolbar {
+            transition-delay: 0ms;
+            opacity: 0;
         }
     }
 }
