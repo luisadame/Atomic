@@ -117,7 +117,9 @@ export default class Database {
 		let name = desluggify(slug);
 		return this.posts.find({
 			selector: {
-				title: name
+				title: {
+					$regex: new RegExp(name, 'gi')
+				}
 			}
 		}).then(result => {
 			return result.docs[0];
