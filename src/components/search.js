@@ -40,9 +40,9 @@ export default class Search {
 	onKeyUp(e) {
 		const title = e.target.value;
 		// if (title.length > 0) {
-			window.db.searchPosts(title).then(posts => {
-				Post.render(posts);
-			});
+		window.db.searchPosts(title).then(posts => {
+			Post.render(posts);
+		});
 		// } else {
 		// 	Post.all().then(posts => {
 		// 		Post.render(posts);
