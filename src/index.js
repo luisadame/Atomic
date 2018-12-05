@@ -1,71 +1,68 @@
+/**
+ * Static assets.
+ */
 import 'babel-polyfill';
 import '../assets/css/app.scss';
 import '../assets/img/logo.svg';
 import './plugins/fontawesome';
 
-// database
-import repository from './repository.js';
+/**
+ * Config and routes.
+ */
+import config from './config';
+import routes from './router/routes';
+
+/**
+ * Classes needed.
+ */
 import Database from './database';
 import Router from './router';
-import routes from './router/routes';
-import Post from './post';
+import Category from './category';
+
+/**
+ * Pages needed.
+ */
+import Home from './pages/home';
+
+/**
+ * Components needed.
+ */
 import Sidebar from './components/sidebar';
 import Search from './components/search';
-import Category from './category';
-import config from './config';
-import Source from './source';
-import Parser from './parser';
 import SourceModal from './components/source-add-modal';
-const db = new Database(repository);
-window.db = db;
+
+/**
+ * Initialize database and application config.
+ */
+window.db = new Database();
 window.app = config;
 
-async function init() {
-	let sources;
+/**
+ * Execute the process to render all posts.
+ */
+Home.init();
 
-	try {
-		sources = await db.sources.allDocs({
-			include_docs: true
-		});
-		sources = sources.rows.map(row => row.doc);
-		Source.render(sources.map(Source.fromObject));
-	} catch (e) {
-		// eslint-disable-next-line no-console
-		console.error(e);
-		if (!sources.length) {
-			Post.render([]);
-			return;
-		}
-	}
-	let posts = [];
-	for (let source of sources) {
-		let data = await fetch(config.proxy + source.url, {
-			mode: 'cors',
-		});
-		data = await data.text();
-		let parser = new Parser({
-			data: data,
-			source: source
-		});
-		posts.push(...parser.posts());
-	}
-	db.posts.bulkDocs(posts.map(post => post.toObject())).then(() => {
-		posts = posts.sort(Post.sortByDate);
-		Post.render(posts).catch(e => {
-			throw new Error(e);
-		});
-	}).catch(e => {
-		throw new Error(e);
-	});
-}
-
-init();
-
-// Listen url changes
+/**
+ * Start the router.
+ */
 Router.listen(routes);
 
-// we'll split this later
-Category.render(db.categories);
+/**
+ * Render the categories saved in the sidebar.
+ */
+Category.render(window.db.categories);
+
+/**
+ * Listen for events related to the sidebar.
+ */
 Sidebar.listen();
+
+/**
+ * Listen for events related with the search component.
+ */
 Search.listen();
+
+/**
+ * Listen for events related with the 'add source' button.
+ */
 SourceModal.listen();
