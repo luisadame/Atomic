@@ -240,14 +240,16 @@ export default class Post extends Model {
 	 * @param {string} slug
 	 */
 	static openPost(slug) {
-		let post = window.db.postBySlug(slug);
-		let position = {
-			width: 0,
-			height: 0,
-			top: 0,
-			left: 0
-		};
-		Modal.from(post, position).init();
+		window.db.postBySlug(slug).then(post => {
+			let position = {
+				width: 0,
+				height: 0,
+				top: 0,
+				left: 0
+			};
+			post = Post.fromObject(post);
+			Modal.from(post, position).init();
+		});
 	}
 
 	static async render(posts) {
