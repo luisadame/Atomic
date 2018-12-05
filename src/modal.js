@@ -107,7 +107,7 @@ export default class Modal {
 			this.modal.classList.add('active');
 		}, 20);
 		Modal.opened = this;
-		Router.go(`${this.title} - ${window.app.name}`, `#/post/${this.post.slug()}`);
+		Router.go(`${this.post.title} - ${window.app.name}`, `#/post/${this.post.slug()}`);
 	}
 
 	static async close() {
