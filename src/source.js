@@ -64,7 +64,7 @@ export default class Source extends Model {
 	renderToSidebar() {
 		let markup = `
 		<li>
-			<a class="source__link" href="#/source/${this.slug()}">${this.title}</a>
+			<a class="notranslate" translate="no" class="source__link" href="#/source/${this.slug()}">${this.title}</a>
 		</li>`;
 		return markup;
 	}

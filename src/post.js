@@ -158,7 +158,7 @@ export default class Post extends Model {
 							${this.title}
 						</a>
 					</h2>
-					<p class="post__source">${this.source.render()}</p>
+					<p class="post__source" class="notranslate" translate="no">${this.source.render()}</p>
 				</div>
 			</article>
 		`;

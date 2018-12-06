@@ -151,7 +151,7 @@ export default class Modal {
 				<div class="post--modal__container ${!this.post.image ? 'no-image' : ''}">
 					<h2 class="post__title">${this.post.title}</h2>
 					<div class="post__content">${this.post.content} - <a href="${this.post.link}" target="_blank" rel="noopener">Read More</a></div>
-					<p class="post__source">
+					<p class="post__source" class="notranslate" translate="no">
 						${this.post.source.render()} - <a href="${this.post.link}" target="_blank">${this.post.link}</a>
 					</p>
 				</div>
