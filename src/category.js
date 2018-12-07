@@ -79,10 +79,14 @@ export default class Category {
 	}
 
 	static render(categories) {
-		let fragment = [];
-		categories.forEach(category => fragment.push(category.render()));
 		let $categories = document.querySelector('.categories');
-		$categories.innerHTML = `<ul>${fragment.join('')}</ul>`;
-		Category.addListeners();
+		if (categories.length) {
+			let fragment = [];
+			categories.forEach(category => fragment.push(category.render()));
+			$categories.innerHTML = `<ul>${fragment.join('')}</ul>`;
+			Category.addListeners();
+		} else {
+			$categories.innerHTML = '<div class="emptiness">No categories yet :)</div>';
+		}
 	}
 }
