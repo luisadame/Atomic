@@ -1,4 +1,18 @@
 /**
+ * Offline
+ */
+import * as OfflinePluginRuntime from 'offline-plugin/runtime';
+OfflinePluginRuntime.install();
+
+if ('serviceWorker' in navigator) {
+	navigator.serviceWorker.register('/sw.js', {scope: './'}).then(() => {
+		console.log('Sw installed');
+	}).catch(err => {
+		console.error(err);
+	});
+}
+
+/**
  * Static assets.
  */
 import 'babel-polyfill';
