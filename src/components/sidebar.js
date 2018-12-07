@@ -1,5 +1,6 @@
 import Router from '../router';
 import Home from '../pages/home';
+import Source from '../source';
 
 export default class Sidebar {
 	constructor() {
@@ -8,6 +9,22 @@ export default class Sidebar {
 		this.btn = document.querySelector('.logo');
 		this.cloak = document.querySelector('.sidebar__cloak');
 		this.title = document.querySelector('.sidebar__header a');
+		this.$links = document.querySelectorAll('.sidebar a');
+
+		this.init();
+	}
+
+	async init() {
+		try {
+			let sources = await window.db.sources.allDocs({
+				include_docs: true
+			});
+			sources = sources.rows.filter(row => row.doc.url).map(row => row.doc);
+			Source.render(sources.map(Source.fromObject));
+		} catch (e) {
+			// eslint-disable-next-line no-console
+			console.error(e);
+		}
 	}
 
 	toggle(e) {
@@ -55,6 +72,11 @@ export default class Sidebar {
 				Router.home();
 				Home.init();
 			}
+		});
+		this.$links.forEach(link => {
+			link.addEventListener('click', () => {
+				Sidebar.get().close();
+			});
 		});
 	}
 
