@@ -2,6 +2,7 @@ import Sidebar from '../src/components/sidebar';
 import Router from '../src/router';
 import Post from '../src/post';
 import Model from './model';
+import Loader from './components/Loader';
 
 export default class Source extends Model {
 	constructor(url = 'http://example.com') {
@@ -77,14 +78,17 @@ export default class Source extends Model {
 	}
 
 	static openSource(title) {
+		Loader.toggle();
 		window.db.source(title).then(source => {
 			// fetch all posts by source
 			window.db.postsBySource(source).then(posts => {
-				Post.render(posts);
+				Post.render(posts).then(() => { Loader.toggle(); });
 				document.querySelector('.current-section').textContent = `Source: ${title}`;
 
 				// change app state
 				window.app.state = 'source';
+				source = Source.fromObject(source);
+				Router.go(`${title} - ${window.app.name}`, `#/source/${source.slug()}`);
 			});
 		});
 	}
