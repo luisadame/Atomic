@@ -157,7 +157,7 @@
     }
 
     &__container {
-        padding: 10px;
+        padding: 1em;
 
         &.no-image {
             padding-top: 4.3em;
@@ -167,6 +167,7 @@
     .post__title {
         color: #111;
         transition: all 250ms var(--easing) 100ms;
+        font-size: 1.75em;
     }
 
     .post__content {
@@ -174,10 +175,14 @@
         transform: translate3d(0%, -40%, 0);
         color: #222;
         transition: all 250ms var(--easing) 300ms;
+        padding: 0px;
+        margin-bottom: 1em;
+        line-height: 1.45;
     }
 
     .post__source {
-        color: var(--accent-orange);
+        color: #484848;
+        font-size: .9em;
     }
 
     &.active {
