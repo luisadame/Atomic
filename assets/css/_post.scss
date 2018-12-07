@@ -6,12 +6,29 @@
 }
 
 .post {
+    position: relative;
     display: flex;
     flex-direction: column;
     background: var(--gradient);
     border-radius: 25px;
     overflow: hidden;
     box-shadow: 0 10px 15px rgba(77, 0, 143, 0.7);
+
+    &__isReadLabel {
+        color: inherit;
+        text-decoration: none;
+        background: rgba(0, 0, 0, 0.5);
+        color: #eee;
+        padding: 5px 10px;
+        border-radius: 50px;
+        display: inline-block;
+        font-weight: bold;
+        position: absolute;
+        font-size: .85em;
+        margin-top: 3px;
+        right: 10px;
+        top: 5px;
+    }
 
     &__img {
         width: 100%;

@@ -12,6 +12,7 @@
     opacity: 0;
     box-shadow: 0 4px 16px -3px var(--deep-purple);
     transition: all 250ms var(--easing);
+    z-index: 2;
 
     &.open {
         border-radius: 10px;
