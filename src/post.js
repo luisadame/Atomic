@@ -95,6 +95,12 @@ export default class Post extends Model {
 		return this._timestamp;
 	}
 
+	isSaved() {
+		return window.db.saved.get(this._id).then((_, doc) => {
+			return !!doc;
+		});
+	}
+
 	/**
 	 * It creates an sluggified version from the title.
 	 */
@@ -151,6 +157,7 @@ export default class Post extends Model {
 		const size = await this.getPostSize();
 		return `
 			<article class="post ${size}" data-id="${this._id}">
+				${this.isRead ? '<div class="post__isReadLabel">Read</div>' : ''}
 				${size !== 'wide' ? `<img class="post__img" src="${this.image}" alt="Article featured image">` : ''}
 				<div class="post__content">
 					<h2 class="post__title">
@@ -260,13 +267,11 @@ export default class Post extends Model {
 		}
 		let reg = new RegExp(/\r\n|\n|\r|\t|\\/, 'gm');
 		let promises = posts.map(post => post.render());
-		let fragment = Promise.all(promises);
-		fragment.then(result => {
-			$posts.innerHTML = result.join('').trim().replace(reg, '');
-			const postTitles = document.querySelectorAll('.post__title');
-			postTitles.forEach(title =>
-				title.addEventListener('click', Post.loadPost, false)
-			);
-		});
+		let result = await Promise.all(promises);
+		$posts.innerHTML = result.join('').trim().replace(reg, '');
+		const postTitles = document.querySelectorAll('.post__title');
+		postTitles.forEach(title =>
+			title.addEventListener('click', Post.loadPost, false)
+		);
 	}
 }
