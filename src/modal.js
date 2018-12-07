@@ -40,6 +40,7 @@ export default class Modal {
 		this.modal = document.body.querySelector('.post--modal');
 		this.$markAsRead = this.modal.querySelector('.post--modal__read');
 		this.$markAsFavorite = this.modal.querySelector('.post--modal__favorite');
+		this.$offline = this.modal.querySelector('.post--modal__offline');
 		this.events = [{
 			el: this.modal.querySelector('.post--modal__back'),
 			event: 'click',
@@ -73,6 +74,11 @@ export default class Modal {
 			event: 'click',
 			fn: this.toggleMarkAsFavorite
 		},
+		{
+			el: this.$offline,
+			event: 'click',
+			fn: this.toggleOfflineSave
+		},
 		];
 	}
 
@@ -98,6 +104,19 @@ export default class Modal {
 		}
 		// update on db
 		this.post.update();
+	}
+
+	toggleOfflineSave(e) {
+		e.preventDefault();
+		window.db.saved.get(this.post._id).then(doc => {
+			window.db.saved.remove(doc).then(() => {
+				this.$offline.classList.remove('checked');
+			});
+		}).catch(() => {
+			window.db.saved.put(this.post.toObject()).then(() => {
+				this.$offline.classList.add('checked');
+			});
+		});
 	}
 
 	async destroy() {
@@ -154,7 +173,7 @@ export default class Modal {
 					<div class="align-right d-flex">
 						<button title="Mark as read" class="btn post--modal__read ${this.post.isRead ? 'checked' : ''}"><i class="fas fa-check-circle"></i></button>
 						<button title="Mark as favorite" class="btn post--modal__favorite ${this.post.isFavorite ? 'checked' : ''}"><i class="fas fa-heart"></i></button>
-						<button title="Save to read offline" class="btn post--modal__offline"><i class="fas fa-hdd"></i></button>
+						<button title="Save to read offline" class="btn post--modal__offline ${this.post.isSaved() ? 'checked' : ''}"><i class="fas fa-hdd"></i></button>
 					</div>
 				</div>
 				${ this.post.image ? `<img class="post__img" src="${this.post.image}" alt="Article featured image">` : '' }
