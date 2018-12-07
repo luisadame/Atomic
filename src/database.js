@@ -8,7 +8,7 @@ import Post from './post';
 export default class Database {
 	constructor() {
 		this.driver = PouchDB;
-		const models = ['posts', 'categories', 'sources'];
+		const models = ['posts', 'categories', 'sources', 'saved'];
 		PouchDB.plugin(find);
 		models.forEach(model => {
 			this[model] = new PouchDB(model);
@@ -46,6 +46,15 @@ export default class Database {
 
 	get posts() {
 		return this._posts;
+	}
+
+	set saved(db) {
+		this.validateDb(db);
+		this._saved = db;
+	}
+
+	get saved() {
+		return this._saved;
 	}
 
 	set sources(db) {
@@ -135,6 +144,19 @@ export default class Database {
 			return result.docs[0];
 		});
 	}
+
+	favorites() {
+		return this.posts.find({
+			selector: {
+				'isFavorite': true
+			}
+		}).then(results => {
+			return results.docs.map(Post.fromObject);
+		}).catch(e => {
+			throw new Error(e);
+		});
+	}
+
 	postsBySource(source) {
 		return this.posts.find({
 			selector: {
