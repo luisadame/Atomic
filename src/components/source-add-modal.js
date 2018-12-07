@@ -38,6 +38,7 @@ export default class SourceModal extends Modal {
 		let $sourceInput = document.getElementById('source-url');
 		let $feedInfo = document.querySelector('.feed-info');
 		if ($sourceInput.checkValidity()) {
+			this.toggleLoader();
 			FeedValidator.validate($sourceInput.value)
 				.then(data => {
 					let url;
@@ -50,14 +51,23 @@ export default class SourceModal extends Modal {
 							this.info = Object.assign({}, info, {
 								url: url ? url : $sourceInput.value
 							});
-							let markup = `${info.title} - ${info.description}`;
+							let image = false;
+							let markup = `
+								${image ? '<div class="image"></div>' : ''}
+								<div class="title">${info.title}</div>
+								<div class="description">${info.description}</div>
+							`;
 							$feedInfo.innerHTML = markup;
+							$feedInfo.classList.add('show');
+							this.toggleLoader();
 							this.$ok.removeAttribute('disabled');
 						})
 						.catch(error => {
+							this.toggleLoader();
 							throw new Error(error);
 						});
 				}).catch(error => {
+					this.toggleLoader();
 					throw new Error(error);
 				});
 
@@ -70,6 +80,11 @@ export default class SourceModal extends Modal {
 		super.open();
 		let $sourceInput = document.getElementById('source-url');
 		$sourceInput.addEventListener('input', debounce(this.validate.bind(this), 300));
+	}
+
+	toggleLoader() {
+		let loader = document.querySelector('#modal .loader');
+		loader.classList.toggle('show');
 	}
 
 	static listen() {
@@ -90,14 +105,16 @@ export default class SourceModal extends Modal {
             <header><h2>Add a source</h2></header>
             <div class="container">
                 <div class="input-group">
-                    <label>
+                    <label for="source-url">
                         Source of news
-                    </label>
-					<input required id="source-url" type="url">
-					<div class="loader"></div>
+					</label>
+					<div class="flex">
+						<input required id="source-url" type="url">
+						<div class="loader"></div>
+					</div>
                 </div>
+				<div class="feed-info"></div>
 			</div>
-			<div class="feed-info"></div>
             <div class="submit">
                 <button disabled class="js-ok modal__btn">Add</button>
                 <button class="js-cancel modal__btn modal__btn--link">Cancel</button>
