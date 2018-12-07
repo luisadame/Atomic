@@ -9,10 +9,11 @@ import {
 	faArrowLeft,
 	faHeart,
 	faHdd,
-	faCheckCircle
+	faCheckCircle,
+	faStar
 } from '@fortawesome/free-solid-svg-icons';
 
-library.add(faPlus, faSearch, faEllipsisV, faArrowLeft, faHeart, faHdd, faCheckCircle);
+library.add(faPlus, faSearch, faEllipsisV, faArrowLeft, faHeart, faHdd, faCheckCircle, faStar);
 
 dom.i2svg();
 dom.watch();
