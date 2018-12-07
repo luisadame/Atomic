@@ -38,6 +38,8 @@ export default class Modal {
 
 	async setProperties() {
 		this.modal = document.body.querySelector('.post--modal');
+		this.$markAsRead = this.modal.querySelector('.post--modal__read');
+		this.$markAsFavorite = this.modal.querySelector('.post--modal__favorite');
 		this.events = [{
 			el: this.modal.querySelector('.post--modal__back'),
 			event: 'click',
@@ -62,32 +64,40 @@ export default class Modal {
 			}
 		},
 		{
-			el: this.modal.querySelector('.post--modal__read'),
+			el: this.$markAsRead,
 			event: 'click',
-			fn: e => {
-				e.preventDefault();
-				this.post.isRead = !this.post.isRead;
-				if (this.post.isRead) {
-					e.target.classList.add('checked');
-				} else {
-					e.target.classList.remove('checked');
-				}
-			}
+			fn: this.toggleMarkAsRead
 		},
 		{
-			el: this.modal.querySelector('.post--modal__favorite'),
+			el: this.$markAsFavorite,
 			event: 'click',
-			fn: e => {
-				e.preventDefault();
-				this.post.isFavorite = !this.post.isFavorite;
-				if (this.post.isFavorite) {
-					e.target.classList.add('checked');
-				} else {
-					e.target.classList.remove('checked');
-				}
-			}
+			fn: this.toggleMarkAsFavorite
 		},
 		];
+	}
+
+	toggleMarkAsRead(e) {
+		e.preventDefault();
+		this.post.isRead = !this.post.isRead;
+		if (this.post.isRead) {
+			this.$markAsRead.classList.add('checked');
+		} else {
+			this.$markAsRead.classList.remove('checked');
+		}
+		// update on db
+		this.post.update();
+	}
+
+	toggleMarkAsFavorite(e) {
+		e.preventDefault();
+		this.post.isFavorite = !this.post.isFavorite;
+		if (this.post.isFavorite) {
+			this.$markAsFavorite.classList.add('checked');
+		} else {
+			this.$markAsFavorite.classList.remove('checked');
+		}
+		// update on db
+		this.post.update();
 	}
 
 	async destroy() {
