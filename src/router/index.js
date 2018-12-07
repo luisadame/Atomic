@@ -1,4 +1,5 @@
 import Modal from '../modal';
+import Sidebar from '../components/sidebar';
 
 export default class Router {
 
@@ -80,6 +81,9 @@ export default class Router {
 
 		// hand the hash to the matcher
 		this.match(route);
+
+		// Close sidebar if opened
+		Sidebar.get().close();
 	}
 
 	match(url) {
@@ -95,9 +99,7 @@ export default class Router {
 	handleCurrentRoute() {
 		// Get url's hash
 		const route = window.location.hash.substr(1);
-		// If route is home, do nothing.
-		if (route === '' || route === '/') return;
-		// Otherwise, hand the route to the matcher
+		// Hand the route to the matcher
 		this.match(route);
 	}
 
