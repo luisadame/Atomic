@@ -113,7 +113,6 @@ export default class Source extends Model {
 			Source.addListeners();
 		} else {
 			$sources.innerText = 'No sources added... yet :)';
-			throw new Error('No sources');
 		}
 	}
 }
