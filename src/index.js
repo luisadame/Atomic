@@ -20,11 +20,6 @@ import Router from './router';
 import Category from './category';
 
 /**
- * Pages needed.
- */
-import Home from './pages/home';
-
-/**
  * Components needed.
  */
 import Sidebar from './components/sidebar';
@@ -36,16 +31,6 @@ import SourceModal from './components/source-add-modal';
  */
 window.db = new Database();
 window.app = config;
-
-/**
- * Execute the process to render all posts.
- */
-Home.init();
-
-/**
- * Start the router.
- */
-Router.listen(routes);
 
 /**
  * Render the categories saved in the sidebar.
@@ -66,3 +51,8 @@ Search.listen();
  * Listen for events related with the 'add source' button.
  */
 SourceModal.listen();
+
+/**
+ * Start the router.
+ */
+Router.listen(routes);
