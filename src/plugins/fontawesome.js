@@ -10,7 +10,7 @@ import {
 	faHeart,
 	faHdd,
 	faCheckCircle,
-	faStar
+	faStar,
 } from '@fortawesome/free-solid-svg-icons';
 
 library.add(faPlus, faSearch, faEllipsisV, faArrowLeft, faHeart, faHdd, faCheckCircle, faStar);
