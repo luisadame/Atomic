@@ -38,7 +38,7 @@ export default class Home {
 		window.db.posts.bulkDocs(posts.map(post => post.toObject())).then(() => {
 			posts = posts.sort(Post.sortByDate);
 			Post.render(posts)
-				.then(Loader.toggle())
+				.then(() => { Loader.toggle(); })
 				.catch(e => {
 					throw new Error(e);
 				});
