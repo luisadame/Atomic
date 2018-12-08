@@ -79,7 +79,7 @@ export default class SourceModal extends Modal {
 	open() {
 		super.open();
 		let $sourceInput = document.getElementById('source-url');
-		$sourceInput.addEventListener('input', debounce(this.validate.bind(this), 300));
+		$sourceInput.addEventListener('input', debounce(this.validate.bind(this), 600));
 	}
 
 	toggleLoader() {
