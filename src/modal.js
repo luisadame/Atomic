@@ -166,6 +166,7 @@ export default class Modal {
 	}
 
 	async render() {
+		let isSaved = await this.post.isSaved();
 		return `
 			<article class="post--modal" style="${this.from}">
 				<div class="post--modal__toolbar">
@@ -173,7 +174,7 @@ export default class Modal {
 					<div class="align-right d-flex">
 						<button title="Mark as read" class="btn post--modal__read ${this.post.isRead ? 'checked' : ''}"><i class="fas fa-check-circle"></i></button>
 						<button title="Mark as favorite" class="btn post--modal__favorite ${this.post.isFavorite ? 'checked' : ''}"><i class="fas fa-heart"></i></button>
-						<button title="Save to read offline" class="btn post--modal__offline ${this.post.isSaved() ? 'checked' : ''}"><i class="fas fa-hdd"></i></button>
+						<button title="Save to read offline" class="btn post--modal__offline ${isSaved ? 'checked' : ''}"><i class="fas fa-hdd"></i></button>
 					</div>
 				</div>
 				${ this.post.image ? `<img class="post__img" src="${this.post.image}" alt="Article featured image">` : '' }

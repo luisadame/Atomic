@@ -95,10 +95,13 @@ export default class Post extends Model {
 		return this._timestamp;
 	}
 
-	isSaved() {
-		return window.db.saved.get(this._id).then((_, doc) => {
-			return !!doc;
-		});
+	async isSaved() {
+		try {
+			var doc = await window.db.saved.get(this._id);
+			return true;
+		} catch (err) {
+			return false;
+		}
 	}
 
 	/**
