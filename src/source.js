@@ -116,7 +116,7 @@ export default class Source extends Model {
 			$sources.innerHTML = `<ul>${fragment.join('')}</ul>`;
 			Source.addListeners();
 		} else {
-			$sources.innerText = 'No sources added... yet :)';
+			$sources.innerHTML = '<div class="emptiness">No sources added... yet :)</div>';
 		}
 	}
 }
