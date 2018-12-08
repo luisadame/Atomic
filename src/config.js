@@ -1,5 +1,5 @@
 export default {
 	name: 'Atomic',
 	state: 'home',
-	proxy: 'http://localhost:3000/?url='
+	proxy: 'https://atomic-proxy.herokuapp.com/?url='
 };
