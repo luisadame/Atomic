@@ -2,6 +2,7 @@ import Post from '../post';
 import Source from '../source';
 import Parser from '../parser';
 import Loader from '../components/Loader';
+import Router from '../router';
 
 export default class Home {
 	static async init() {
@@ -47,7 +48,13 @@ export default class Home {
 		// and fetch from db
 		Post.all().then(posts => {
 			Post.render(posts)
-				.then(() => { Loader.toggle(); })
+				.then(() => {
+					Loader.toggle();
+					Router.home();
+					document.querySelector('.current-section').textContent = 'All articles';
+					// change app state
+					window.app.state = 'home';
+				})
 				.catch(e => {
 					throw new Error(e);
 				});
