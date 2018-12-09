@@ -35,15 +35,22 @@ export default class Home {
 			posts.push(...parser.posts());
 		}
 
-		window.db.posts.bulkDocs(posts.map(post => post.toObject())).then(() => {
-			posts = posts.sort(Post.sortByDate);
+		// save the posts that are not already stored
+		for (let post of posts) {
+			window.db.posts.get(post._id, (_, doc) => {
+				if (_) {
+					window.db.posts.put(post.toObject());
+				}
+			});
+		}
+
+		// and fetch from db
+		Post.all().then(posts => {
 			Post.render(posts)
 				.then(() => { Loader.toggle(); })
 				.catch(e => {
 					throw new Error(e);
 				});
-		}).catch(e => {
-			throw new Error(e);
 		});
 	}
 }
