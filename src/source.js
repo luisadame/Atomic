@@ -119,4 +119,16 @@ export default class Source extends Model {
 			$sources.innerHTML = '<div class="emptiness">No sources added... yet :)</div>';
 		}
 	}
+
+	static all() {
+		return window.db.sources.allDocs({include_docs: true})
+			.then(result => {
+				let sources = result.rows.filter(row => row.doc.url)
+					.map(row => Source.fromObject(row.doc));
+				return sources;
+			})
+			.catch(e => {
+				throw new Error(e);
+			});
+	}
 }
