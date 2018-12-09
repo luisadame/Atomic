@@ -38,6 +38,7 @@ export default class Home {
 
 		// save the posts that are not already stored
 		for (let post of posts) {
+			// eslint-disable-next-line no-unused-vars
 			window.db.posts.get(post._id, (_, doc) => {
 				if (_) {
 					window.db.posts.put(post.toObject());

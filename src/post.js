@@ -97,6 +97,7 @@ export default class Post extends Model {
 
 	async isSaved() {
 		try {
+			// eslint-disable-next-line no-unused-vars
 			var doc = await window.db.saved.get(this._id);
 			return true;
 		} catch (err) {

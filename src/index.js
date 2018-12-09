@@ -6,8 +6,10 @@ OfflinePluginRuntime.install();
 
 if ('serviceWorker' in navigator) {
 	navigator.serviceWorker.register('/sw.js', {scope: './'}).then(() => {
+		// eslint-disable-next-line no-console
 		console.log('Sw installed');
 	}).catch(err => {
+		// eslint-disable-next-line no-console
 		console.error(err);
 	});
 }

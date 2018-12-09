@@ -15,12 +15,12 @@ export default class CategorySourceModal extends Modal {
 		e.preventDefault();
 		let source = await window.db.sources.get(e.target.dataset.id);
 		let category = await window.db.category(window.app.category.name);
-        category = Category.fromObject(category);
-        if (!e.target.checked) {
-            category.removeSource(source);
-        } else {
-            category.addSource(source);
-        }
+		category = Category.fromObject(category);
+		if (!e.target.checked) {
+			category.removeSource(source);
+		} else {
+			category.addSource(source);
+		}
 	}
 
 	open() {
