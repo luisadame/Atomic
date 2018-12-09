@@ -5,6 +5,7 @@ import {
 import FeedValidator from '../validation/feed';
 import Source from '../source';
 import Home from '../pages/home';
+import CategorySourceModal from './category-add-source';
 
 export default class SourceModal extends Modal {
 
@@ -101,27 +102,31 @@ export default class SourceModal extends Modal {
 	}
 
 	static open() {
-		let markup = `
-            <header><h2>Add a source</h2></header>
-            <div class="container">
-                <div class="input-group">
-                    <label for="source-url">
-                        Source of news
-					</label>
-					<div class="flex">
-						<input required id="source-url" type="url">
-						<div class="loader"></div>
+		if (window.app.state === 'category') {
+			CategorySourceModal.open();
+		} else {
+			let markup = `
+				<header><h2>Add a source</h2></header>
+				<div class="container">
+					<div class="input-group">
+						<label for="source-url">
+							Source of news
+						</label>
+						<div class="flex">
+							<input required id="source-url" type="url">
+							<div class="loader"></div>
+						</div>
 					</div>
-                </div>
-				<div class="feed-info"></div>
-			</div>
-            <div class="submit">
-                <button disabled class="js-ok modal__btn">Add</button>
-                <button class="js-cancel modal__btn modal__btn--link">Cancel</button>
-            </div>
-        `;
-		let modal = new this(markup);
-		modal.open();
+					<div class="feed-info"></div>
+				</div>
+				<div class="submit">
+					<button disabled class="js-ok modal__btn">Add</button>
+					<button class="js-cancel modal__btn modal__btn--link">Cancel</button>
+				</div>
+			`;
+			let modal = new this(markup);
+			modal.open();
+		}
 	}
 
 	static close() {
