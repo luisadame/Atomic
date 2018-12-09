@@ -178,6 +178,10 @@
         }
     }
 
+    .btn-pill {
+        margin-left: 5px;
+    }
+
     .sources {
         @extend .categories
     }
@@ -191,6 +195,8 @@
         width: max-content;
         font-weight: bold;
         margin-bottom: 5px;
+        display: flex;
+        align-items: center;
 
         a {
             color: inherit;
