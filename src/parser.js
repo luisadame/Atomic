@@ -41,7 +41,8 @@ export default class Parser extends DOMParser {
 			data[itemsToLookFor[item]] = dom.querySelector(item).textContent;
 		}
 		// extract image from description
-		data.image = this.extractImage(data.content);
+		let enclosure = dom.querySelector('enclosure');
+		data.image = enclosure ? enclosure.getAttribute('url') : this.extractImage(data.content);
 		// and delete it from the description markup
 		data.content = data.content.replace(this.imageTagPattern, '');
 		// delete analytics tags
