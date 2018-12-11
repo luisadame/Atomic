@@ -29,6 +29,10 @@
     z-index: 3;
     outline: none;
 
+    @media #{$laptop} {
+        flex: none;
+    }
+
     &:hover,
     &:focus {
         transform: scale(1.1);
@@ -53,6 +57,14 @@
     width: 100%;
     padding: calc((var(--logo-size) - var(--btn-size)) / 2);
     color: white;
+
+    @media #{$laptop} {
+        width: 65%;
+    }
+
+    @media #{$desktop} {
+        width: 35%;
+    }
 
     & .btn {
         color: inherit;
@@ -112,6 +124,11 @@
     transition: all 200ms var(--easing);
     color: white;
     z-index: 2;
+    max-width: 220px;
+
+    @media #{$laptop} {
+        transform: none;
+    }
 
     &--opened {
         .logo {
@@ -142,6 +159,11 @@
         height: 55px;
         display: flex;
         align-items: center;
+
+        @media #{$laptop} {
+            padding-left: 0;
+            padding-right: 75px;
+        }
 
         h1 {
             margin: 0;
