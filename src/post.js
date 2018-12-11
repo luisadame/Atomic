@@ -112,7 +112,8 @@ export default class Post extends Model {
 		return this.title
 			.split(' ')
 			.map(slice => slice.toLowerCase())
-			.join('-');
+			.join('-')
+			.replace(new RegExp(/[^-\w]/, 'g'), '');
 	}
 
 	/**
