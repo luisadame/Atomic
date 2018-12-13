@@ -677,6 +677,7 @@ body {
   background: var(--gradient);
   border-radius: 25px;
   overflow: hidden;
+  backface-visibility: hidden;
   box-shadow: 0 10px 15px rgba(77, 0, 143, 0.7); }
   @media only screen and (min-width: 1000px) {
     .post {
