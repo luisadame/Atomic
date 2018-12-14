@@ -79,16 +79,24 @@
         }
     }
 
-    &__source {
+    &__info {
         color: #FFD01D;
         margin: 0;
         font-weight: bold;
         font-size: .7em;
+        display: flex;
+    }
 
+    &__source {
+        margin: 0 10px 0 0;
         a {
             color: inherit;
             text-decoration: none;
         }
+    }
+
+    &__timestamp {
+        margin: 0 0 0 10px;
     }
 
     &.wide {

@@ -1,5 +1,6 @@
 import Post from '../src/post';
 import Router from './router';
+import { distanceInWords } from 'date-fns';
 
 export default class Modal {
 	constructor() {
@@ -191,7 +192,9 @@ export default class Modal {
 					<p class="post__source" class="notranslate" translate="no">
 						${this.post.source.render()} - <a href="${this.post.link}" target="_blank">${this.post.link}</a>
 					</p>
-					<time datetime="${this.post.timestamp}">${(new Date(this.post.timestamp)).toLocaleString()}</time>
+					<time datetime="${this.post.timestamp}">
+						${ distanceInWords(new Date(), new Date(this.post.timestamp), {addSuffix: true}) }
+					</time>
 				</div>
 			</article>
 			<div class="cloak"></div>

@@ -1,6 +1,7 @@
 import Model from './model';
 import Modal from './modal';
 import Source from './source';
+import { distanceInWords } from 'date-fns';
 
 export default class Post extends Model {
 	constructor(title = null) {
@@ -170,7 +171,12 @@ export default class Post extends Model {
 							${this.title}
 						</a>
 					</h2>
-					<p class="post__source" class="notranslate" translate="no">${this.source.render()}</p>
+					<div class="post__info">
+						<p class="post__source" class="notranslate" translate="no">${this.source.render()}</p>&mdash;
+						<time class="post__timestamp" datetime="${this.timestamp}">
+							${distanceInWords(new Date(), new Date(this.timestamp), {addSuffix: true})}
+						</time>
+					</div>
 				</div>
 			</article>
 		`;
