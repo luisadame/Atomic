@@ -50,7 +50,7 @@ export default class Source extends Model {
 	}
 
 	render() {
-		return `<a href="#/source/${this.slug()}">${this.title}</a>`;
+		return `<a href="#/source/${this.url}">${this.title}</a>`;
 	}
 
 	/**
@@ -65,7 +65,7 @@ export default class Source extends Model {
 	renderToSidebar() {
 		let markup = `
 		<li>
-			<a class="notranslate" translate="no" class="source__link" href="#/source/${this.slug()}">${this.title}</a>
+			<a class="notranslate" translate="no" class="source__link" href="#/source/${this.url}">${this.title}</a>
 		</li>`;
 		return markup;
 	}
@@ -77,18 +77,18 @@ export default class Source extends Model {
 		return source;
 	}
 
-	static openSource(title) {
+	static openSource(url) {
 		Loader.toggle();
-		window.db.source(title).then(source => {
+		window.db.sources.get(url).then(source => {
 			// fetch all posts by source
 			window.db.postsBySource(source).then(posts => {
 				Post.render(posts).then(() => { Loader.toggle(); });
-				document.querySelector('.current-section').textContent = `Source: ${title}`;
+				document.querySelector('.current-section').textContent = `Source: ${source.title}`;
 
 				// change app state
 				window.app.state = 'source';
 				source = Source.fromObject(source);
-				Router.go(`${title} - ${window.app.name}`, `#/source/${source.slug()}`);
+				Router.go(`${source.title} - ${window.app.name}`, `#/source/${source.url}`);
 			});
 		});
 	}

@@ -19,7 +19,7 @@ export default [
 		handler: Category.openCategoryBySlug
 	},
 	{
-		url: '^/source/([a-z-]+)$',
+		url: '^/source/(.+)$',
 		handler: Source.openSource
 	},
 	{
