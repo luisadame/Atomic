@@ -16,7 +16,7 @@ export default [
 	},
 	{
 		url: '^/category/([a-z-]+)$',
-		handler: Category.openCategory
+		handler: Category.openCategoryBySlug
 	},
 	{
 		url: '^/source/([a-z-]+)$',

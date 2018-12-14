@@ -2,6 +2,7 @@ import Post from '../post';
 import Source from '../source';
 import Parser from '../parser';
 import Loader from '../components/Loader';
+import Router from '../router';
 
 export default class Home {
 	static async init() {
@@ -35,15 +36,29 @@ export default class Home {
 			posts.push(...parser.posts());
 		}
 
-		window.db.posts.bulkDocs(posts.map(post => post.toObject())).then(() => {
-			posts = posts.sort(Post.sortByDate);
+		// save the posts that are not already stored
+		for (let post of posts) {
+			// eslint-disable-next-line no-unused-vars
+			window.db.posts.get(post._id, (_, doc) => {
+				if (_) {
+					window.db.posts.put(post.toObject());
+				}
+			});
+		}
+
+		// and fetch from db
+		Post.all().then(posts => {
 			Post.render(posts)
-				.then(() => { Loader.toggle(); })
+				.then(() => {
+					Loader.toggle();
+					Router.home();
+					document.querySelector('.current-section').textContent = 'All articles';
+					// change app state
+					window.app.state = 'home';
+				})
 				.catch(e => {
 					throw new Error(e);
 				});
-		}).catch(e => {
-			throw new Error(e);
 		});
 	}
 }

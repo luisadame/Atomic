@@ -6,8 +6,10 @@ OfflinePluginRuntime.install();
 
 if ('serviceWorker' in navigator) {
 	navigator.serviceWorker.register('/sw.js', {scope: './'}).then(() => {
+		// eslint-disable-next-line no-console
 		console.log('Sw installed');
 	}).catch(err => {
+		// eslint-disable-next-line no-console
 		console.error(err);
 	});
 }
@@ -39,6 +41,7 @@ import Category from './category';
 import Sidebar from './components/sidebar';
 import Search from './components/search';
 import SourceModal from './components/source-add-modal';
+import CategoryModal from './components/category-add-modal';
 
 /**
  * Initialize database and application config.
@@ -49,7 +52,9 @@ window.app = config;
 /**
  * Render the categories saved in the sidebar.
  */
-Category.render(window.db.categories);
+Category.all().then(categories => {
+	Category.render(categories);
+});
 
 /**
  * Listen for events related to the sidebar.
@@ -65,6 +70,11 @@ Search.listen();
  * Listen for events related with the 'add source' button.
  */
 SourceModal.listen();
+
+/**
+ * Listen for events related with the add category button.
+ */
+CategoryModal.listen();
 
 /**
  * Start the router.

@@ -148,6 +148,7 @@ export default class Modal {
 
 	async close() {
 		this.opened = false;
+		document.querySelector('.cloak:last-child').remove();
 		document.body.classList.remove('modal-opened');
 		this.modal.classList.remove('active');
 		this.modal.classList.add('closing');
@@ -186,6 +187,7 @@ export default class Modal {
 					</p>
 				</div>
 			</article>
+			<div class="cloak"></div>
 	    `;
 	}
 

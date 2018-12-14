@@ -97,6 +97,7 @@ export default class Post extends Model {
 
 	async isSaved() {
 		try {
+			// eslint-disable-next-line no-unused-vars
 			var doc = await window.db.saved.get(this._id);
 			return true;
 		} catch (err) {
@@ -111,7 +112,8 @@ export default class Post extends Model {
 		return this.title
 			.split(' ')
 			.map(slice => slice.toLowerCase())
-			.join('-');
+			.join('-')
+			.replace(new RegExp(/[^-\w]/, 'g'), '');
 	}
 
 	/**

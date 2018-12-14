@@ -14,6 +14,10 @@ body {
     padding: var(--main-padding);
     min-width: 350px;
 
+    @media #{$laptop} {
+        padding-left: 240px;
+    }
+
     &.modal-opened {
         overflow-y: hidden;
     }

@@ -7,7 +7,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = (env, options) => {
 	const isDevMode = options.mode !== 'production';
-	const publicURL = 'https://mrluissan.github.io/Atomic/';
+	const publicURL = 'https://atomic-app.netlify.com/';
 	return {
 		mode: 'development',
 		entry: {
@@ -35,11 +35,28 @@ module.exports = (env, options) => {
 					output: './sw.js'
 				}
 			}),
-			new CopyWebpackPlugin([{
-				from: './src/manifest.json',
-				to: '.',
-				toType: 'dir'
-			}])
+			new CopyWebpackPlugin([
+				{
+					from: './src/manifest.json',
+					to: '.',
+					toType: 'dir'
+				},
+				{
+					from: './src/browserconfig.xml',
+					to: '.',
+					toType: 'dir'
+				},
+				{
+					from: './src/favicon.ico',
+					to: '.',
+					toType: 'dir'
+				},
+				{
+					from: './assets/icons',
+					to: './assets/icons',
+					toType: 'dir'
+				}
+			])
 		],
 		output: {
 			path: path.resolve(__dirname, 'docs'),

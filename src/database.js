@@ -72,11 +72,11 @@ export default class Database {
 	}
 
 	get categories() {
-		return [];
+		return this._categories;
 	}
 
 	category(name) {
-		return this.categories.find(category => category.name === name);
+		return this.categories.get(name);
 	}
 
 	categoryBySlug(slug) {
