@@ -41,6 +41,7 @@ export default class Modal {
 		this.$markAsRead = this.modal.querySelector('.post--modal__read');
 		this.$markAsFavorite = this.modal.querySelector('.post--modal__favorite');
 		this.$offline = this.modal.querySelector('.post--modal__offline');
+		this.$cloak = document.querySelector('.cloak:last-child');
 		this.events = [{
 			el: this.modal.querySelector('.post--modal__back'),
 			event: 'click',
@@ -79,6 +80,11 @@ export default class Modal {
 			event: 'click',
 			fn: this.toggleOfflineSave
 		},
+		{
+			el: this.$cloak,
+			event: 'click',
+			fn: this.destroy
+		}
 		];
 	}
 
@@ -185,6 +191,7 @@ export default class Modal {
 					<p class="post__source" class="notranslate" translate="no">
 						${this.post.source.render()} - <a href="${this.post.link}" target="_blank">${this.post.link}</a>
 					</p>
+					<time datetime="${this.post.timestamp}">${(new Date(this.post.timestamp)).toLocaleString()}</time>
 				</div>
 			</article>
 			<div class="cloak"></div>
