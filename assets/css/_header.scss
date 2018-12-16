@@ -57,6 +57,7 @@
     width: 100%;
     padding: calc((var(--logo-size) - var(--btn-size)) / 2);
     color: white;
+    position: relative;
 
     @media #{$laptop} {
         width: 65%;
