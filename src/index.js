@@ -42,6 +42,7 @@ import Sidebar from './components/sidebar';
 import Search from './components/search';
 import SourceModal from './components/source-add-modal';
 import CategoryModal from './components/category-add-modal';
+import Options from './components/options';
 
 /**
  * Initialize database and application config.
@@ -80,3 +81,8 @@ CategoryModal.listen();
  * Start the router.
  */
 Router.listen(routes);
+
+/**
+ * Listen for the options.
+ */
+Options.listen();
