@@ -157,6 +157,22 @@ export default class Database {
 		});
 	}
 
+	deleteBySource(url) {
+		return new Promise((res, rej) => {
+			return window.db.posts.allDocs({include_docs: true})
+				.then(result => {
+					let promises = [];
+					for (let row of result.rows) {
+						let doc = row.doc;
+						if (doc.source && doc.source._url === url) {
+							promises.push(window.db.posts.remove(doc));
+						}
+					}
+					Promise.all(promises).then(res).catch(rej);
+				});
+		});
+	}
+
 	postsBySource(source) {
 		return this.posts.find({
 			selector: {
