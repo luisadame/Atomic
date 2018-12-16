@@ -77,6 +77,7 @@ export default class SourceModal extends Modal {
 				});
 
 		} else {
+			// eslint-disable-next-line no-console
 			console.error('Feed not valid');
 		}
 	}

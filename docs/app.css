@@ -494,7 +494,8 @@ body {
   border-radius: 50px;
   width: 100%;
   padding: calc((var(--logo-size) - var(--btn-size)) / 2);
-  color: white; }
+  color: white;
+  position: relative; }
   @media only screen and (min-width: 1000px) {
     .toolbar {
       width: 65%; } }
@@ -1004,4 +1005,34 @@ body {
     transform: rotate(0deg); }
   100% {
     transform: rotate(360deg); } }
+
+.options {
+  position: absolute;
+  background: var(--shade-0);
+  top: 48px;
+  right: 10px;
+  width: 150px;
+  padding: 1em;
+  border-radius: 5px;
+  display: flex;
+  box-shadow: 0 3px 1px var(--shade-1);
+  flex-direction: column;
+  align-items: center;
+  visibility: hidden;
+  transform: scale(0) translateX(20px);
+  opacity: 0;
+  transform-origin: 90% top;
+  transition: all 250ms var(--easing); }
+  .options.open {
+    visibility: visible;
+    opacity: 1;
+    transform: none; }
+  .options ul {
+    list-style: none;
+    margin: 0;
+    padding: 0; }
+  .options .btn {
+    border-radius: 5px;
+    background: var(--shade-6);
+    padding: 0 10px; }
 

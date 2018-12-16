@@ -44,6 +44,7 @@ export default class Model {
 			var doc = await window.db[this._database].get(this._id);
 			await window.db[this._database].remove(doc);
 		} catch (err) {
+			// eslint-disable-next-line no-console
 			console.log(err);
 		}
 	}
