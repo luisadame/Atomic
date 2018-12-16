@@ -28,9 +28,13 @@ export default class SourceModal extends Modal {
 		let source = new Source(this.info.url);
 		source.title = this.info.title;
 		if (source.isUnique()) {
-			source.save().then(() => {
-				Home.init();
-			});
+			source.save()
+				.then(() => {
+					Home.init();
+				})
+				.catch(() => {
+					Home.init();
+				});
 		}
 		this.close();
 	}
@@ -73,7 +77,7 @@ export default class SourceModal extends Modal {
 				});
 
 		} else {
-			alert('show errors');
+			console.error('Feed not valid');
 		}
 	}
 
