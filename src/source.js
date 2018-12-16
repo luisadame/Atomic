@@ -3,6 +3,8 @@ import Router from '../src/router';
 import Post from '../src/post';
 import Model from './model';
 import Loader from './components/Loader';
+import Home from './pages/home';
+import Options from './components/options';
 
 export default class Source extends Model {
 	constructor(url = 'http://example.com') {
@@ -70,6 +72,24 @@ export default class Source extends Model {
 		return markup;
 	}
 
+	static delete() {
+		if (window.app.source) {
+			let source = window.app.source;
+			source.delete()
+				.then(() => {
+					// delete them from posts
+					Loader.toggle();
+					window.db.deleteBySource(source.url).then(() => {
+						Loader.toggle();
+						window.app.source = null;
+						Options.toggle();
+						Home.init();
+						Sidebar.get().init();
+					});
+				});
+		}
+	}
+
 	static fromObject(object) {
 		if (!object.title || !object.url) return;
 		let source = new Source(object.url);
@@ -88,9 +108,13 @@ export default class Source extends Model {
 				// change app state
 				window.app.state = 'source';
 				source = Source.fromObject(source);
+				window.app.source = source;
 				Router.go(`${source.title} - ${window.app.name}`, `#/source/${source.url}`);
 			});
-		});
+		})
+			.catch(() => {
+				Home.init();
+			});
 	}
 
 	static loadSource(e) {
