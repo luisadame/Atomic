@@ -104,7 +104,7 @@ module.exports = (env, options) => {
 			},
 			]
 		},
-		devtool: 'eval-source-map',
+		devtool: isDevMode ? 'eval-source-map' : 'source-map',
 		devServer: {
 			contentBase: path.join(__dirname, 'docs'),
 			publicPath: '/docs',
