@@ -38,4 +38,13 @@ export default class Model {
 			console.error(e);
 		}
 	}
+
+	async delete() {
+		try {
+			var doc = await window.db[this._database].get(this._id);
+			await window.db[this._database].remove(doc);
+		} catch (err) {
+			console.log(err);
+		}
+	}
 }
