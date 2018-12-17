@@ -102,6 +102,7 @@ export default class Source extends Model {
 		window.db.sources.get(url).then(source => {
 			// fetch all posts by source
 			window.db.postsBySource(source).then(posts => {
+				posts = posts.sort(Post.sortByDate);
 				Post.render(posts).then(() => { Loader.toggle(); });
 				document.querySelector('.current-section').textContent = `Source: ${source.title}`;
 
