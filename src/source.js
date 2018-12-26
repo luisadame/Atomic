@@ -59,9 +59,17 @@ export default class Source extends Model {
 	 * Check if a source is unique in the database.
 	 */
 	isUnique() {
-		return window.db[this._database].get(this._id).then(doc => {
-			return !!doc;
-		});
+		return window.db[this._database].get(this._id)
+			.catch(e => {
+				if (e.status === 404) {
+					return true;
+				}
+			})
+			.then(doc => {
+				if (doc) {
+					return false;
+				}
+			});
 	}
 
 	renderToSidebar() {

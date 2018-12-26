@@ -29,14 +29,9 @@ export default class SourceModal extends Modal {
 		source.title = this.info.title;
 		if (source.isUnique()) {
 			source.save()
-				.then(() => {
-					Home.init();
-				})
-				.catch(() => {
-					Home.init();
-				});
+				.then(Home.init(true))
+				.then(this.close);
 		}
-		this.close();
 	}
 
 	validate() {

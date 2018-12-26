@@ -5,13 +5,13 @@ import Loader from '../components/Loader';
 import Router from '../router';
 
 export default class Home {
-	static async init() {
+	static async init(refresh = false) {
 		let sources;
 		Loader.toggle();
 
 		let cachedPosts = await Post.all();
 
-		if (cachedPosts.length) {
+		if (cachedPosts.length && !refresh) {
 			Post.render(cachedPosts)
 				.then(() => {
 					Loader.toggle();
@@ -24,6 +24,8 @@ export default class Home {
 					throw new Error(e);
 				});
 		}
+
+
 
 		try {
 			sources = await window.db.sources.allDocs({
@@ -51,31 +53,36 @@ export default class Home {
 
 			Promise.all(promises).then(() => {
 				// save the posts that are not already stored
+
+				let savedPostPromises = [];
+
 				for (let post of posts) {
 					// eslint-disable-next-line no-unused-vars
 					window.db.posts.get(post._id, (_, doc) => {
 						if (_) {
-							window.db.posts.put(post.toObject());
+							savedPostPromises.push(window.db.posts.put(post.toObject()));
 						}
 					});
 				}
 
 				// and fetch from db
-				if (!cachedPosts.length) {
-					Post.all().then(posts => {
-						Post.render(posts)
-							.then(() => {
-								Loader.toggle();
-								Router.home();
-								document.querySelector('.current-section').textContent = 'All articles';
-								// change app state
-								window.app.state = 'home';
-							})
-							.catch(e => {
-								throw new Error(e);
-							});
-					});
-				}
+				Promise.all(savedPostPromises).then(() => {
+					if (!cachedPosts.length) {
+						Post.all().then(posts => {
+							Post.render(posts)
+								.then(() => {
+									Loader.toggle();
+									Router.home();
+									document.querySelector('.current-section').textContent = 'All articles';
+									// change app state
+									window.app.state = 'home';
+								})
+								.catch(e => {
+									throw new Error(e);
+								});
+						});
+					}
+				});
 			});
 		} catch (e) {
 			// eslint-disable-next-line no-console
