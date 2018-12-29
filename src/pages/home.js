@@ -25,8 +25,6 @@ export default class Home {
 				});
 		}
 
-
-
 		try {
 			sources = await window.db.sources.allDocs({
 				include_docs: true
@@ -57,17 +55,13 @@ export default class Home {
 				let savedPostPromises = [];
 
 				for (let post of posts) {
-					// eslint-disable-next-line no-unused-vars
-					window.db.posts.get(post._id, (_, doc) => {
-						if (_) {
-							savedPostPromises.push(window.db.posts.put(post.toObject()));
-						}
-					});
+					let savePost = window.db.posts.put(post.toObject()).catch(e => console.log(e));
+					savedPostPromises.push(savePost);
 				}
 
 				// and fetch from db
 				Promise.all(savedPostPromises).then(() => {
-					if (!cachedPosts.length) {
+					if (refresh || !cachedPosts.length) {
 						Post.all().then(posts => {
 							Post.render(posts)
 								.then(() => {
