@@ -6,31 +6,34 @@ import Router from '../router';
 
 export default class Home {
 	static async init(refresh = false) {
-		let sources;
+		// Show loader
 		Loader.toggle();
 
+		// Get already stored posts
 		let cachedPosts = await Post.all();
 
+		function afterRender() {
+			// Hide loader
+			Loader.toggle();
+			// Change history
+			Router.home();
+			// Change document title
+			document.querySelector('.current-section').textContent = 'All articles';
+			// Change app state
+			window.app.state = 'home';
+		}
+
+		// If we have saved posts and we dont want fresh data render inmediately
 		if (cachedPosts.length && !refresh) {
 			Post.render(cachedPosts)
-				.then(() => {
-					Loader.toggle();
-					Router.home();
-					document.querySelector('.current-section').textContent = 'All articles';
-					// change app state
-					window.app.state = 'home';
-				})
-				.catch(e => {
-					throw new Error(e);
-				});
+				.then(afterRender())
+				.catch(e => {throw new Error(e);});
 		}
 
 		try {
-			sources = await window.db.sources.allDocs({
-				include_docs: true
-			});
-			sources = sources.rows.filter(row => row.doc.url).map(row => row.doc);
-			Source.render(sources.map(Source.fromObject));
+
+			let sources = await Source.all();
+			Source.render(sources);
 
 			let posts = [];
 			let promises = [];
@@ -51,30 +54,15 @@ export default class Home {
 
 			Promise.all(promises).then(() => {
 				// save the posts that are not already stored
-
-				let savedPostPromises = [];
-
-				for (let post of posts) {
-					let savePost = window.db.posts.put(post.toObject()).catch(e => console.log(e));
-					savedPostPromises.push(savePost);
-				}
+				let savedPostPromises = posts.map(post => window.db.posts.put(post.toObject()).catch(e => console.log(e)));
 
 				// and fetch from db
 				Promise.all(savedPostPromises).then(() => {
 					if (refresh || !cachedPosts.length) {
-						Post.all().then(posts => {
-							Post.render(posts)
-								.then(() => {
-									Loader.toggle();
-									Router.home();
-									document.querySelector('.current-section').textContent = 'All articles';
-									// change app state
-									window.app.state = 'home';
-								})
-								.catch(e => {
-									throw new Error(e);
-								});
-						});
+						Post.all()
+							.then(Post.render)
+							.then(afterRender())
+							.catch(e => {throw new Error(e);});
 					}
 				});
 			});
