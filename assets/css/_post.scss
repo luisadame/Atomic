@@ -230,6 +230,11 @@
         padding: 0px;
         margin-bottom: 1em;
         line-height: 1.45;
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
     }
 
     .post__source {
