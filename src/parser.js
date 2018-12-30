@@ -1,5 +1,6 @@
 import Post from '../src/post';
 import Source from '../src/source';
+import dompurify from 'dompurify';
 
 export default class Parser extends DOMParser {
 	constructor(object) {
@@ -41,8 +42,7 @@ export default class Parser extends DOMParser {
 	}
 
 	strip(html) {
-		let doc = this.parseFromString(html, 'text/html');
-		return doc.body.textContent || '';
+		return dompurify.sanitize(html);
 	}
 
 	extractImage(html) {
