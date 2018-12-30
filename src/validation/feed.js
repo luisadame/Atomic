@@ -12,8 +12,9 @@ export default class Feed {
 
 	static async containsFeedUrl(html) {
 		let dom = new DOMParser().parseFromString(html, 'text/html');
-		let feed = dom.head.querySelector('link[rel="alternate"]');
-		return feed ? Promise.resolve(feed.href) : Promise.reject();
+		let rss = dom.head.querySelector('link[rel="alternate"][type="application/rss+xml"]'),
+			atom = dom.head.querySelector('link[rel="alternate"][type="application/atom+xml"]');
+		return rss ? Promise.resolve(rss.href) : atom ? Promise.resolve(atom.href) : Promise.reject();
 	}
 
 	static mergeURLS(host, feed) {
