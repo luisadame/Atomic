@@ -8,6 +8,7 @@ export default class Home {
 	static async init(refresh = false) {
 		// Show loader
 		Loader.toggle();
+		let sources = null;
 
 		// Get already stored posts
 		let cachedPosts = await Post.all();
@@ -32,7 +33,7 @@ export default class Home {
 
 		try {
 
-			let sources = await Source.all();
+			sources = await Source.all();
 			Source.render(sources);
 
 			let posts = [];
@@ -54,6 +55,7 @@ export default class Home {
 
 			Promise.all(promises).then(() => {
 				// save the posts that are not already stored
+				// eslint-disable-next-line no-console
 				let savedPostPromises = posts.map(post => window.db.posts.put(post.toObject()).catch(e => console.log(e)));
 
 				// and fetch from db
