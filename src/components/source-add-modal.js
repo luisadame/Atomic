@@ -14,8 +14,8 @@ export default class SourceModal extends Modal {
 			try {
 				const dom = new DOMParser().parseFromString(xml, 'text/xml');
 				let info = {
-					title: dom.querySelector('title').textContent,
-					description: dom.querySelector('description').textContent
+					title: dom.querySelector('title') ? dom.querySelector('title').textContent : null,
+					description: dom.querySelector('description') ? dom.querySelector('description').textContent : null
 				};
 				resolve(info);
 			} catch (error) {
@@ -55,7 +55,7 @@ export default class SourceModal extends Modal {
 							let markup = `
 								${image ? '<div class="image"></div>' : ''}
 								<div class="title">${info.title}</div>
-								<div class="description">${info.description}</div>
+								${info.description ? `<div class="description">${info.description}</div>` : ''}
 							`;
 							$feedInfo.innerHTML = markup;
 							$feedInfo.classList.add('show');
