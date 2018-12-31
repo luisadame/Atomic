@@ -181,9 +181,11 @@ export default class Database {
 					let promises = [];
 					for (let row of result.rows) {
 						let doc = row.doc;
-						if (doc.source && doc.source._url === url) {
-							promises.push(window.db.posts.remove(doc));
-						}
+						window.db.saved.get(doc._id).catch(() => {
+							if (doc.source && doc.source._url === url) {
+								promises.push(window.db.posts.remove(doc));
+							}
+						});
 					}
 					Promise.all(promises).then(res).catch(rej);
 				});
