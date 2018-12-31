@@ -41,15 +41,30 @@ export default class Search {
 	onKeyUp(e) {
 		const title = e.target.value;
 		Loader.toggle();
-		if (title.length > 0) {
-			window.db.searchPosts(title).then(posts => {
-				Post.render(posts).then(Loader.toggle());
-			});
+
+		if (window.app.state === 'source') {
+			const source = window.app.source;
+			if (title.length > 0) {
+				window.db.searchPostsInSource(title, source).then(posts => {
+					Post.render(posts).then(Loader.toggle());
+				});
+			} else {
+				window.db.postsBySource(source).then(posts => {
+					Post.render(posts).then(Loader.toggle());
+				});
+			}
 		} else {
-			Post.all().then(posts => {
-				Post.render(posts).then(Loader.toggle());
-			});
+			if (title.length > 0) {
+				window.db.searchPosts(title).then(posts => {
+					Post.render(posts).then(Loader.toggle());
+				});
+			} else {
+				Post.all().then(posts => {
+					Post.render(posts).then(Loader.toggle());
+				});
+			}
 		}
+
 	}
 
 	listen() {

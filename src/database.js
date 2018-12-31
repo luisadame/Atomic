@@ -93,6 +93,23 @@ export default class Database {
 		});
 	}
 
+	searchPostsInSource(title, source) {
+		const pattern = new RegExp(`.*${title}.*`, 'i');
+		return this.posts.find({
+			selector: {
+				title: {
+					$regex: pattern
+				},
+				'source._url': source.url
+			}
+		}).then(result => {
+			let posts = result.docs.map(Post.fromObject);
+			return posts;
+		}).catch(error => {
+			throw new Error(error);
+		});
+	}
+
 	searchPosts(title) {
 		const pattern = new RegExp(`.*${title}.*`, 'i');
 		return this.posts.find({
