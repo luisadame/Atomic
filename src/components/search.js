@@ -46,7 +46,14 @@ export default class Search {
 			const source = window.app.source;
 			if (title.length > 0) {
 				window.db.searchPostsInSource(title, source).then(posts => {
-					Post.render(posts).then(Loader.toggle());
+					if (!posts.length) {
+						let $posts = document.querySelector('.posts');
+						$posts.innerHTML = '<img src="/assets/img/no_data.svg" alt="No favorited articles or news" />';
+						Loader.toggle();
+						return;
+					} else {
+						Post.render(posts).then(Loader.toggle());
+					}
 				});
 			} else {
 				window.db.postsBySource(source).then(posts => {
@@ -56,7 +63,14 @@ export default class Search {
 		} else {
 			if (title.length > 0) {
 				window.db.searchPosts(title).then(posts => {
-					Post.render(posts).then(Loader.toggle());
+					if (!posts.length) {
+						let $posts = document.querySelector('.posts');
+						$posts.innerHTML = '<img src="/assets/img/no_data.svg" alt="No favorited articles or news" />';
+						Loader.toggle();
+						return;
+					} else {
+						Post.render(posts).then(Loader.toggle());
+					}
 				});
 			} else {
 				Post.all().then(posts => {

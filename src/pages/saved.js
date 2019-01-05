@@ -20,9 +20,16 @@ export default class Saved {
 			// sort them by date
 			savedPosts = savedPosts.sort(Post.sortByDate);
 			// render them
-			Post.render(savedPosts).then(() => {
+			if (!savedPosts.length) {
+				let $posts = document.querySelector('.posts');
+				$posts.innerHTML = '<img src="/assets/img/store.svg" alt="No saved articles or news" />';
 				Loader.toggle();
-			});
+				return;
+			} else {
+				Post.render(savedPosts).then(() => {
+					Loader.toggle();
+				});
+			}
 		} catch (e) {
 			throw new Error(e);
 		}

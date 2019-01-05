@@ -273,7 +273,7 @@ export default class Post extends Model {
 	static async render(posts) {
 		let $posts = document.querySelector('.posts');
 		if (!posts.length) {
-			$posts.innerText = 'Hi! Please add a source of news if you want to see them :)';
+			$posts.innerHTML = '<img src="/assets/img/news.svg" alt="No articles or news added" />';
 			return;
 		}
 		let reg = new RegExp(/\r\n|\n|\r|\t|\\/, 'gm');

@@ -12,11 +12,18 @@ export default class Favorites {
 			window.app.state = 'favorites';
 			// sort posts
 			posts = posts.sort(Post.sortByDate);
-			Post.render(posts)
-				.then(Loader.toggle())
-				.catch(e => {
-					throw new Error(e);
-				});
+			if (!posts.length) {
+				let $posts = document.querySelector('.posts');
+				$posts.innerHTML = '<img src="/assets/img/favorite.svg" alt="No favorited articles or news" />';
+				Loader.toggle();
+				return;
+			} else {
+				Post.render(posts)
+					.then(Loader.toggle())
+					.catch(e => {
+						throw new Error(e);
+					});
+			}
 		}).catch(e => {
 			throw new Error(e);
 		});

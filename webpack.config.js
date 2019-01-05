@@ -55,6 +55,11 @@ module.exports = (env, options) => {
 					from: './assets/icons',
 					to: './assets/icons',
 					toType: 'dir'
+				},
+				{
+					from: './assets/img',
+					to: './assets/img',
+					toType: 'dir'
 				}
 			])
 		],

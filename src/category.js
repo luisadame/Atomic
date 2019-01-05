@@ -105,7 +105,13 @@ export default class Category extends Model {
 			posts = [...posts, ...await window.db.postsBySource(source)];
 		}
 		posts = posts.sort(Post.sortByDate);
-		Post.render(posts);
+		if (!posts.length) {
+			let $posts = document.querySelector('.posts');
+			$posts.innerHTML = '<img src="/assets/img/empty.svg" alt="No favorited articles or news" />';
+			return;
+		} else {
+			Post.render(posts);
+		}
 	}
 
 	static async openCategory(name) {
