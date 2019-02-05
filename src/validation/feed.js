@@ -3,7 +3,7 @@ import config from '../config';
 export default class Feed {
 
 	static async fetch(url) {
-		return fetch(url).then(response => response.text());
+		return fetch(url, config.fetchOptions).then(response => response.text());
 	}
 
 	static isXML(data) {
