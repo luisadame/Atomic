@@ -126,6 +126,8 @@
     color: white;
     z-index: 2;
     max-width: 220px;
+    display: flex;
+    flex-direction: column;
 
     @media #{$laptop} {
         transform: none;
@@ -244,6 +246,35 @@
         transition: all 200ms var(--easing);
         z-index: 2;
     }
+
+    &__sections {
+        flex: 1;
+    }
+
+    &__user-area {
+        display: flex;
+        .btn {
+            border-radius: 4px;
+            flex: 1;
+            &:first-child {
+                margin-right: 10px;
+            }
+        }
+
+        &__signup {
+            box-shadow: 0px 0px 21px var(--accent-orange);
+            font-weight: bolder;
+            color: white;
+            background: var(--accent-orange);
+        }
+
+        &__login {
+            box-shadow: -16px 6px 33px var(--shade-9);
+            color: white;
+            background: var(--gradient);
+        }
+    }
+
 }
 
 .cloak {
