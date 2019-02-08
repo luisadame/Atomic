@@ -18,13 +18,6 @@ var __wpo = {
   ],
   "hashesMap": {
     "ff6e79711b2df8b22092e114506bde3e7c672d13": "/assets/img/logo.svg",
-    "84528e205e4a393b88f92fa0cff9e3f7b8cc76fa": "/app.js",
-    "df0fd65ec9b448b631350329ee65a90ced98a8de": "/"
-  },
-  "strategy": "changed",
-  "responseStrategy": "cache-first",
-  "version": "2/4/2019, 9:18:32 PM",
-  "name": "webpack-offline",
   "pluginVersion": "5.0.6",
   "relativePaths": false
 };
@@ -32,7 +25,6 @@ var __wpo = {
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/

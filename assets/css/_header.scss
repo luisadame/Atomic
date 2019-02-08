@@ -254,6 +254,7 @@
     &__user-area {
         display: flex;
         .btn {
+            border-radius: 4px;
             flex: 1;
             &:first-child {
                 margin-right: 10px;
