@@ -2,6 +2,7 @@ var __wpo = {
   "assets": {
     "main": [
       "/assets/img/logo.svg",
+      "/app.css",
       "/app.js",
       "/",
       "/",
@@ -18,6 +19,14 @@ var __wpo = {
   ],
   "hashesMap": {
     "ff6e79711b2df8b22092e114506bde3e7c672d13": "/assets/img/logo.svg",
+    "1a628a4c03dafb2512cb379feda9501449e1b329": "/app.css",
+    "8aa44333698cb07265027b59e6fbae42eee76212": "/app.js",
+    "63c5c5a61c6f24aa8aa4fee73d95fb07abecb1b3": "/"
+  },
+  "strategy": "changed",
+  "responseStrategy": "cache-first",
+  "version": "2/8/2019, 7:25:39 PM",
+  "name": "webpack-offline",
   "pluginVersion": "5.0.6",
   "relativePaths": false
 };
@@ -25,6 +34,7 @@ var __wpo = {
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/

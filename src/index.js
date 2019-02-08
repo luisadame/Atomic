@@ -42,6 +42,7 @@ import Sidebar from './components/sidebar';
 import Search from './components/search';
 import SourceModal from './components/source-add-modal';
 import CategoryModal from './components/category-add-modal';
+import SignUpModal from './components/signup-modal';
 import Options from './components/options';
 
 /**
@@ -76,6 +77,11 @@ SourceModal.listen();
  * Listen for events related with the add category button.
  */
 CategoryModal.listen();
+
+/**
+ * Listen for sign up button.
+ */
+SignUpModal.listen();
 
 /**
  * Start the router.
