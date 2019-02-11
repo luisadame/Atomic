@@ -43,18 +43,25 @@ export default class Validator {
 	}
 
 	make() {
+		this.errors = {};
 		for (let name in this.rules) {
-			let value = this.form.querySelector(`[name=${name}]`).value;
-			if (!value) throw new Error(`Element ${name} is not within the form.`);
-			for (let rule of this.buildValidations(this.rules[name])) {
-				if (rule.param) {
-					if (!methods[rule.name].fn(value, rule.param)) {
-						this.errors[name] = this.message(rule.name, rule.param);
-					}
-				} else {
-					if (!methods[rule.name].fn(value)) {
-						this.errors[name] = this.message(rule.name);
-					}
+			this.validateInput(name);
+		}
+	}
+
+	validateInput(name) {
+		delete this.errors[name];
+		let input = this.form.querySelector(`[name=${name}]`);
+		if (!input) throw new Error(`Element ${name} is not within the form.`);
+		let value = input.value;
+		for (let rule of this.buildValidations(this.rules[name])) {
+			if (rule.param) {
+				if (!methods[rule.name].fn(value, rule.param)) {
+					this.errors[name] = this.message(rule.name, rule.param);
+				}
+			} else {
+				if (!methods[rule.name].fn(value)) {
+					this.errors[name] = this.message(rule.name);
 				}
 			}
 		}

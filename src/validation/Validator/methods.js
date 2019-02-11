@@ -3,7 +3,9 @@ export default {
 		fn: function(value) {
 			return value.length > 0;
 		},
-		msg: 'This field is required'
+		msg: function() {
+			return 'This field is required';
+		}
 	},
 	string: {
 		fn: function(value) {
