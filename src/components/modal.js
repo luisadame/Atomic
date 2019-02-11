@@ -2,6 +2,7 @@ export default class Modal {
 	constructor(html) {
 		this.cloak = document.querySelector('.cloak');
 		this.content = html;
+		this.classes = [];
 	}
 
 	addlisteners() {
@@ -29,6 +30,10 @@ export default class Modal {
 		return `<div id="modal">${html}</div>`;
 	}
 
+	classNames() {
+		this.classes = [...arguments];
+	}
+
 	open() {
 		if (Modal.instance) return;
 		this.cloak.classList.toggle('open');
@@ -37,9 +42,13 @@ export default class Modal {
 		let modal = document.getElementById('modal');
 		setTimeout(() => {
 			modal.classList.add('open');
+			modal.className += ' ' + this.classes.join(' ');
 		}, 10);
 		Modal.instance = this;
 		this.addlisteners();
+		if (this.afterOpen) {
+			this.afterOpen();
+		}
 	}
 
 	close() {
