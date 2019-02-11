@@ -4,18 +4,22 @@ import Form from './Form';
 
 export default class SignUpModal extends Modal {
 
-	proceed() {
-		let $form = document.getElementById('signup-form');
-		let rules = {
+	afterOpen() {
+		this.$form = document.getElementById('signup-form');
+		this.rules = {
 			email: 'required|email',
 			password: 'required',
 			'password-confirmation': 'required|match:password'
 		};
-		let form = new Form($form, rules);
-		if (form.validate()) {
+		this.form = new Form(this.$form, this.rules);
+	}
+
+	proceed() {
+		if (this.form.validate()) {
+			this.form.removeAllErrorElements();
 			console.log('Perfect!');
 		} else {
-			console.log(form.errors());
+			this.form.displayErrors();
 		}
 		//this.close();
 	}
@@ -55,7 +59,7 @@ export default class SignUpModal extends Modal {
                         </div>
                     </div>
                     <div class="input-group">
-                        <label for="password">
+                        <label for="password-confirmation">
                             Confirm your password
                         </label>
                         <div class="flex">
@@ -70,6 +74,7 @@ export default class SignUpModal extends Modal {
             </div>
         `;
 		let modal = new this(markup);
+		modal.classNames('signup__modal');
 		modal.open();
 	}
 
