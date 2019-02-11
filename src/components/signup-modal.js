@@ -1,11 +1,22 @@
 import Modal from './modal';
 import config from '../config';
+import Form from './Form';
 
 export default class SignUpModal extends Modal {
 
 	proceed() {
 		let $form = document.getElementById('signup-form');
-		$form.checkValidity();
+		let rules = {
+			email: 'required|email',
+			password: 'required',
+			'password-confirmation': 'required|match:password'
+		};
+		let form = new Form($form, rules);
+		if (form.validate()) {
+			console.log('Perfect!');
+		} else {
+			console.log(form.errors());
+		}
 		//this.close();
 	}
 

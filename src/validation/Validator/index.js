@@ -3,7 +3,7 @@ export default class Validator {
 	constructor(rules, form) {
 		this.rules = rules;
 		this.form = form;
-		this.errors = null;
+		this.errors = {};
 	}
 
 	get rules() {
@@ -31,6 +31,7 @@ export default class Validator {
 	buildValidations(validations) {
 		validations = validations.split('|');
 		return validations.map(validation => {
+			let param = null;
 			if (validation.includes(':')) {
 				[validation, param] = validation.split(':');
 			}
@@ -47,11 +48,11 @@ export default class Validator {
 			if (!value) throw new Error(`Element ${name} is not within the form.`);
 			for (let rule of this.buildValidations(this.rules[name])) {
 				if (rule.param) {
-					if (!this[rule.name](value, rule.param)) {
+					if (!methods[rule.name].fn(value, rule.param)) {
 						this.errors[name] = this.message(rule.name, rule.param);
 					}
 				} else {
-					if (!this[rule.name](value)) {
+					if (!methods[rule.name].fn(value)) {
 						this.errors[name] = this.message(rule.name);
 					}
 				}
@@ -64,10 +65,6 @@ export default class Validator {
 	}
 
 	isValid() {
-		return this.errors === null;
-	}
-
-	errors() {
-		return this.errors;
+		return !Object.keys(this.errors).length > 0;
 	}
 }

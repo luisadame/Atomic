@@ -52,12 +52,12 @@ var __wpo = {
     "0c08688fbcec0b1dac311b62da47a5576740dc27": "/assets/fonts/Nunito-Light.woff",
     "ff6e79711b2df8b22092e114506bde3e7c672d13": "/assets/img/logo.svg",
     "1a628a4c03dafb2512cb379feda9501449e1b329": "/app.css",
-    "8aa44333698cb07265027b59e6fbae42eee76212": "/app.js",
+    "ad3e5397efae834b1b6bfed84eb57b0c6e4a6ba6": "/app.js",
     "63c5c5a61c6f24aa8aa4fee73d95fb07abecb1b3": "/"
   },
   "strategy": "changed",
   "responseStrategy": "cache-first",
-  "version": "2/11/2019, 12:05:40 PM",
+  "version": "2/11/2019, 2:24:57 PM",
   "name": "webpack-offline",
   "pluginVersion": "5.0.6",
   "relativePaths": false

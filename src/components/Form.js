@@ -1,39 +1,34 @@
+import Validator from '../validation/Validator';
+
 export default class Form {
 
-    constructor(form) {
-        this.rules = [];
-        this.form = form;
+	constructor(form, rules) {
+		this.rules = [];
+		this.form = form;
+		this.validator = new Validator(rules, form);
+	}
+
+	get form() {
+		return this._form;
+	}
+
+	set form(form) {
+		if (!(form instanceof HTMLFormElement)) {
+			throw new Error('Form must be a form element');
+		}
+		this._form = form;
     }
 
-    get form() {
-        return this._form;
+	formData() {
+		return new FormData(this.form);
+	}
+
+	validate() {
+        this.validator.make();
+        return this.validator.isValid();
     }
 
-    set form(form) {
-        if (!(form instanceof HTMLFormElement)) {
-            throw new Error('Form must be a form element');
-        }
-        this._form = form;
-    }
-
-    get rules() {
-        return this._rules;
-    }
-
-    set rules(rules) {
-        if (!Array.isArray(rules)) {
-            throw new Error('Rules must be an array of rules');
-        }
-        this._rules = rules;
-    }
-
-    formData() {
-        return new FormData(this.form);
-    }
-
-    validate() {
-        for (let rule of this.rules) {
-
-        }
+    errors() {
+        return this.validator.errors;
     }
 }

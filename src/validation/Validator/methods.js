@@ -16,7 +16,7 @@ export default {
 	email: {
 		fn: function(value) {
 			var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-			return !re.test(String(value).toLowerCase());
+			return re.test(String(value).toLowerCase());
 		},
 		msg: function() {
 			return 'This field must be a valid email';
@@ -25,7 +25,7 @@ export default {
 	match: {
 		fn: function(value, param) {
 			let fieldToMatch = document.querySelector(`[name="${param}"]`);
-			return value !== fieldToMatch.value;
+			return value === fieldToMatch.value;
 		},
 		msg: function(field) {
 			return `This field must match against ${field} field`;
