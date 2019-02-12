@@ -9,7 +9,7 @@ export default class Modal {
 		this.$ok = document.querySelector('.modal__btn.js-ok');
 		this.$cancel = document.querySelector('.modal__btn.js-cancel');
 		this.$cancel.addEventListener('click', this.close);
-		this.$ok.addEventListener('click', this.proceed.bind(this));
+		this.$ok.addEventListener('click', this.proceed.bind(this, this.$ok));
 		this.cloak.addEventListener('click', this.close);
 	}
 
