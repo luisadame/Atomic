@@ -1,5 +1,4 @@
 import Validator from '../validation/Validator';
-import config from '../config';
 
 export default class Form {
 
@@ -26,8 +25,14 @@ export default class Form {
 	}
 
 	submit() {
-		fetch(this.form.action, {method: 'POST', body: this.formData(), mode: 'cors'})
-			.then(r => console.log(r.json()));
+		return new Promise((resolve, reject) => {
+			fetch(this.form.action, {method: 'POST', body: this.formData(), mode: 'cors'})
+				.then(r => {
+					r.json().then(data => {
+						r.ok ? resolve(data) : reject(data);
+					});
+				});
+		});
 	}
 
 	validate() {
@@ -61,24 +66,30 @@ export default class Form {
 	displayErrors() {
 		if (this.hasErrors()) {
 			for (let input of Object.keys(this.rules)) {
-				let $formGroup = this.form.querySelector(`[name="${input}"]`).closest('.input-group');
-				let $error = $formGroup.querySelector('.error');
-				if (this.errors(input)) {
-					$formGroup.classList.add('has-errors');
-					if ($error) {
-						$error.innerText = this.errors(input);
-					} else {
-						$formGroup.insertAdjacentHTML('beforeend', this.errorToHtml(this.errors(input)));
-					}
-				} else {
-					$formGroup.classList.remove('has-errors');
-					if ($error) {
-						$error.remove();
-					}
-				}
+				this.displayError(input);
 			}
 		} else {
 			this.removeAllErrorElements();
+		}
+	}
+
+	displayError(input) {
+		let $formGroup = this.form.querySelector(`[name="${input}"]`).closest('.input-group');
+		let $error = $formGroup.querySelector('.error');
+		if (this.errors(input)) {
+			$formGroup.classList.remove('is-valid');
+			$formGroup.classList.add('has-errors');
+			if ($error) {
+				$error.innerText = this.errors(input);
+			} else {
+				$formGroup.insertAdjacentHTML('beforeend', this.errorToHtml(this.errors(input)));
+			}
+		} else {
+			$formGroup.classList.remove('has-errors');
+			$formGroup.classList.add('is-valid');
+			if ($error) {
+				$error.remove();
+			}
 		}
 	}
 
@@ -109,8 +120,9 @@ export default class Form {
 	validateInput(e) {
 		let name = e.target.name;
 		this.validator.validateInput(name);
-		if (this.hasErrors()) {
-			this.displayErrors();
+		if (this.errors(name)) {
+			this.displayError(name);
+			e.target.classList.remove('is-valid');
 		} else {
 			this.removeError(name);
 			this.makeSuccessful(name);
