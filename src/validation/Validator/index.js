@@ -1,4 +1,5 @@
 import methods from './methods';
+
 export default class Validator {
 	constructor(rules, form) {
 		this.rules = rules;

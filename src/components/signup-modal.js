@@ -9,7 +9,7 @@ export default class SignUpModal extends Modal {
 		this.rules = {
 			email: 'required|email',
 			password: 'required',
-			'password-confirmation': 'required|match:password'
+			'password_confirmation': 'required|match:password'
 		};
 		this.form = new Form(this.$form, this.rules);
 	}
@@ -17,11 +17,10 @@ export default class SignUpModal extends Modal {
 	proceed() {
 		if (this.form.validate()) {
 			this.form.removeAllErrorElements();
-			console.log('Perfect!');
+			this.form.submit();
 		} else {
 			this.form.displayErrors();
 		}
-		//this.close();
 	}
 
 	static listen() {
@@ -41,7 +40,7 @@ export default class SignUpModal extends Modal {
 		let markup = `
             <header><h2>Sign Up</h2></header>
             <div class="container">
-                <form id="signup-form" action="${config.backend}/signup" method="post">
+                <form id="signup-form" action="${config.backend}/register" method="post">
                     <div class="input-group">
                         <label for="email">
                             Email
@@ -59,11 +58,11 @@ export default class SignUpModal extends Modal {
                         </div>
                     </div>
                     <div class="input-group">
-                        <label for="password-confirmation">
+                        <label for="password_confirmation">
                             Confirm your password
                         </label>
                         <div class="flex">
-                            <input required id="password-confirmation" name="password-confirmation" type="password">
+                            <input required id="password_confirmation" name="password_confirmation" type="password">
                         </div>
                     </div>
                 </form>

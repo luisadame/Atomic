@@ -1,4 +1,5 @@
 import Validator from '../validation/Validator';
+import config from '../config';
 
 export default class Form {
 
@@ -22,6 +23,11 @@ export default class Form {
 
 	formData() {
 		return new FormData(this.form);
+	}
+
+	submit() {
+		fetch(this.form.action, {method: 'POST', body: this.formData(), mode: 'cors'})
+			.then(r => console.log(r.json()));
 	}
 
 	validate() {
