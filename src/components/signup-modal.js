@@ -14,12 +14,22 @@ export default class SignUpModal extends Modal {
 		this.form = new Form(this.$form, this.rules);
 	}
 
-	proceed() {
+	proceed(button) {
+		button.disabled = true;
 		if (this.form.validate()) {
 			this.form.removeAllErrorElements();
-			this.form.submit();
+			this.form.submit()
+				.catch(errors => {
+					this.form.validator.errors = errors;
+					this.form.displayErrors();
+					button.disabled = false;
+				})
+				.then(data => {
+					console.log(data, 'good one');
+				});
 		} else {
 			this.form.displayErrors();
+			button.disabled = false;
 		}
 	}
 
