@@ -24,8 +24,11 @@ export default class SignUpModal extends Modal {
 					this.form.displayErrors();
 					button.disabled = false;
 				})
-				.then(data => {
-					console.log(data, 'good one');
+				.then(() => {
+					this.getContainer().innerHTML = `
+						<p>You are all set!</p>
+						<p>You can login using the credentials you entered :)</p>
+					`;
 				});
 		} else {
 			this.form.displayErrors();

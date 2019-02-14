@@ -30,6 +30,10 @@ export default class Modal {
 		return `<div id="modal">${html}</div>`;
 	}
 
+	getContainer() {
+		return document.querySelector('#modal .container');
+	}
+
 	classNames() {
 		this.classes = [...arguments];
 	}
