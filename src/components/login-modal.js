@@ -32,8 +32,9 @@ export default class SignUpModal extends Modal {
 					this.getContainer().innerHTML = '<p>Getting your sources...</p>';
 					fetch(config.backend + '/sources', window.app.fetchOptions)
 						.then(r => r.json())
-						.then(sources => {
-							sources = sources.map(sourceData => {
+						.then(({data}) => {
+							if (data.length < 1) return;
+							let sources = data.map(sourceData => {
 								let source = new Source(sourceData.url);
 								source.title = sourceData.title;
 								if (source.isUnique()) {
@@ -42,22 +43,28 @@ export default class SignUpModal extends Modal {
 								}
 								return undefined;
 							}).filter(s => s !== undefined);
-							return Promise.all(sources);
+							return Promise.all(sources).then(sources => {
+								Source.render(sources);
+							});
 						})
 						.then(() => {
 							this.getContainer().innerHTML = '<p>Getting your categories...</p>';
 							return fetch(config.backend + '/categories', window.app.fetchOptions);
 						})
 						.then(r => r.json())
-						.then(categories => {
-							categories = categories.map(categoryData => {
+						.then(({data}) => {
+							let categories = data.map(categoryData => {
 								let category = new Category(categoryData.name);
 								if (category.isUnique()) {
 									category.save();
 									return category;
 								}
 							});
-							this.close();
+
+							Promise.all(categories).then(categories => {
+								Category.render(categories);
+								this.close();
+							});
 						});
 				});
 		} else {
