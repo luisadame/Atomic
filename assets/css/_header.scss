@@ -249,10 +249,12 @@
 
     &__sections {
         flex: 1;
+        overflow-y: auto;
     }
 
     &__user-area {
         display: flex;
+        margin-top: 1em;
         .btn {
             border-radius: 4px;
             flex: 1;
