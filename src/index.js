@@ -43,6 +43,7 @@ import Search from './components/search';
 import SourceModal from './components/source-add-modal';
 import CategoryModal from './components/category-add-modal';
 import SignUpModal from './components/signup-modal';
+import LogInModal from './components/login-modal';
 import Options from './components/options';
 
 /**
@@ -82,6 +83,7 @@ CategoryModal.listen();
  * Listen for sign up button.
  */
 SignUpModal.listen();
+LogInModal.listen();
 
 /**
  * Start the router.
