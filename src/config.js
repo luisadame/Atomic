@@ -3,6 +3,7 @@ export default {
 	state: 'home',
 	backend: 'http://atomic-api.test/api',
 	proxy: 'http://atomic-api.test/api/proxy/',
+	authenticated: false,
 	fetchOptions: {
 		mode: 'cors',
 		headers: {
