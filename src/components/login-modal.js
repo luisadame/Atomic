@@ -2,6 +2,8 @@ import Modal from './modal';
 import config from '../config';
 import Form from './Form';
 import Auth from '../auth';
+import Source from '../source';
+import Category from '../category';
 
 export default class SignUpModal extends Modal {
 
@@ -30,16 +32,31 @@ export default class SignUpModal extends Modal {
 					this.getContainer().innerHTML = '<p>Getting your sources...</p>';
 					fetch(config.backend + '/sources', window.app.fetchOptions)
 						.then(r => r.json())
-						.then(data => {
-							console.log(data);
+						.then(sources => {
+							sources = sources.map(sourceData => {
+								let source = new Source(sourceData.url);
+								source.title = sourceData.title;
+								if (source.isUnique()) {
+									source.save();
+									return source;
+								}
+								return undefined;
+							}).filter(s => s !== undefined);
+							return Promise.all(sources);
 						})
 						.then(() => {
 							this.getContainer().innerHTML = '<p>Getting your categories...</p>';
 							return fetch(config.backend + '/categories', window.app.fetchOptions);
 						})
 						.then(r => r.json())
-						.then(data => {
-							console.log(data);
+						.then(categories => {
+							categories = categories.map(categoryData => {
+								let category = new Category(categoryData.name);
+								if (category.isUnique()) {
+									category.save();
+									return category;
+								}
+							});
 							this.close();
 						});
 				});
