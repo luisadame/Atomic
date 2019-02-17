@@ -28,36 +28,12 @@ export default class SourceModal extends Modal {
 	proceed() {
 		let source = new Source(this.info.url);
 		source.title = this.info.title;
-		const saveSource = () => {
-			if (source.isUnique()) {
-				source.save()
-					.then(Home.init(true))
-					.then(this.close());
-			}
-		}
+		source.description = this.info.description;
 
-		if (window.app.authenticated) {
-			// make a form data
-			let data = new FormData();
-			data.set('name', source.title);
-			data.set('url', source.url);
-			data.set('description', this.info.description);
-			data.set('icon', 'http://luisadame.ninja');
-			// send it to server, if everything is ok, then save it locally
-			// this way we keep it in sync
-			let options = {
-				method: 'POST',
-				body: data,
-				mode: 'cors',
-				headers: {
-					'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-				}
-			};
-			fetch(config.backend + '/sources', options)
-				.then(r => r.json())
-				.then(saveSource());
-		} else {
-			saveSource(source);
+		if (source.isUnique()) {
+			source.save(true)
+				.then(Home.init(true))
+				.then(this.close());
 		}
 	}
 
