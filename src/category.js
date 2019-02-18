@@ -4,14 +4,18 @@ import Sidebar from './components/sidebar';
 import Model from './model';
 import Source from './source';
 import { desluggify } from './utils';
+import config from './config';
 
 export default class Category extends Model {
 	constructor(name) {
 		super();
 		this.name = name;
 		this.sources = [];
-		this.attributes = ['_id', 'name', 'sources'];
+		this.attributes = ['_id', 'id', 'name', 'sources'];
 		this._database = 'categories';
+		this.fillable = ['name'];
+		this.endpoint = config.backend + '/categories';
+		this.routeKeyName = 'id';
 	}
 
 	get _id() {
