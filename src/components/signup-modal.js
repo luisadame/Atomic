@@ -19,16 +19,16 @@ export default class SignUpModal extends Modal {
 		if (this.form.validate()) {
 			this.form.removeAllErrorElements();
 			this.form.submit()
-				.catch(errors => {
-					this.form.validator.errors = errors;
-					this.form.displayErrors();
-					button.disabled = false;
-				})
 				.then(() => {
 					this.getContainer().innerHTML = `
 						<p>You are all set!</p>
 						<p>You can login using the credentials you entered :)</p>
 					`;
+				})
+				.catch(errors => {
+					this.form.validator.errors = errors;
+					this.form.displayErrors();
+					button.disabled = false;
 				});
 		} else {
 			this.form.displayErrors();
