@@ -25,14 +25,15 @@ export default class Form {
 	}
 
 	submit() {
-		return new Promise((resolve, reject) => {
-			fetch(this.form.action, {method: 'POST', body: this.formData(), ...window.app.fetchOptions()})
-				.then(r => {
-					r.json().then(data => {
-						r.ok ? resolve(data) : reject(data);
-					});
+		return fetch(
+			this.form.action,
+			{method: 'POST', body: this.formData(), ...window.app.fetchOptions()}
+		)
+			.then(r => {
+				return r.json().then(data => {
+					return r.ok ? data : Promise.reject(data);
 				});
-		});
+			});
 	}
 
 	validate() {
@@ -59,7 +60,10 @@ export default class Form {
 	removeAllErrorElements() {
 		this.form.querySelectorAll('.has-errors').forEach(group => {
 			group.classList.remove('has-errors');
-			group.querySelector('.error').remove();
+			let errorMsg = group.querySelector('.error');
+			if (errorMsg) {
+				errorMsg.remove();
+			}
 		});
 	}
 
@@ -68,6 +72,7 @@ export default class Form {
 			for (let input of Object.keys(this.rules)) {
 				this.displayError(input);
 			}
+			this.form.querySelector('.has-errors[name]').focus();
 		} else {
 			this.removeAllErrorElements();
 		}
@@ -79,6 +84,7 @@ export default class Form {
 		if (this.errors(input)) {
 			$formGroup.classList.remove('is-valid');
 			$formGroup.classList.add('has-errors');
+			$formGroup.querySelector('.is-valid').classList.replace('is-valid', 'has-errors');
 			if ($error) {
 				$error.innerText = this.errors(input);
 			} else {
