@@ -6,6 +6,8 @@ let handler = {
 		if (prop === 'authenticated') {
 			if (value) {
 				Auth.afterLogin();
+			} else {
+				Auth.afterLogout();
 			}
 		}
 		return true;
