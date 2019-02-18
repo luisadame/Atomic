@@ -33,15 +33,7 @@ export default class Model {
 
 	async update(updateOnServer = false) {
 		if (updateOnServer && window.app.authenticated) {
-			let options = {
-				method: 'PATCH',
-				mode: 'cors',
-				headers: {
-					'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-				}
-			};
-
-			return fetch(this.endpoint + `/${this[this.routeKeyName]}`, options)
+			return fetch(this.endpoint + `/${this[this.routeKeyName]}`, {method: 'PATCH', ...window.app.fetchOptions()})
 				.then(r => r.json())
 				.then(this.updateLocally());
 		} else {
@@ -66,17 +58,13 @@ export default class Model {
 				data.set(attribute, this[attribute]);
 			}
 
-			let options = {
-				method: 'POST',
-				body: data,
-				mode: 'cors',
-				headers: {
-					'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-				}
-			};
-
-			return fetch(this.endpoint, options)
+			return fetch(this.endpoint, {method: 'POST', body: data, ...window.app.fetchOptions()})
 				.then(r => r.json())
+				.then(data => {
+					if (data.id) {
+						this.id = data.id;
+					}
+				})
 				.then(this.saveLocally());
 		} else {
 			return this.saveLocally();
@@ -95,16 +83,7 @@ export default class Model {
 
 	async delete(deleteOnServer = false) {
 		if (deleteOnServer && window.app.authenticated) {
-
-			let options = {
-				method: 'DELETE',
-				mode: 'cors',
-				headers: {
-					'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-				}
-			};
-
-			return fetch(this.endpoint + `/${this[this.routeKeyName]}`, options)
+			return fetch(this.endpoint + `/${this[this.routeKeyName]}`, {method: 'DELETE', ...window.app.fetchOptions()})
 				.then(r => r.json())
 				.then(this.deleteLocally());
 		} else {

@@ -30,7 +30,7 @@ export default class SignUpModal extends Modal {
 					Auth.login(data.token);
 					// fetch
 					this.getContainer().innerHTML = '<p>Getting your sources...</p>';
-					fetch(config.backend + '/sources', window.app.fetchOptions)
+					fetch(config.backend + '/sources', window.app.fetchOptions())
 						.then(r => r.json())
 						.then(({data}) => {
 							if (data.length < 1) return;
@@ -49,7 +49,7 @@ export default class SignUpModal extends Modal {
 						})
 						.then(() => {
 							this.getContainer().innerHTML = '<p>Getting your categories...</p>';
-							return fetch(config.backend + '/categories', window.app.fetchOptions);
+							return fetch(config.backend + '/categories', window.app.fetchOptions());
 						})
 						.then(r => r.json())
 						.then(({data}) => {

@@ -26,7 +26,7 @@ export default class Form {
 
 	submit() {
 		return new Promise((resolve, reject) => {
-			fetch(this.form.action, {method: 'POST', body: this.formData(), mode: 'cors'})
+			fetch(this.form.action, {method: 'POST', body: this.formData(), ...window.app.fetchOptions()})
 				.then(r => {
 					r.json().then(data => {
 						r.ok ? resolve(data) : reject(data);
