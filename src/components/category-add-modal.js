@@ -7,7 +7,8 @@ export default class CategoryModal extends Modal {
 		let $categoryInput = document.getElementById('category');
 		let category = new Category($categoryInput.value);
 		if (category.isUnique()) {
-			category.save().then(() => {
+			let saveOnServer = window.app.authenticated;
+			category.save(saveOnServer).then(() => {
 				Category.all().then(categories => {
 					Category.render(categories);
 				});
