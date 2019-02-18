@@ -45,12 +45,18 @@ import CategoryModal from './components/category-add-modal';
 import SignUpModal from './components/signup-modal';
 import LogInModal from './components/login-modal';
 import Options from './components/options';
+import Auth from './auth';
 
 /**
  * Initialize database and application config.
  */
 window.db = new Database();
 window.app = config;
+
+/**
+ * Check if user is authenticated
+ */
+Auth.check();
 
 /**
  * Render the categories saved in the sidebar.
