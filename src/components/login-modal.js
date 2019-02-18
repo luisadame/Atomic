@@ -4,6 +4,7 @@ import Form from './Form';
 import Auth from '../auth';
 import Source from '../source';
 import Category from '../category';
+import Home from '../pages/home';
 
 export default class SignUpModal extends Modal {
 
@@ -63,8 +64,9 @@ export default class SignUpModal extends Modal {
 
 							Promise.all(categories).then(categories => {
 								Category.render(categories);
-								this.close();
-							});
+							})
+							.then(this.close())
+							.then(Home.init(true));
 						});
 				});
 		} else {
