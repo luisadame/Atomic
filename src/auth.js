@@ -1,4 +1,28 @@
+import config from './config';
+import Source from './source';
+import Category from './category';
+import Loader from './components/Loader';
+import Home from './pages/home';
+import Post from './post';
+import Router from './router';
+
 export default class Auth {
+
+	static refresh() {
+		fetch(
+			window.app.backend + '/refresh_token',
+			window.app.fetchOptions()
+		)
+			.then(response => {
+				if (response.ok && response.headers['Authorization']) {
+					localStorage.setItem('access_token', response.headers['Authorization'].replace('Bearer ', ''));
+					window.app.authenticated = true;
+				} else {
+					this.logout();
+				}
+			});
+	}
+
 	static check() {
 		let access_token = localStorage.getItem('access_token');
 		if (access_token) {
@@ -6,16 +30,7 @@ export default class Auth {
 			fetch(window.app.backend + '/user', window.app.fetchOptions())
 				.then(response => {
 					if (response.status === 401) {
-						// try to request another token
-						fetch(window.app.backend + '/refresh_token', window.app.fetchOptions())
-							.then(response => {
-								if (response.ok && response.headers['Authorization']) {
-									localStorage.setItem('access_token', response.headers['Authorization'].replace('Bearer ', ''));
-									window.app.authenticated = true;
-								} else {
-									this.logout();
-								}
-							});
+						this.refresh();
 					} else {
 						window.app.authenticated = true;
 					}
@@ -45,8 +60,16 @@ export default class Auth {
 	}
 
 	static logout() {
+		Loader.toggle();
 		localStorage.removeItem('access_token');
-		window.app.authenticated = false;
-		window.location.href = '/';
+		window.db.flush()
+			.then(() => {
+				window.app.authenticated = false;
+				Post.render([]);
+				Category.render([]);
+				Source.render([]);
+				Router.home();
+				Loader.toggle();
+			});
 	}
 }
