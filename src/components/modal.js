@@ -56,14 +56,17 @@ export default class Modal {
 	}
 
 	close() {
-		// get modal
-		let modal = document.getElementById('modal');
-		modal.classList.remove('open');
-		// close it
-		setTimeout(() => {
-			Modal.instance.cloak.classList.toggle('open');
-			modal.remove();
-			Modal.instance = null;
-		}, 270);
+		return new Promise(resolve => {
+			// get modal
+			let modal = document.getElementById('modal');
+			modal.classList.remove('open');
+			// close it
+			setTimeout(() => {
+				Modal.instance.cloak.classList.toggle('open');
+				modal.remove();
+				Modal.instance = null;
+				resolve();
+			}, 270);
+		});
 	}
 }
