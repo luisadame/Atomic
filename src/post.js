@@ -2,6 +2,7 @@ import Model from './model';
 import Modal from './modal';
 import Source from './source';
 import { distanceInWords } from 'date-fns';
+import Paginator from './paginator';
 
 export default class Post extends Model {
 	constructor(title = null) {
@@ -221,7 +222,7 @@ export default class Post extends Model {
 
 	static all() {
 		return window.db.posts.allDocs({
-			include_docs: true
+			include_docs: true,
 		})
 			.then(result => {
 				let posts = result.rows.filter(row => row.doc.title).map(row => {
@@ -272,17 +273,48 @@ export default class Post extends Model {
 
 	static async render(posts) {
 		let $posts = document.querySelector('.posts');
+
 		if (!posts.length) {
 			$posts.innerHTML = '<img src="/assets/img/news.svg" alt="No articles or news added" />';
 			return;
 		}
-		let reg = new RegExp(/\r\n|\n|\r|\t|\\/, 'gm');
-		let promises = posts.map(post => post.render());
-		let result = await Promise.all(promises);
-		$posts.innerHTML = result.join('').trim().replace(reg, '');
-		const postTitles = document.querySelectorAll('.post__title');
-		postTitles.forEach(title =>
-			title.addEventListener('click', Post.loadPost, false)
-		);
+
+		if (this.isPaginated) {
+			let paginator = new Paginator(
+				this.itemsToPaginate,
+				$posts,
+				posts
+			);
+
+			paginator.beforeRender = function() {
+				this.isRendering = true;
+				let reg = new RegExp(/\r\n|\n|\r|\t|\\/, 'gm');
+				let items = this.items.slice(this.start, this.end);
+				let promises = items.map(post => post.render());
+				return Promise.all(promises).then(posts => {
+					return posts.join('').trim().replace(reg, '');
+				});
+			};
+
+			paginator.afterRender = function() {
+				const postTitles = document.querySelectorAll('.post__title');
+				postTitles.forEach(title =>
+					title.addEventListener('click', Post.loadPost, false)
+				);
+				this.isRendering = false;
+			};
+
+			paginator.listen().run();
+		} else {
+			let reg = new RegExp(/\r\n|\n|\r|\t|\\/, 'gm');
+			let promises = posts.map(post => post.render());
+			let result = await Promise.all(promises);
+			$posts.innerHTML = result.join('').trim().replace(reg, '');
+			const postTitles = document.querySelectorAll('.post__title');
+			postTitles.forEach(title =>
+				title.addEventListener('click', Post.loadPost, false)
+			);
+		}
+
 	}
 }

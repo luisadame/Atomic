@@ -9,6 +9,7 @@ export default class Home {
 		// Show loader
 		Loader.toggle();
 		let sources = null;
+		let nItems = 25;
 
 		// Get already stored posts
 		let cachedPosts = await Post.all();
@@ -26,7 +27,8 @@ export default class Home {
 
 		// If we have saved posts and we dont want fresh data render inmediately
 		if (cachedPosts.length && !refresh) {
-			Post.render(cachedPosts)
+			Post.paginate(nItems)
+				.render(cachedPosts)
 				.then(afterRender())
 				.catch(e => {throw new Error(e);});
 		}
@@ -61,7 +63,8 @@ export default class Home {
 				// and fetch from db
 				Promise.all(savedPostPromises).then(() => {
 					if (refresh || !cachedPosts.length) {
-						Post.all()
+						Post.paginate(nItems)
+							.all()
 							.then(Post.render)
 							.then(afterRender())
 							.catch(e => {throw new Error(e);});

@@ -1,4 +1,5 @@
 export default class Model {
+
 	constructor() {
 
 	}
@@ -89,5 +90,11 @@ export default class Model {
 		} else {
 			return this.deleteLocally();
 		}
+	}
+
+	static paginate(n) {
+		this.isPaginated = true;
+		this.itemsToPaginate = n;
+		return this;
 	}
 }
