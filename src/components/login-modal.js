@@ -17,57 +17,72 @@ export default class SignUpModal extends Modal {
 		this.form = new Form(this.$form, this.rules);
 	}
 
+	loadSources() {
+		this.getContainer().innerHTML = '<p>Getting your sources...</p>';
+		return fetch(config.backend + '/sources', window.app.fetchOptions())
+			.then(r => r.json());
+	}
+
+	saveSources({data}) {
+		if (data.length < 1) return;
+
+		let sources = data.map(sourceData => {
+			let source = new Source(sourceData.url);
+			source.title = sourceData.title;
+			if (source.isUnique()) {
+				return source.save().then(() => source);
+			}
+			return undefined;
+		}).filter(s => s !== undefined);
+
+		return Promise.all(sources)
+			.then(sources => {
+				Source.render(sources);
+			});
+	}
+
+	loadCategories() {
+		this.getContainer().innerHTML = '<p>Getting your categories...</p>';
+		return fetch(config.backend + '/categories', window.app.fetchOptions())
+			.then(r => r.json());
+	}
+
+	saveCategories({data}) {
+		if (data.length < 1) return;
+
+		let categories = data.map(categoryData => {
+			let category = new Category(categoryData.name);
+			if (category.isUnique()) {
+				return category.save().then(() => category);
+			}
+			return undefined;
+		}).filter(c => c !== undefined);
+
+		return Promise.all(categories)
+			.then(categories => {
+				Category.render(categories);
+			});
+	}
+
 	proceed(button) {
 		button.disabled = true;
 		if (this.form.validate()) {
 			this.form.removeAllErrorElements();
 			this.form.submit()
 				.catch(errors => {
+					errors = errors.errors ? errors.errors : errors;
 					this.form.validator.errors = errors;
 					this.form.displayErrors();
 					button.disabled = false;
 				})
 				.then(data => {
-					Auth.login(data.token);
-					// fetch
-					this.getContainer().innerHTML = '<p>Getting your sources...</p>';
-					fetch(config.backend + '/sources', window.app.fetchOptions())
-						.then(r => r.json())
-						.then(({data}) => {
-							if (data.length < 1) return;
-							let sources = data.map(sourceData => {
-								let source = new Source(sourceData.url);
-								source.title = sourceData.title;
-								if (source.isUnique()) {
-									source.save();
-									return source;
-								}
-								return undefined;
-							}).filter(s => s !== undefined);
-							return Promise.all(sources).then(sources => {
-								Source.render(sources);
-							});
-						})
-						.then(() => {
-							this.getContainer().innerHTML = '<p>Getting your categories...</p>';
-							return fetch(config.backend + '/categories', window.app.fetchOptions());
-						})
-						.then(r => r.json())
-						.then(({data}) => {
-							let categories = data.map(categoryData => {
-								let category = new Category(categoryData.name);
-								if (category.isUnique()) {
-									category.save();
-									return category;
-								}
-							});
-
-							Promise.all(categories).then(categories => {
-								Category.render(categories);
-							})
-							.then(this.close())
-							.then(Home.init(true));
-						});
+					Auth.login(data.token)
+						.then(this.loadSources.bind(this))
+						.then(this.saveSources)
+						.then(this.loadCategories.bind(this))
+						.then(this.saveCategories)
+						.then(this.close)
+						.then(Home.init(true));
 				});
 		} else {
 			this.form.displayErrors();
