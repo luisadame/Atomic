@@ -84,7 +84,10 @@ export default class Form {
 		if (this.errors(input)) {
 			$formGroup.classList.remove('is-valid');
 			$formGroup.classList.add('has-errors');
-			$formGroup.querySelector('.is-valid').classList.replace('is-valid', 'has-errors');
+			let $formGroupInput = $formGroup.querySelector('.is-valid');
+			if ($formGroupInput) {
+				$formGroupInput.classList.replace('is-valid', 'has-errors');
+			}
 			if ($error) {
 				$error.innerText = this.errors(input);
 			} else {
