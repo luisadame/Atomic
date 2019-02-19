@@ -36,8 +36,13 @@ export default class Database {
 	}
 
 	flush() {
-		let destruction = this.models.map(model => this[model].destroy());
-		return Promise.all(destruction);
+		// destroy databases and create them again
+		return Promise.all(this.models.map(model => this[model].destroy()))
+			.then(() => {
+				this.models.forEach(model => {
+					this[model] = new PouchDB(model);
+				});
+			});
 	}
 
 	validateDb(db) {
