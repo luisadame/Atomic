@@ -43,6 +43,7 @@ export default class Auth {
 	static login(access_token) {
 		localStorage.setItem('access_token', access_token);
 		window.app.authenticated = true;
+		return Promise.resolve();
 	}
 
 	static afterLogin() {

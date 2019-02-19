@@ -17,48 +17,50 @@ export default class SignUpModal extends Modal {
 		this.form = new Form(this.$form, this.rules);
 	}
 
-	getSources() {
+	loadSources() {
+		this.getContainer().innerHTML = '<p>Getting your sources...</p>';
 		return fetch(config.backend + '/sources', window.app.fetchOptions())
-			.then(r => r.json())
-			.then(({data}) => {
-				return new Promise((resolve) => {
-					if (data.length < 1) return;
-					let sources = data.map(sourceData => {
-						let source = new Source(sourceData.url);
-						source.title = sourceData.title;
-						if (source.isUnique()) {
-							source.save();
-							return source;
-						}
-						return undefined;
-					}).filter(s => s !== undefined);
-					Promise.all(sources).then(sources => {
-						Source.render(sources);
-						resolve();
-					});
-				});
+			.then(r => r.json());
+	}
+
+	saveSources({data}) {
+		if (data.length < 1) return;
+
+		let sources = data.map(sourceData => {
+			let source = new Source(sourceData.url);
+			source.title = sourceData.title;
+			if (source.isUnique()) {
+				return source.save().then(() => source);
+			}
+			return undefined;
+		}).filter(s => s !== undefined);
+
+		return Promise.all(sources)
+			.then(sources => {
+				Source.render(sources);
 			});
 	}
 
-	getCategories() {
+	loadCategories() {
+		this.getContainer().innerHTML = '<p>Getting your categories...</p>';
 		return fetch(config.backend + '/categories', window.app.fetchOptions())
-			.then(r => r.json())
-			.then(({data}) => {
-				return new Promise(resolve => {
-					let categories = data.map(categoryData => {
-						let category = new Category(categoryData.name);
-						if (category.isUnique()) {
-							category.save();
-							return category;
-						}
-					});
+			.then(r => r.json());
+	}
 
-					Promise.all(categories)
-						.then(categories => {
-							Category.render(categories);
-							resolve();
-						});
-				})
+	saveCategories({data}) {
+		if (data.length < 1) return;
+
+		let categories = data.map(categoryData => {
+			let category = new Category(categoryData.name);
+			if (category.isUnique()) {
+				return category.save().then(() => category);
+			}
+			return undefined;
+		}).filter(c => c !== undefined);
+
+		return Promise.all(categories)
+			.then(categories => {
+				Category.render(categories);
 			});
 	}
 
@@ -74,16 +76,12 @@ export default class SignUpModal extends Modal {
 					button.disabled = false;
 				})
 				.then(data => {
-					Auth.login(data.token);
-					// fetch
-					this.getContainer().innerHTML = '<p>Getting your sources...</p>';
-					this.getSources()
-						.then(() => {
-							this.getContainer().innerHTML = '<p>Getting your categories...</p>';
-							return Promise.resolve();
-						})
-						.then(this.getCategories())
-						.then(this.close())
+					Auth.login(data.token)
+						.then(this.loadSources.bind(this))
+						.then(this.saveSources)
+						.then(this.loadCategories.bind(this))
+						.then(this.saveCategories)
+						.then(this.close)
 						.then(Home.init(true));
 				});
 		} else {

@@ -5,13 +5,11 @@ import * as OfflinePluginRuntime from 'offline-plugin/runtime';
 OfflinePluginRuntime.install();
 
 if ('serviceWorker' in navigator) {
-	navigator.serviceWorker.register('/sw.js', {scope: './'}).then(() => {
-		// eslint-disable-next-line no-console
-		console.log('Sw installed');
-	}).catch(err => {
-		// eslint-disable-next-line no-console
-		console.error(err);
-	});
+	navigator.serviceWorker.register('/sw.js', {scope: './'})
+		.catch(err => {
+			// eslint-disable-next-line no-console
+			console.error(err);
+		});
 }
 
 /**
