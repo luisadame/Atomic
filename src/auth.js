@@ -1,10 +1,10 @@
-import config from './config';
 import Source from './source';
 import Category from './category';
 import Loader from './components/Loader';
-import Home from './pages/home';
 import Post from './post';
 import Router from './router';
+import SignUpModal from './components/signup-modal';
+import LogInModal from './components/login-modal';
 
 export default class Auth {
 
@@ -57,6 +57,8 @@ export default class Auth {
 			<button class="btn sidebar__user-area__login js-login">Log In</button>
 			<button class="btn sidebar__user-area__signup js-signup">Sign Up</button>
 		`;
+		SignUpModal.listen();
+		LogInModal.listen();
 	}
 
 	static logout() {

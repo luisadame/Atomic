@@ -111,7 +111,7 @@ export default class Source extends Model {
 						Loader.toggle();
 						window.app.source = null;
 						Options.toggle();
-						Home.init();
+						Home.init(true);
 						Sidebar.get().init();
 					});
 				});
