@@ -2,11 +2,15 @@ import Validator from '../validation/Validator';
 
 export default class Form {
 
-	constructor(form, rules) {
+	constructor(form, rules, action = null) {
 		this.rules = rules;
 		this.form = form;
 		this.validator = new Validator(rules, form);
+		this.action = action ? action : this.form.action;
 		this.listenForValidation();
+		this.form.addEventListener('submit', e => {
+			e.preventDefault();
+		});
 	}
 
 	get form() {
@@ -24,10 +28,10 @@ export default class Form {
 		return new FormData(this.form);
 	}
 
-	submit() {
+	submit(method = 'POST') {
 		return fetch(
-			this.form.action,
-			{method: 'POST', body: this.formData(), ...window.app.fetchOptions()}
+			this.action,
+			{method: method, body: this.formData(), ...window.app.fetchOptions()}
 		)
 			.then(r => {
 				return r.json().then(data => {

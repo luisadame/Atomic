@@ -5,6 +5,9 @@ import Model from './model';
 import Source from './source';
 import { desluggify } from './utils';
 import config from './config';
+import Loader from './components/Loader';
+import Options from './components/options';
+import Home from './pages/home';
 
 export default class Category extends Model {
 	constructor(name) {
@@ -15,7 +18,7 @@ export default class Category extends Model {
 		this._database = 'categories';
 		this.fillable = ['name'];
 		this.endpoint = config.backend + '/categories';
-		this.routeKeyName = 'id';
+		this.routeKeyName = 'name';
 	}
 
 	get _id() {
@@ -162,5 +165,21 @@ export default class Category extends Model {
 			.catch(e => {
 				throw new Error(e);
 			});
+	}
+
+	static delete() {
+		if (window.app.category) {
+			let category = window.app.category;
+			Loader.toggle();
+			category.delete(true)
+				.then(() => {
+					Loader.toggle();
+					window.app.category = null;
+					Options.toggle();
+					Category.all().then(Category.render);
+					Home.init(true);
+					Sidebar.get().init();
+				});
+		}
 	}
 }
