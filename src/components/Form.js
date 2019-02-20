@@ -5,6 +5,7 @@ export default class Form {
 	constructor(form, rules, action = null) {
 		this.rules = rules;
 		this.form = form;
+		this.method = null;
 		this.validator = new Validator(rules, form);
 		this.action = action ? action : this.form.action;
 		this.listenForValidation();
@@ -25,13 +26,16 @@ export default class Form {
 	}
 
 	formData() {
-		return new FormData(this.form);
+		let data = new FormData(this.form);
+		data.append('_method', this.method);
+		return data;
 	}
 
 	submit(method = 'POST') {
+		this.method = method;
 		return fetch(
 			this.action,
-			{method: method, body: this.formData(), ...window.app.fetchOptions()}
+			{method: 'POST', body: this.formData(), ...window.app.fetchOptions()}
 		)
 			.then(r => {
 				return r.json().then(data => {

@@ -1,5 +1,7 @@
 import Modal from '../modal';
 import Sidebar from '../components/sidebar';
+import { throttle } from '../utils';
+import Post from '../post';
 
 export default class Router {
 
@@ -73,12 +75,18 @@ export default class Router {
 		this.handleCurrentRoute();
 	}
 
+	removePageListeners() {
+		window.removeEventListener('scroll', throttle);
+	}
+
 	async handle(e) {
 		// get urls hash
 		const route = e.target.location.hash.substr(1);
 
 		if (route === '') await Modal.close();
 
+		this.removePageListeners();
+		Post.isPaginated = false;
 		// hand the hash to the matcher
 		this.match(route);
 
@@ -99,6 +107,9 @@ export default class Router {
 	handleCurrentRoute() {
 		// Get url's hash
 		const route = window.location.hash.substr(1);
+		// remove necessary listeners
+		Post.isPaginated = false;
+		this.removePageListeners();
 		// Hand the route to the matcher
 		this.match(route);
 	}
