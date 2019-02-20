@@ -53,12 +53,12 @@ export default class Paginator {
 	}
 
 	next() {
-		this.start += this.step - 1;
+		this.start += this.step;
 		this.end += this.step;
 	}
 
 	previous() {
-		this.start -= this.step + 1;
+		this.start -= this.step;
 		this.end -= this.step;
 	}
 
