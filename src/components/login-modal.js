@@ -82,7 +82,10 @@ export default class SignUpModal extends Modal {
 						.then(this.loadCategories.bind(this))
 						.then(this.saveCategories)
 						.then(this.close)
-						.then(Home.init(true));
+						.then(() => {
+							console.log('Lets render posts');
+							Home.init(true);
+						});
 				});
 		} else {
 			this.form.displayErrors();

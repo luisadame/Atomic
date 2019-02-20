@@ -91,12 +91,4 @@ export default class Model {
 			return this.deleteLocally();
 		}
 	}
-
-	static paginate(n) {
-		this.isPaginated = true;
-		this.itemsToPaginate = n;
-		return this;
-	}
 }
-
-Model.isPaginated = false;

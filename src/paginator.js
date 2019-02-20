@@ -57,11 +57,6 @@ export default class Paginator {
 		this.end += this.step;
 	}
 
-	previous() {
-		this.start -= this.step;
-		this.end -= this.step;
-	}
-
 	isNearBottom() {
 		let document = window.document.documentElement,
 			threshold = +(document.scrollHeight * 0.3).toFixed(2);

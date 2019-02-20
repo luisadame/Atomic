@@ -271,6 +271,12 @@ export default class Post extends Model {
 		});
 	}
 
+	static paginate(n) {
+		Post.isPaginated = true;
+		Post.itemsToPaginate = n;
+		return this;
+	}
+
 	static async render(posts) {
 		let $posts = document.querySelector('.posts');
 
@@ -279,9 +285,9 @@ export default class Post extends Model {
 			return;
 		}
 
-		if (this.isPaginated) {
+		if (Post.isPaginated) {
 			let paginator = new Paginator(
-				this.itemsToPaginate,
+				Post.itemsToPaginate,
 				$posts,
 				posts
 			);
