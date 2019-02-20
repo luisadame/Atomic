@@ -52,12 +52,12 @@ var __wpo = {
     "e0418901a0c8f90e6efb618bef11ee93a8a0dc93": "/assets/fonts/Nunito-SemiBold.woff",
     "ff6e79711b2df8b22092e114506bde3e7c672d13": "/assets/img/logo.svg",
     "fb68f3dfbb0656460bdef92c7ab54766eb13873d": "/app.css",
-    "38a16a1a9070941ac4218382c7624afd22a4847e": "/app.js",
+    "ad75d7eb2d98402f6a3c920e3fb023e067bc9266": "/app.js",
     "3cc60e9b3a610b9c36be6693382d528afce6e590": "/"
   },
   "strategy": "changed",
   "responseStrategy": "cache-first",
-  "version": "2/19/2019, 11:22:13 PM",
+  "version": "2/20/2019, 1:41:44 AM",
   "name": "webpack-offline",
   "pluginVersion": "5.0.6",
   "relativePaths": false

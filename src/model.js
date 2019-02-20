@@ -98,3 +98,5 @@ export default class Model {
 		return this;
 	}
 }
+
+Model.isPaginated = false;
