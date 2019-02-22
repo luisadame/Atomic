@@ -44,12 +44,12 @@ export default class SourceModal extends Modal {
 				})
 				.catch(e => console.error);
 		} else {
-			let source = new Source(this.info.url);
-			source.title = this.info.title;
-			source.description = this.info.description;
+			let source = new Source(this.selectedItem.url);
+			source.title = this.selectedItem.title;
+			source.description = this.selectedItem.description;
 
 			if (source.isUnique()) {
-				source.save(true)
+				source.save()
 					.then(Home.init(true))
 					.then(this.close());
 			}
@@ -57,77 +57,97 @@ export default class SourceModal extends Modal {
 
 	}
 
-	validate() {
-		let $sourceInput = document.getElementById('source-url');
-		let $feedInfo = document.querySelector('.feed-info');
-		if ($sourceInput.checkValidity()) {
-			this.toggleLoader();
-			FeedValidator.validate($sourceInput.value)
-				.then(data => {
-					let url;
-					if (typeof data === 'object') {
-						url = data.url;
-						data = data.data;
-					}
-					this.getFeedInfo(data)
-						.then(info => {
-							this.info = Object.assign({}, info, {
-								url: url ? url : $sourceInput.value
-							});
-							let image = false;
-							let markup = `
-								${image ? '<div class="image"></div>' : ''}
-								<div class="title">${info.title}</div>
-								${info.description ? `<div class="description">${info.description}</div>` : ''}
-							`;
-							$feedInfo.innerHTML = markup;
-							$feedInfo.classList.add('show');
-							this.toggleLoader();
-							this.$ok.removeAttribute('disabled');
-						})
-						.catch(error => {
-							this.toggleLoader();
-							throw new Error(error);
-						});
-				}).catch(error => {
-					this.toggleLoader();
-					throw new Error(error);
-				});
+	// validate() {
+	// 	let $sourceInput = document.getElementById('source-url');
+	// 	let $feedInfo = document.querySelector('.feed-info');
+	// 	if ($sourceInput.checkValidity()) {
+	// 		this.toggleLoader();
+	// 		FeedValidator.validate($sourceInput.value)
+	// 			.then(data => {
+	// 				let url;
+	// 				if (typeof data === 'object') {
+	// 					url = data.url;
+	// 					data = data.data;
+	// 				}
+	// 				this.getFeedInfo(data)
+	// 					.then(info => {
+	// 						this.info = Object.assign({}, info, {
+	// 							url: url ? url : $sourceInput.value
+	// 						});
+	// 						let image = false;
+	// 						let markup = `
+	// 							${image ? '<div class="image"></div>' : ''}
+	// 							<div class="title">${info.title}</div>
+	// 							${info.description ? `<div class="description">${info.description}</div>` : ''}
+	// 						`;
+	// 						$feedInfo.innerHTML = markup;
+	// 						$feedInfo.classList.add('show');
+	// 						this.toggleLoader();
+	// 						this.$ok.removeAttribute('disabled');
+	// 					})
+	// 					.catch(error => {
+	// 						this.toggleLoader();
+	// 						throw new Error(error);
+	// 					});
+	// 			}).catch(error => {
+	// 				this.toggleLoader();
+	// 				throw new Error(error);
+	// 			});
 
-		} else {
-			// eslint-disable-next-line no-console
-			console.error('Feed not valid');
+	// 	} else {
+	// 		// eslint-disable-next-line no-console
+	// 		console.error('Feed not valid');
+	// 	}
+	// }
+
+	feedResultMarkup(feed) {
+		let $feed = document.createElement('div');
+		$feed.className = 'feed-result appear';
+		$feed.innerHTML = `
+			<div class="title">${feed.title}</div>
+			${feed.description ? `<div class="description">${feed.description}</div>` : ''}
+		`;
+		return $feed;
+	}
+
+	selectFeedResult(item) {
+		this.selectedItem = item;
+		this.$sourceInput.value = item.url;
+		if (this.$sourceInput.checkValidity()) {
+			this.$ok.disabled = false;
 		}
 	}
 
-	search() {
-		let $sourceInput = document.getElementById('source-url');
-		let $feedInfo = document.querySelector('.feed-info');
+	addSearchResults(data) {
+		let feedResults = document.createDocumentFragment();
+		data.forEach(item => {
+			let feedResult = this.feedResultMarkup(item);
+			feedResult.addEventListener(
+				'click',
+				this.selectFeedResult.bind(this, item),
+				false
+			);
+			feedResult.addEventListener('animationend', () => {
+				feedResult.classList.remove('appear');
+			});
+			feedResults.appendChild(feedResult);
+		});
+		this.$feedInfo.innerHTML = '';
+		this.$feedInfo.appendChild(feedResults);
+		this.$feedInfo.classList.add('show');
+	}
 
+	search() {
 		this.toggleLoader();
-		if ($sourceInput.checkValidity()) {
+		if (this.$sourceInput.checkValidity()) {
 			this.toggleLoader();
 			this.$ok.removeAttribute('disabled');
-		} else if ($sourceInput.value.length > 0) {
-			fetch(`${config.backend}/feed/search?url=${$sourceInput.value}`)
+		} else if (this.$sourceInput.value.length > 0) {
+			fetch(`${config.backend}/feed/search?url=${this.$sourceInput.value}`)
 				.then(r => r.json())
 				.then(({data}) => {
-					let markup = '';
-					data.forEach(result => {
-						markup += `
-							<div class="feed-result" data-url="${result.url}">
-								<div class="title">${result.title}</div>
-								${result.description ? `<div class="description">${result.description}</div>` : ''}
-							</div>
-						`;
-					});
-					$feedInfo.innerHTML = markup;
-					$feedInfo.querySelectorAll('.feed-result').forEach(feedResult => {
-						feedResult.addEventListener('click', e => {
-							$sourceInput.value = e.target.closest('.feed-result').dataset.url;
-						}, false);
-					});
-					$feedInfo.classList.add('show');
+					this.search = data;
+					this.addSearchResults(data);
 					this.toggleLoader();
 				})
 				.catch(e => console.error);
@@ -136,8 +156,9 @@ export default class SourceModal extends Modal {
 
 	open() {
 		super.open();
-		let $sourceInput = document.getElementById('source-url');
-		$sourceInput.addEventListener('input', debounce(this.search.bind(this), 600));
+		this.$sourceInput = document.getElementById('source-url');
+		this.$feedInfo = document.querySelector('.feed-info');
+		this.$sourceInput.addEventListener('input', debounce(this.search.bind(this), 600));
 	}
 
 	toggleLoader() {
