@@ -68,6 +68,7 @@
 
     .container {
         padding: 1em;
+        padding-bottom: 0;
         background: var(--shade-0);
         color: hsl(272, 8%, 40%);
 
@@ -111,6 +112,38 @@
             padding: 1em;
             border-radius: 6px;
             cursor: pointer;
+            transition: all 250ms var(--easing);
+            outline: none;
+            will-change: transform, box-shadow;
+
+            &:hover {
+                transform: scale(1.02);
+                box-shadow: 0 12px 25px -10px #0000009c;
+            }
+
+            &:active, &:focus {
+                transform: scale(.95);
+                box-shadow: 0 10px 20px -14px #0000009c;
+            }
+
+            &.appear {
+                transform: translate3d(0, -40px, 0);
+                opacity: 0;
+                animation: appear 250ms var(--easing) forwards;
+
+                @for $i from 1 through 3 {
+                    &:nth-of-type(#{$i}) {
+                        animation-delay: (($i - 1) * 50) + 350ms;
+                    }
+                }
+            }
+
+            @keyframes appear {
+                to {
+                    transform: none;
+                    opacity: 1;
+                }
+            }
         }
 
         .title {
