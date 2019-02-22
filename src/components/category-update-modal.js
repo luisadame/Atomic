@@ -25,8 +25,16 @@ export default class CategoryUpdateModal extends Modal {
 					button.disabled = false;
 				})
 				.then(data => {
-					category.name = data.name;
-					category.update()
+					window.db.categories.get(category._id)
+						.then(doc => {
+							return window.db.categories.put({
+								_id: doc._id,
+								_rev: doc._rev,
+								name: data.name
+							});
+						})
+						.then(Category.all())
+						.then(Category.render)
 						.then(this.close);
 				});
 		} else {
