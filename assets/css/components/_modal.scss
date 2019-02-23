@@ -68,7 +68,6 @@
 
     .container {
         padding: 1em;
-        padding-bottom: 0;
         background: var(--shade-0);
         color: hsl(272, 8%, 40%);
 
@@ -184,4 +183,7 @@
 
 #modal.add-source {
     top: 40%;
+    & .container {
+        padding-bottom: 0;
+    }
 }

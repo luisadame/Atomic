@@ -28,19 +28,25 @@ export default class SourceModal extends Modal {
 	proceed() {
 
 		if (window.app.authenticated) {
-			let $sourceInput = document.getElementById('source-url');
-			let $feedInfo = document.querySelector('.feed-info');
-			let url = encodeURIComponent($sourceInput.value);
-			fetch(`${config.backend}/feed?url=${url}`, window.app.fetchOptions())
+			let data = new FormData();
+			Object.keys(this.selectedItem).forEach(key => {
+				data.set(key, this.selectedItem[key]);
+			});
+			fetch(`${config.backend}/sources`, {method: 'POST', body: data, ...window.app.fetchOptions()})
 				.then(r => r.json())
-				.then(({data}) => {
-					let markup = `
-							<div class="feed-result" data-url="${data.url}">
-								<div class="title">${data.title}</div>
-								${data.description ? `<div class="description">${data.description}</div>` : ''}
-							</div>
-						`;
-					$feedInfo.innerHTML = markup;
+				.then(data => {
+					let source = new Source(data.url);
+					source.title = data.title;
+
+					if (data.description) {
+						source.description = data.description;
+					}
+
+					if (source.isUnique()) {
+						source.save()
+							.then(Home.init(true))
+							.then(this.close());
+					}
 				})
 				.catch(e => console.error);
 		} else {
@@ -56,49 +62,6 @@ export default class SourceModal extends Modal {
 		}
 
 	}
-
-	// validate() {
-	// 	let $sourceInput = document.getElementById('source-url');
-	// 	let $feedInfo = document.querySelector('.feed-info');
-	// 	if ($sourceInput.checkValidity()) {
-	// 		this.toggleLoader();
-	// 		FeedValidator.validate($sourceInput.value)
-	// 			.then(data => {
-	// 				let url;
-	// 				if (typeof data === 'object') {
-	// 					url = data.url;
-	// 					data = data.data;
-	// 				}
-	// 				this.getFeedInfo(data)
-	// 					.then(info => {
-	// 						this.info = Object.assign({}, info, {
-	// 							url: url ? url : $sourceInput.value
-	// 						});
-	// 						let image = false;
-	// 						let markup = `
-	// 							${image ? '<div class="image"></div>' : ''}
-	// 							<div class="title">${info.title}</div>
-	// 							${info.description ? `<div class="description">${info.description}</div>` : ''}
-	// 						`;
-	// 						$feedInfo.innerHTML = markup;
-	// 						$feedInfo.classList.add('show');
-	// 						this.toggleLoader();
-	// 						this.$ok.removeAttribute('disabled');
-	// 					})
-	// 					.catch(error => {
-	// 						this.toggleLoader();
-	// 						throw new Error(error);
-	// 					});
-	// 			}).catch(error => {
-	// 				this.toggleLoader();
-	// 				throw new Error(error);
-	// 			});
-
-	// 	} else {
-	// 		// eslint-disable-next-line no-console
-	// 		console.error('Feed not valid');
-	// 	}
-	// }
 
 	feedResultMarkup(feed) {
 		let $feed = document.createElement('div');
@@ -118,19 +81,23 @@ export default class SourceModal extends Modal {
 		}
 	}
 
+	createResultElement(item) {
+		let feedResult = this.feedResultMarkup(item);
+		feedResult.addEventListener(
+			'click',
+			this.selectFeedResult.bind(this, item),
+			false
+		);
+		feedResult.addEventListener('animationend', () => {
+			feedResult.classList.remove('appear');
+		});
+		return feedResult;
+	}
+
 	addSearchResults(data) {
 		let feedResults = document.createDocumentFragment();
 		data.forEach(item => {
-			let feedResult = this.feedResultMarkup(item);
-			feedResult.addEventListener(
-				'click',
-				this.selectFeedResult.bind(this, item),
-				false
-			);
-			feedResult.addEventListener('animationend', () => {
-				feedResult.classList.remove('appear');
-			});
-			feedResults.appendChild(feedResult);
+			feedResults.appendChild(this.createResultElement(item));
 		});
 		this.$feedInfo.innerHTML = '';
 		this.$feedInfo.appendChild(feedResults);
@@ -138,11 +105,8 @@ export default class SourceModal extends Modal {
 	}
 
 	search() {
-		this.toggleLoader();
-		if (this.$sourceInput.checkValidity()) {
+		if (this.$sourceInput.value.length > 0) {
 			this.toggleLoader();
-			this.$ok.removeAttribute('disabled');
-		} else if (this.$sourceInput.value.length > 0) {
 			fetch(`${config.backend}/feed/search?url=${this.$sourceInput.value}`)
 				.then(r => r.json())
 				.then(({data}) => {
@@ -151,6 +115,8 @@ export default class SourceModal extends Modal {
 					this.toggleLoader();
 				})
 				.catch(e => console.error);
+		} else {
+			this.$feedInfo.classList.remove('show');
 		}
 	}
 

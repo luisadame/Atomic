@@ -19,13 +19,13 @@ var __wpo = {
   ],
   "hashesMap": {
     "ff6e79711b2df8b22092e114506bde3e7c672d13": "/assets/img/logo.svg",
-    "6e437354d0f7cdc235903b7ea27cd453d3954522": "/app.css",
-    "9e1069150218e6b7b7e45ae3b0dcb0b461270de3": "/app.js",
+    "997b8d2bcd4191cbb32f3039bb432cb7a33c3019": "/app.css",
+    "7eb88ca5851c577dcbf65bc6163b4f09ae17500f": "/app.js",
     "3cc60e9b3a610b9c36be6693382d528afce6e590": "/"
   },
   "strategy": "changed",
   "responseStrategy": "cache-first",
-  "version": "2/22/2019, 10:00:10 PM",
+  "version": "2/23/2019, 5:17:00 AM",
   "name": "webpack-offline",
   "pluginVersion": "5.0.6",
   "relativePaths": false
