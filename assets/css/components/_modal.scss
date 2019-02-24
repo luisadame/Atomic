@@ -21,7 +21,11 @@
     }
 
     header {
-        padding: 18px 1em;
+        padding: 10px 1em;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        min-height: 65px;
 
         h2 {
             margin: 0;
