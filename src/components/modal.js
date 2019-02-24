@@ -17,6 +17,28 @@ export default class Modal {
 
 	}
 
+	listen() {
+
+		function onKeyDown(e) {
+			if (e.key === 'Enter') {
+				this.proceed(this.$ok);
+			}
+		}
+
+		let inputs = this.getContainer().querySelectorAll('.input-group input');
+		let input = null;
+
+		if (inputs.length > 1) {
+			input = this.getContainer().querySelector('.input-group:last-child input');
+		} else {
+			input = inputs[0];
+		}
+
+		if (input) {
+			input.addEventListener('keydown', onKeyDown.bind(this));
+		}
+	}
+
 	static set instance(object) {
 		// if(!(object instanceof Modal) || object !== null) throw new Error('Object given should be an instance of Modal');
 		this._instance = object;
@@ -50,6 +72,7 @@ export default class Modal {
 		}, 10);
 		Modal.instance = this;
 		this.addlisteners();
+		this.listen();
 		if (this.afterOpen) {
 			this.afterOpen();
 		}
