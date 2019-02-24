@@ -65,6 +65,7 @@ export default class SignUpModal extends Modal {
 	}
 
 	proceed(button) {
+		this.toggleLoader();
 		button.disabled = true;
 		if (this.form.validate()) {
 			this.form.removeAllErrorElements();
@@ -74,6 +75,7 @@ export default class SignUpModal extends Modal {
 					this.form.validator.errors = errors;
 					this.form.displayErrors();
 					button.disabled = false;
+					this.toggleLoader();
 				})
 				.then(data => {
 					Auth.login(data.token)
@@ -83,13 +85,20 @@ export default class SignUpModal extends Modal {
 						.then(this.saveCategories)
 						.then(this.close)
 						.then(() => {
-							console.log('Lets render posts');
+							this.toggleLoader();
 							Home.init(true);
 						});
 				});
 		} else {
 			this.form.displayErrors();
 			button.disabled = false;
+		}
+	}
+
+	toggleLoader() {
+		let loader = document.querySelector('#modal .loader');
+		if (loader) {
+			loader.classList.toggle('show');
 		}
 	}
 
@@ -108,7 +117,10 @@ export default class SignUpModal extends Modal {
 
 	static open() {
 		let markup = `
-            <header><h2>Log In</h2></header>
+			<header>
+				<h2>Log In</h2>
+				<div class="loader"></div>
+			</header>
             <div class="container">
                 <form id="signup-form" action="${config.backend}/login" method="post">
                     <div class="input-group">
