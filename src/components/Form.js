@@ -9,9 +9,7 @@ export default class Form {
 		this.validator = new Validator(rules, form);
 		this.action = action ? action : this.form.action;
 		this.listenForValidation();
-		this.form.addEventListener('submit', e => {
-			e.preventDefault();
-		});
+		this.listenForSubmition();
 	}
 
 	get form() {
@@ -117,6 +115,12 @@ export default class Form {
 	listenForValidation() {
 		this.rulesToElements().forEach(input => {
 			input.addEventListener('input', this.validateInput.bind(this), false);
+		});
+	}
+
+	listenForSubmition() {
+		this.form.addEventListener('submit', e => {
+			e.preventDefault();
 		});
 	}
 
