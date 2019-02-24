@@ -57,8 +57,11 @@ export default class Home {
 
 			Promise.all(promises).then(() => {
 				// save the posts that are not already stored
-				// eslint-disable-next-line no-console
-				let savedPostPromises = posts.map(post => window.db.posts.put(post.toObject()).catch(e => console.log(e)));
+				let savedPostPromises = posts.map(post => {
+					if (!post.isSaved()) {
+						post.save();
+					}
+				});
 
 				// and fetch from db
 				Promise.all(savedPostPromises).then(() => {
