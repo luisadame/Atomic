@@ -22,6 +22,8 @@ export default class Modal {
 		function onKeyDown(e) {
 			if (e.key === 'Enter') {
 				this.proceed(this.$ok);
+			} else if (e.key === 'Escape') {
+				this.close();
 			}
 		}
 
@@ -37,6 +39,7 @@ export default class Modal {
 		if (input) {
 			input.addEventListener('keydown', onKeyDown.bind(this));
 		}
+		this.getContainer().addEventListener('keydown', onKeyDown.bind(this));
 	}
 
 	static set instance(object) {
@@ -58,6 +61,13 @@ export default class Modal {
 
 	classNames() {
 		this.classes = [...arguments];
+	}
+
+	toggleLoader() {
+		let loader = document.querySelector('#modal .loader');
+		if (loader) {
+			loader.classList.toggle('show');
+		}
 	}
 
 	open() {
