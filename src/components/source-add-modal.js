@@ -26,7 +26,7 @@ export default class SourceModal extends Modal {
 	}
 
 	proceed() {
-
+		this.toggleLoader();
 		if (window.app.authenticated) {
 			let data = new FormData();
 			Object.keys(this.selectedItem).forEach(key => {
@@ -42,8 +42,15 @@ export default class SourceModal extends Modal {
 						source.description = data.description;
 					}
 
+					data.items = data.items.map(item => {
+						item.source = source.toObject();
+						return item;
+					});
+
 					if (source.isUnique()) {
+						this.toggleLoader();
 						source.save()
+							.then(window.db.posts.bulkDocs(data.items))
 							.then(Home.init(true))
 							.then(this.close());
 					}
@@ -55,6 +62,7 @@ export default class SourceModal extends Modal {
 			source.description = this.selectedItem.description;
 
 			if (source.isUnique()) {
+				this.toggleLoader();
 				source.save()
 					.then(Home.init(true))
 					.then(this.close());
@@ -150,7 +158,10 @@ export default class SourceModal extends Modal {
 			CategorySourceModal.open();
 		} else {
 			let markup = `
-				<header><h2>Add a source</h2></header>
+				<header>
+					<h2>Add a source</h2>
+					<div class="loader"></div>
+				</header>
 				<div class="container">
 					<div class="input-group">
 						<label for="source-url">
