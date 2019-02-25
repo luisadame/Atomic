@@ -1,11 +1,19 @@
 import {
 	throttle
 } from './utils';
+import Post from './post';
+import Loader from './components/Loader';
 export default class AjaxPaginator {
 
 	constructor(container) {
-        this.container = container;
-        this.endpoint = null;
+		if (AjaxPaginator.instance) {
+			return AjaxPaginator.instance;
+		} else {
+			this.container = container;
+			this.endpoint = undefined;
+			this.page = 0;
+			AjaxPaginator.instance = this;
+		}
 	}
 
 
@@ -36,11 +44,13 @@ export default class AjaxPaginator {
 
 	next(endpoint) {
 		this.endpoint = endpoint;
-    }
+		return this;
+	}
 
-    items(items) {
-        this.items = items;
-    }
+	items(items) {
+		this.items = items;
+		return this;
+	}
 
 	isNearBottom() {
 		let document = window.document.documentElement,
@@ -61,7 +71,7 @@ export default class AjaxPaginator {
 	}
 
 	render(items) {
-		if (!this.endpoint) {
+		if (this.page === 1) {
 			this.container.innerHTML = '';
 		}
 		this.container.insertAdjacentHTML('beforeend', items);
@@ -69,9 +79,39 @@ export default class AjaxPaginator {
 
 	run() {
 		if (!this.isRendering) {
-			this.beforeRender()
+			return this.beforeRender()
 				.then(this.render.bind(this))
 				.then(this.afterRender.bind(this));
 		}
+	}
+
+	load(response) {
+		let items = response.data.map(Post.fromObject);
+		let nextPage = response.links.next;
+		this.next(nextPage).items(items);
+
+		return Promise.all(items.map(post => post.save()));
+	}
+
+	initialRender() {
+		if (!window.app.authenticated) return;
+		let reg = new RegExp(/\r\n|\n|\r|\t|\\/, 'gm');
+		let promises = this.items.map(post => post.render());
+		return Promise.all(promises)
+			.then(posts => {
+				return posts.join('').trim().replace(reg, '');
+			})
+			.then(results => {
+				this.container.innerHTML = '';
+				this.container.insertAdjacentHTML('beforeend', results);
+			})
+			.then(() => {
+				const postTitles = document.querySelectorAll('.post__title');
+				postTitles.forEach(title =>
+					title.addEventListener('click', Post.loadPost, false)
+				);
+				this.isRendering = false;
+				Loader.toggle();
+			});
 	}
 }

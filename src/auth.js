@@ -5,6 +5,7 @@ import Post from './post';
 import Router from './router';
 import SignUpModal from './components/signup-modal';
 import LogInModal from './components/login-modal';
+import AjaxPaginator from './ajaxPaginator';
 
 export default class Auth {
 
@@ -60,6 +61,7 @@ export default class Auth {
 		`;
 		SignUpModal.listen();
 		LogInModal.listen();
+		AjaxPaginator.instance = undefined;
 	}
 
 	static logout() {

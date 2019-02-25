@@ -93,54 +93,75 @@ export default class Home {
 		}
 	}
 
-	static async remoteInit() {
-		let $posts = document.querySelector('.posts');
+	static async remoteInit(refresh = false) {
 
-		let firstRequest = fetch(`${window.app.backend}/posts`, window.app.fetchOptions());
+		Loader.toggle();
+		let nItems = 25;
 
-		let paginator = new AjaxPaginator($posts);
+		// Get already stored posts
+		let cachedPosts = await Post.all();
 
-
-		function load(response) {
-			let items = response.data.map(Post.fromObject);
-			let nextPage = response.links.next;
-			paginator.next(nextPage).items(items);
+		function afterRender() {
+			// Hide loader
+			Loader.toggle();
+			// Change history
+			Router.home();
+			// Change document title
+			document.querySelector('.current-section').textContent = 'All articles';
+			// Change app state
+			window.app.state = 'home';
 		}
 
-		paginator.beforeRender = function () {
-			this.isRendering = true;
-			let request = fetch(this.next, window.app.fetchOptions());
-			return request
-				.then(r => r.json())
-				.then(load)
-				.then(() => {
-					let reg = new RegExp(/\r\n|\n|\r|\t|\\/, 'gm');
-					let promises = this.items.map(post => post.render());
-					return Promise.all(promises).then(posts => {
-						return posts.join('').trim().replace(reg, '');
-					});
+		// If we have saved posts and we dont want fresh data render inmediately
+		if (cachedPosts.length && !refresh) {
+			Post.paginate(nItems)
+				.render(cachedPosts)
+				.then(afterRender())
+				.catch(e => {
+					throw new Error(e);
 				});
-		};
+		} else {
+			let $posts = document.querySelector('.posts');
 
-		paginator.afterRender = function () {
-			const postTitles = document.querySelectorAll('.post__title');
-			postTitles.forEach(title =>
-				title.addEventListener('click', Post.loadPost, false)
-			);
-			this.isRendering = false;
-		};
+			let firstRequest = fetch(`${window.app.backend}/posts`, window.app.fetchOptions());
 
-		firstRequest
-			.then(r => r.json())
-			.then(load)
-			.then(() => {
-				paginator.listen().run();
-			});
+			let paginator = new AjaxPaginator($posts);
+
+			paginator.beforeRender = function () {
+				this.isRendering = true;
+				Loader.toggle();
+				let request = fetch(this.endpoint, window.app.fetchOptions());
+				return request
+					.then(r => r.json())
+					.then(this.load.bind(paginator))
+					.then(() => {
+						let reg = new RegExp(/\r\n|\n|\r|\t|\\/, 'gm');
+						let promises = this.items.map(post => post.render());
+						return Promise.all(promises).then(posts => {
+							return posts.join('').trim().replace(reg, '');
+						});
+					});
+			};
+
+			paginator.afterRender = function () {
+				const postTitles = document.querySelectorAll('.post__title');
+				postTitles.forEach(title =>
+					title.addEventListener('click', Post.loadPost, false)
+				);
+				this.isRendering = false;
+				Loader.toggle();
+			};
+
+			firstRequest
+				.then(r => r.json())
+				.then(paginator.load.bind(paginator))
+				.then(paginator.initialRender.bind(paginator));
+		}
 	}
 
 	static async init(refresh = false) {
 		if (window.app.authenticated) {
-			await Home.remoteInit();
+			await Home.remoteInit(refresh);
 		} else {
 			await Home.localInit(refresh);
 		}
