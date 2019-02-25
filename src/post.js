@@ -208,8 +208,14 @@ export default class Post extends Model {
 		post.image = object.image;
 		post.link = object.link;
 		post.timestamp = object.timestamp;
-		let source = new Source(object.source._url);
-		source.title = object.source._title;
+		let source = null;
+		if (object.source._url) {
+			source = new Source(object.source._url);
+			source.title = object.source._title;
+		} else {
+			source = new Source(object.source.url);
+			source.title = object.source.title;
+		}
 		post.source = source;
 		post.isFavorite = object.isFavorite ? object.isFavorite : false;
 		post.isRead = object.isRead ? object.isRead : false;
