@@ -11,6 +11,7 @@ export default class Post extends Model {
 		this.title = title;
 		this.isRead = false;
 		this.isFavorite = false;
+		this.paginator = null;
 		this.attributes = ['_id', 'title', 'image', 'timestamp', 'link', 'content', 'source', 'isRead', 'isFavorite'];
 	}
 
@@ -185,9 +186,13 @@ export default class Post extends Model {
 
 	/** Check if post is unique in the database */
 	isUnique() {
-		return window.db[this._database].get(this._id()).then(doc => {
-			return !!doc;
-		});
+		return window.db[this._database].get(this._id)
+			.then(() => {
+				return true;
+			})
+			.catch(() => {
+				return false;
+			})
 	}
 
 	/**
@@ -207,7 +212,15 @@ export default class Post extends Model {
 		post.content = object.content;
 		post.image = object.image;
 		post.link = object.link;
-		post.timestamp = object.timestamp;
+
+		if (object.timestamp) {
+			post.timestamp = object.timestamp;
+		} else if (object.created_at) {
+			post.timestamp = object.created_at;
+		} else {
+			post.timestamp = object.updated_at;
+		}
+
 		let source = null;
 		if (object.source._url) {
 			source = new Source(object.source._url);
@@ -216,6 +229,7 @@ export default class Post extends Model {
 			source = new Source(object.source.url);
 			source.title = object.source.title;
 		}
+
 		post.source = source;
 		post.isFavorite = object.isFavorite ? object.isFavorite : false;
 		post.isRead = object.isRead ? object.isRead : false;
