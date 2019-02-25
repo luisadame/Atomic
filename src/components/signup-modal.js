@@ -15,6 +15,7 @@ export default class SignUpModal extends Modal {
 	}
 
 	proceed(button) {
+		this.toggleLoader();
 		button.disabled = true;
 		if (this.form.validate()) {
 			this.form.removeAllErrorElements();
@@ -24,15 +25,18 @@ export default class SignUpModal extends Modal {
 						<p>You are all set!</p>
 						<p>You can login using the credentials you entered :)</p>
 					`;
+					this.toggleLoader();
 				})
 				.catch(errors => {
 					this.form.validator.errors = errors;
 					this.form.displayErrors();
 					button.disabled = false;
+					this.toggleLoader();
 				});
 		} else {
 			this.form.displayErrors();
 			button.disabled = false;
+			this.toggleLoader();
 		}
 	}
 
@@ -51,7 +55,10 @@ export default class SignUpModal extends Modal {
 
 	static open() {
 		let markup = `
-            <header><h2>Sign Up</h2></header>
+			<header>
+				<h2>Sign Up</h2>
+				<div class="loader"></div>
+			</header>
             <div class="container">
                 <form id="signup-form" action="${config.backend}/register" method="post">
                     <div class="input-group">
@@ -59,7 +66,7 @@ export default class SignUpModal extends Modal {
                             Email
                         </label>
                         <div class="flex">
-                            <input required id="email" name="email" type="email">
+                            <input autofocus required id="email" name="email" type="email">
                         </div>
                     </div>
                     <div class="input-group">
