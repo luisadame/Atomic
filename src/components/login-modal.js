@@ -52,6 +52,7 @@ export default class SignUpModal extends Modal {
 
 		let categories = data.map(categoryData => {
 			let category = new Category(categoryData.name);
+			category.id = categoryData.id;
 			if (category.isUnique()) {
 				return category.save().then(() => category);
 			}

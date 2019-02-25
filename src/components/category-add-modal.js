@@ -6,15 +6,24 @@ export default class CategoryModal extends Modal {
 	proceed() {
 		let $categoryInput = document.getElementById('category');
 		let category = new Category($categoryInput.value);
-		if (category.isUnique()) {
-			let saveOnServer = window.app.authenticated;
-			category.save(saveOnServer).then(() => {
-				Category.all().then(categories => {
-					Category.render(categories);
-				});
-			});
-		}
-		this.close();
+
+		let data = new FormData();
+		data.set('name', category.name);
+
+		fetch(category.endpoint, {method: 'post', body: data, ...window.app.fetchOptions()})
+			.then(r => r.json())
+			.then(({data}) => {
+				category.id = data.id;
+				return category;
+			})
+			.then(category => {
+				if (category.isUnique()) {
+					return category.save();
+				}
+			})
+			.then(Category.all())
+			.then(Category.render)
+			.then(this.close());
 	}
 
 	static listen() {

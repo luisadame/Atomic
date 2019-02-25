@@ -43,6 +43,7 @@ export default class SourceModal extends Modal {
 					}
 
 					data.items = data.items.map(item => {
+						item._id = item.url;
 						item.source = source.toObject();
 						return item;
 					});
@@ -76,7 +77,7 @@ export default class SourceModal extends Modal {
 		$feed.className = 'feed-result appear';
 		$feed.innerHTML = `
 			<div class="title">${feed.title}</div>
-			${feed.description ? `<div class="description">${feed.description}</div>` : ''}
+			${feed.description !== 'null' ? `<div class="description">${feed.description}</div>` : ''}
 		`;
 		return $feed;
 	}

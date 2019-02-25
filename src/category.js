@@ -14,15 +14,15 @@ export default class Category extends Model {
 		super();
 		this.name = name;
 		this.sources = [];
-		this.attributes = ['_id', 'id', 'name', 'sources'];
+		this.attributes = ['_id', 'name', 'sources'];
 		this._database = 'categories';
-		this.fillable = ['name'];
+		this.fillable = ['id', 'name'];
 		this.endpoint = config.backend + '/categories';
 		this.routeKeyName = 'name';
 	}
 
 	get _id() {
-		return this.name;
+		return this.id;
 	}
 
 	static get attributes() {
