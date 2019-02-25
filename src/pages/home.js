@@ -3,9 +3,11 @@ import Source from '../source';
 import Parser from '../parser';
 import Loader from '../components/Loader';
 import Router from '../router';
+import AjaxPaginator from '../ajaxPaginator';
 
 export default class Home {
-	static async init(refresh = false) {
+
+	static async localInit(refresh = false) {
 		// Show loader
 		Loader.toggle();
 		let sources = null;
@@ -30,7 +32,9 @@ export default class Home {
 			Post.paginate(nItems)
 				.render(cachedPosts)
 				.then(afterRender())
-				.catch(e => {throw new Error(e);});
+				.catch(e => {
+					throw new Error(e);
+				});
 		}
 
 		try {
@@ -43,7 +47,9 @@ export default class Home {
 
 			for (let source of sources) {
 				promises.push(
-					fetch(window.app.proxy + source.url, {mode: 'cors'})
+					fetch(window.app.proxy + source.url, {
+						mode: 'cors'
+					})
 						.then(response => response.text())
 						.then(data => {
 							let parser = new Parser({
@@ -58,7 +64,7 @@ export default class Home {
 			Promise.all(promises).then(() => {
 				// save the posts that are not already stored
 				let savedPostPromises = posts.map(post => {
-					if (!post.isSaved()) {
+					if (post.isUnique()) {
 						post.save();
 					}
 				});
@@ -70,7 +76,9 @@ export default class Home {
 							.all()
 							.then(Post.render)
 							.then(afterRender())
-							.catch(e => {throw new Error(e);});
+							.catch(e => {
+								throw new Error(e);
+							});
 					}
 				});
 			});
@@ -82,6 +90,59 @@ export default class Home {
 				Post.render([]);
 				return;
 			}
+		}
+	}
+
+	static async remoteInit() {
+		let $posts = document.querySelector('.posts');
+
+		let firstRequest = fetch(`${window.app.backend}/posts`, window.app.fetchOptions());
+
+		let paginator = new AjaxPaginator($posts);
+
+
+		function load(response) {
+			let items = response.data.map(Post.fromObject);
+			let nextPage = response.links.next;
+			paginator.next(nextPage).items(items);
+		}
+
+		paginator.beforeRender = function () {
+			this.isRendering = true;
+			let request = fetch(this.next, window.app.fetchOptions());
+			return request
+				.then(r => r.json())
+				.then(load)
+				.then(() => {
+					let reg = new RegExp(/\r\n|\n|\r|\t|\\/, 'gm');
+					let promises = this.items.map(post => post.render());
+					return Promise.all(promises).then(posts => {
+						return posts.join('').trim().replace(reg, '');
+					});
+				});
+		};
+
+		paginator.afterRender = function () {
+			const postTitles = document.querySelectorAll('.post__title');
+			postTitles.forEach(title =>
+				title.addEventListener('click', Post.loadPost, false)
+			);
+			this.isRendering = false;
+		};
+
+		firstRequest
+			.then(r => r.json())
+			.then(load)
+			.then(() => {
+				paginator.listen().run();
+			});
+	}
+
+	static async init(refresh = false) {
+		if (window.app.authenticated) {
+			await Home.remoteInit();
+		} else {
+			await Home.localInit(refresh);
 		}
 	}
 }
