@@ -95,13 +95,6 @@ export default class SignUpModal extends Modal {
 		}
 	}
 
-	toggleLoader() {
-		let loader = document.querySelector('#modal .loader');
-		if (loader) {
-			loader.classList.toggle('show');
-		}
-	}
-
 	static listen() {
 		let $signUpBtn = document.querySelector('.js-login');
 		$signUpBtn.addEventListener('click', SignUpModal.toggle);
@@ -128,7 +121,7 @@ export default class SignUpModal extends Modal {
                             Email
                         </label>
                         <div class="flex">
-                            <input required id="email" name="email" type="email">
+                            <input autofocus required id="email" name="email" type="email">
                         </div>
                     </div>
                     <div class="input-group">
