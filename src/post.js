@@ -162,7 +162,7 @@ export default class Post extends Model {
 	 * It returns the markup to be injected in the posts section.
 	 */
 	async render() {
-		const size = await this.getPostSize();
+		const size = this.image ? await this.getPostSize() : 'wide';
 		return `
 			<article class="post ${size}" data-id="${this._id}">
 				${this.isRead ? '<div class="post__isReadLabel">Read</div>' : ''}
@@ -211,7 +211,7 @@ export default class Post extends Model {
 		post.title = object.title;
 		post.content = object.content;
 		post.image = object.image;
-		post.link = object.link;
+		post.link = object.link ? object.link : object.url;
 
 		if (object.timestamp) {
 			post.timestamp = object.timestamp;
