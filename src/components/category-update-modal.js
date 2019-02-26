@@ -30,11 +30,11 @@ export default class CategoryUpdateModal extends Modal {
 							return window.db.categories.put({
 								_id: doc._id,
 								_rev: doc._rev,
-								name: data.name
+								name: data.name,
+								sources: category.sources
 							});
 						})
 						.then(result => {
-							console.log(result);
 							return Category.all()
 								.then(categories => {
 									return Category.render(categories);
