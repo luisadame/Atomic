@@ -28,14 +28,17 @@ export default class CategoryUpdateModal extends Modal {
 					window.db.categories.get(category._id)
 						.then(doc => {
 							return window.db.categories.put({
-								_id: data.name,
+								_id: doc._id,
 								_rev: doc._rev,
 								name: data.name
 							});
 						})
-						.then(() => {
+						.then(result => {
+							console.log(result);
 							return Category.all()
-									.then(Category.render);
+								.then(categories => {
+									return Category.render(categories);
+								});
 						})
 						.then(this.close);
 				});

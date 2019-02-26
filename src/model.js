@@ -14,7 +14,6 @@ export default class Model {
 
 	async updateLocally() {
 		try {
-			debugger;
 			let doc = await window.db[this._database].get(this._id);
 			let updatedObject = {
 				_rev: doc._rev,

@@ -22,12 +22,12 @@ export default class Category extends Model {
 	}
 
 	get _id() {
-		return this.id;
+		return String(this.id);
 	}
 
 	static get attributes() {
 		return {
-			_id: 'string',
+			_id: 'int',
 			name: 'string',
 			sources: 'array'
 		};
@@ -82,15 +82,20 @@ export default class Category extends Model {
 	}
 
 	isUnique() {
-		return window.db[this._database].get(this._id, (_, doc) => {
-			return !!doc;
-		});
+		return window.db[this._database].get(this._id)
+			.then(() => {
+				return true;
+			})
+			.catch(() => {
+				return false;
+			});
 	}
 
 	static fromObject(object) {
-		if (!object.name ||!object.sources) return;
+		if (!object.name) return;
 		let category = new Category(object.name);
-		category.sources = object.sources;
+		category.id = object._id;
+		category.sources = object.sources ? object.sources : [];
 		return category;
 	}
 
@@ -123,14 +128,18 @@ export default class Category extends Model {
 
 	static async openCategory(name) {
 		let category = await window.db.category(name);
+		if (!category) {
+			Home.init();
+		} else {
 
-		// fetch all posts by source
-		await this.renderCategoryPosts(category.sources);
-		document.querySelector('.current-section').textContent = `Category: ${name}`;
+			// fetch all posts by source
+			await this.renderCategoryPosts(category.sources);
+			document.querySelector('.current-section').textContent = `Category: ${name}`;
 
-		// change app state
-		window.app.state = 'category';
-		window.app.category = Category.fromObject(category);
+			// change app state
+			window.app.state = 'category';
+			window.app.category = Category.fromObject(category);
+		}
 	}
 
 	static addListeners() {
@@ -141,6 +150,7 @@ export default class Category extends Model {
 	}
 
 	static render(categories) {
+		categories = categories.filter(c => c !== undefined);
 		let $categories = document.querySelector('.categories');
 		if (categories.length) {
 			let fragment = [];

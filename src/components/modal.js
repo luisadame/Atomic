@@ -20,7 +20,8 @@ export default class Modal {
 	listen() {
 
 		function onKeyDown(e) {
-			if (e.key === 'Enter') {
+			e.stopPropagation();
+			if (e.key === 'Enter' && e.target.nodeName === 'INPUT') {
 				this.proceed(this.$ok);
 			} else if (e.key === 'Escape') {
 				this.close();

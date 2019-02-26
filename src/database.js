@@ -24,6 +24,12 @@ export default class Database {
 				fields: ['title', 'url']
 			}
 		});
+
+		this.categories.createIndex({
+			index: {
+				fields: ['name']
+			}
+		});
 	}
 
 	set db(db) {
@@ -86,7 +92,10 @@ export default class Database {
 	}
 
 	category(name) {
-		return this.categories.get(name);
+		return this.categories.find({
+			selector: {name: name},
+			limit: 1
+		}).then(result => result.docs[0]);
 	}
 
 	categoryBySlug(slug) {

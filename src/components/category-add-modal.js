@@ -3,7 +3,9 @@ import Category from '../category';
 
 export default class CategoryModal extends Modal {
 
-	proceed() {
+	proceed(button) {
+		button.disabled = true;
+		this.toggleLoader();
 		let $categoryInput = document.getElementById('category');
 		let category = new Category($categoryInput.value);
 
@@ -14,15 +16,17 @@ export default class CategoryModal extends Modal {
 			.then(r => r.json())
 			.then(({data}) => {
 				category.id = data.id;
-				return category;
-			})
-			.then(category => {
+				category.sources = [];
 				if (category.isUnique()) {
 					return category.save();
 				}
 			})
-			.then(Category.all())
-			.then(Category.render)
+			.then(() => {
+				return Category.all()
+					.then(categories => {
+						return Category.render(categories);
+					});
+			})
 			.then(this.close());
 	}
 
@@ -41,7 +45,10 @@ export default class CategoryModal extends Modal {
 
 	static open() {
 		let markup = `
-            <header><h2>Add a category</h2></header>
+			<header>
+				<h2>Add a category</h2>
+				<div class="loader"></div>
+			</header>
             <div class="container">
                 <div class="input-group">
                     <label for="category">
