@@ -78,7 +78,7 @@ export default class Form {
 			for (let input of Object.keys(this.rules)) {
 				this.displayError(input);
 			}
-			this.form.querySelector('.has-errors[name]').focus();
+			this.form.querySelector('.has-errors [name]').focus();
 		} else {
 			this.removeAllErrorElements();
 		}
