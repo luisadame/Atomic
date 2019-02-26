@@ -9,7 +9,7 @@ export default {
 	},
 	string: {
 		fn: function(value) {
-			return typeof value !== 'string';
+			return typeof value === 'string';
 		},
 		msg: function() {
 			return 'This field must be a string';
