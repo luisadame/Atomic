@@ -91,7 +91,7 @@ export default class SourceModal extends Modal {
 		$feed.className = 'feed-result appear';
 		$feed.innerHTML = `
 			<div class="title">${feed.title}</div>
-			${feed.description !== 'null' ? `<div class="description">${feed.description}</div>` : ''}
+			${feed.description && feed.description !== 'null' ? `<div class="description">${feed.description}</div>` : ''}
 		`;
 		return $feed;
 	}
