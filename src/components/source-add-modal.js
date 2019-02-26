@@ -2,11 +2,11 @@ import Modal from './modal';
 import {
 	debounce
 } from '../utils';
-import FeedValidator from '../validation/feed';
 import Source from '../source';
 import Home from '../pages/home';
 import CategorySourceModal from './category-add-source';
 import config from '../config';
+import Form from './Form';
 
 export default class SourceModal extends Modal {
 
@@ -25,51 +25,65 @@ export default class SourceModal extends Modal {
 		});
 	}
 
-	proceed() {
+	afterOpen() {
+		this.$form = document.getElementById('source-add-modal');
+		this.rules = {
+			url: 'required|string'
+		};
+		this.form = new Form(this.$form, this.rules);
+	}
+
+	proceed(button) {
+		button.disabled = true;
 		this.toggleLoader();
-		if (window.app.authenticated) {
-			let data = new FormData();
-			Object.keys(this.selectedItem).forEach(key => {
-				data.set(key, this.selectedItem[key]);
-			});
-			fetch(`${config.backend}/sources`, {method: 'POST', body: data, ...window.app.fetchOptions()})
-				.then(r => r.json())
-				.then(data => {
-					let source = new Source(data.url);
-					source.title = data.title;
+		if (this.form.validate()) {
+			if (window.app.authenticated) {
+				let data = new FormData();
+				Object.keys(this.selectedItem).forEach(key => {
+					data.set(key, this.selectedItem[key]);
+				});
+				fetch(`${config.backend}/sources`, {method: 'POST', body: data, ...window.app.fetchOptions()})
+					.then(r => r.json())
+					.then(data => {
+						let source = new Source(data.url);
+						source.title = data.title;
 
-					if (data.description) {
-						source.description = data.description;
-					}
+						if (data.description) {
+							source.description = data.description;
+						}
 
-					data.items = data.items.map(item => {
-						item._id = item.url;
-						item.source = source.toObject();
-						return item;
-					});
+						data.items = data.items.map(item => {
+							item._id = item.url;
+							item.source = source.toObject();
+							return item;
+						});
 
-					if (source.isUnique()) {
-						this.toggleLoader();
-						source.save()
-							.then(window.db.posts.bulkDocs(data.items))
-							.then(Home.init(true))
-							.then(this.close());
-					}
-				})
-				.catch(e => console.error);
-		} else {
-			let source = new Source(this.selectedItem.url);
-			source.title = this.selectedItem.title;
-			source.description = this.selectedItem.description;
+						if (source.isUnique()) {
+							this.toggleLoader();
+							source.save()
+								.then(window.db.posts.bulkDocs(data.items))
+								.then(Home.init(true))
+								.then(this.close());
+						}
+					})
+					.catch(e => console.error);
+			} else {
+				let source = new Source(this.selectedItem.url);
+				source.title = this.selectedItem.title;
+				source.description = this.selectedItem.description;
 
-			if (source.isUnique()) {
-				this.toggleLoader();
-				source.save()
-					.then(Home.init(true))
-					.then(this.close());
+				if (source.isUnique()) {
+					this.toggleLoader();
+					source.save()
+						.then(Home.init(true))
+						.then(this.close());
+				}
 			}
+		} else {
+			this.toggleLoader();
+			this.form.displayErrors();
+			button.disabled = false;
 		}
-
 	}
 
 	feedResultMarkup(feed) {
@@ -164,15 +178,17 @@ export default class SourceModal extends Modal {
 					<div class="loader"></div>
 				</header>
 				<div class="container">
-					<div class="input-group">
-						<label for="source-url">
-							Source of news
-						</label>
-						<div class="flex">
-							<input required id="source-url" type="url">
-							<div class="loader"></div>
+					<form id="source-add-modal">
+						<div class="input-group">
+							<label for="source-url">
+								Source of news
+							</label>
+							<div class="flex">
+								<input required id="source-url" type="url" name="url" autocomplete="off">
+								<div class="loader"></div>
+							</div>
 						</div>
-					</div>
+					</form>
 					<div class="feed-info"></div>
 				</div>
 				<div class="submit">
