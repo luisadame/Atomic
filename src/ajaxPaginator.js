@@ -48,7 +48,7 @@ export default class AjaxPaginator {
 	}
 
 	items(items) {
-		this.items = items;
+		this._items = items;
 		return this;
 	}
 
@@ -96,7 +96,7 @@ export default class AjaxPaginator {
 	initialRender() {
 		if (!window.app.authenticated) return;
 		let reg = new RegExp(/\r\n|\n|\r|\t|\\/, 'gm');
-		let promises = this.items.map(post => post.render());
+		let promises = this._items.map(post => post.render());
 		return Promise.all(promises)
 			.then(posts => {
 				return posts.join('').trim().replace(reg, '');
@@ -111,6 +111,7 @@ export default class AjaxPaginator {
 					title.addEventListener('click', Post.loadPost, false)
 				);
 				this.isRendering = false;
+				this.listen();
 				Loader.toggle();
 			});
 	}
