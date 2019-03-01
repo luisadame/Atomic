@@ -136,7 +136,7 @@ export default class Home {
 					.then(this.load.bind(paginator))
 					.then(() => {
 						let reg = new RegExp(/\r\n|\n|\r|\t|\\/, 'gm');
-						let promises = this.items.map(post => post.render());
+						let promises = this._items.map(post => post.render());
 						return Promise.all(promises).then(posts => {
 							return posts.join('').trim().replace(reg, '');
 						});
