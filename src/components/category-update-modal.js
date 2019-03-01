@@ -1,6 +1,8 @@
 import Modal from './modal';
 import Category from '../category';
 import Form from './Form';
+import Router from '../router';
+import Options from './options';
 
 export default class CategoryUpdateModal extends Modal {
 
@@ -35,12 +37,21 @@ export default class CategoryUpdateModal extends Modal {
 							});
 						})
 						.then(result => {
+							if (result.ok) {
+								Router.go(`${data.name} - ${window.app.name}`,`${window.location.origin}/#/category/${data.name}`);
+								return Category.openCategory(data.name);
+							}
+						})
+						.then(() => {
 							return Category.all()
 								.then(categories => {
 									return Category.render(categories);
 								});
 						})
-						.then(this.close);
+						.then(() => {
+							Options.instance.close();
+							this.close();
+						});
 				});
 		} else {
 			this.form.displayErrors();
