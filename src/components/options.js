@@ -47,7 +47,7 @@ export default class Options {
             <ul>
                 <li>
 					<button class="btn js-delete-category">Delete category</button>
-					<button class="btn js-update-category">Update category</button>
+					<button class="btn js-update-category">Rename category</button>
                 </li>
             </ul>
         `;
