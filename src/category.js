@@ -17,8 +17,8 @@ export default class Category extends Model {
 		this.attributes = ['_id', 'name', 'sources'];
 		this._database = 'categories';
 		this.fillable = ['id', 'name'];
-		this.endpoint = config.backend + '/categories';
-		this.routeKeyName = 'name';
+		Category.endpoint = config.backend + '/categories';
+		Category.routeKeyName = 'name';
 	}
 
 	get _id() {
@@ -94,7 +94,7 @@ export default class Category extends Model {
 	static fromObject(object) {
 		if (!object.name) return;
 		let category = new Category(object.name);
-		category.id = object._id;
+		category.id = object._id ? object._id : object.id;
 		category.sources = object.sources ? object.sources : [];
 		return category;
 	}
@@ -127,18 +127,58 @@ export default class Category extends Model {
 	}
 
 	static async openCategory(name) {
-		let category = await window.db.category(name);
-		if (!category) {
-			Home.init();
+		if (window.app.authenticated) {
+			Loader.toggle();
+			let category = null;
+			return fetch(this.endpoint + `/${name}`, window.app.fetchOptions())
+				.then(r => r.json())
+				.then(({data}) => {
+					category = Category.fromObject(data);
+					return window.db.category(data.name)
+							.then(doc => {
+								return window.db.categories.put({
+									_rev: doc._rev,
+									...category.toObject()
+								});
+							})
+							.then(result => {
+								if (result.ok) {
+									return category;
+								}
+							});
+				})
+				.then(result => {
+					if (!result) {
+						return Home.init();
+					} else {
+						category = result;
+						return this.renderCategoryPosts(result.sources);
+					}
+				})
+				.then(() => {
+					document.querySelector('.current-section').textContent = `Category: ${category.name}`;
+					// change app state
+					window.app.state = 'category';
+					window.app.category = Category.fromObject(category);
+					Loader.toggle();
+				}).catch(e => {
+					console.error(e);
+					return Home.init();
+				})
 		} else {
+			let category = await window.db.category(name);
+			if (!category) {
+				Home.init();
+			} else {
 
-			// fetch all posts by source
-			await this.renderCategoryPosts(category.sources);
-			document.querySelector('.current-section').textContent = `Category: ${name}`;
+				// fetch all posts by source
+				await this.renderCategoryPosts(category.sources);
+				document.querySelector('.current-section').textContent = `Category: ${name}`;
 
-			// change app state
-			window.app.state = 'category';
-			window.app.category = Category.fromObject(category);
+				// change app state
+				window.app.state = 'category';
+				window.app.category = Category.fromObject(category);
+			}
 		}
 	}
 
