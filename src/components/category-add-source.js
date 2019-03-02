@@ -5,6 +5,7 @@ import Category from '../category';
 export default class CategorySourceModal extends Modal {
 
 	async proceed() {
+		this.toggleLoader();
 		let category = await window.db.category(window.app.category.name);
 		category = Category.fromObject(category);
 		let sources = category.sources
@@ -23,7 +24,10 @@ export default class CategorySourceModal extends Modal {
 		)
 			.then(r => r.json())
 			.then(Category.renderCategoryPosts(category.sources))
-			.then(this.close());
+			.then(() => {
+				this.toggleLoader();
+				this.close();
+			});
 	}
 
 	async addSourceToCategory(e) {
@@ -59,7 +63,10 @@ export default class CategorySourceModal extends Modal {
 				});
 
 				let markup = `
-                    <header><h2>Add sources to this category</h2></header>
+					<header>
+						<h2>Add sources to this category</h2>
+						<div class="loader"></div>
+					</header>
                     <div class="container">
                         ${sources.map(source => `
                             <div class="d-flex">
