@@ -17,8 +17,8 @@ Como he dicho anteriormente en servidor todos los datos son validados y si falla
 3. CRUD mediante ajax en la aplicaición:
     1. Añadir(1 punto) [Añadir una categoría](src/components/category-add-modal.js)
     2. Borrar(1.5 puntos) [Borrar una categoría](src/model.js#L83)
-    3. Editar(1 punto) [Renombrar una categoría](src/components/category-update-modal.js#L20)
-    4. [] Mostrar(1 punto) [Mostrar categorias]()
+    3. Editar(1 punto) [Renombrar una categoría](src/components/category-update-modal.js#L20) [Añadir o eliminar fuentes de una categoría](src/components/category-add-source.js#L17)
+    4. Mostrar(1 punto) [Mostrar una categoría](src/category.js#L133)
 
 4. Realizar una búsqueda mediante ajax y que muestre los resultados. (1.5 puntos)
 
