@@ -29,6 +29,7 @@ export default class SignUpModal extends Modal {
 		let sources = data.map(sourceData => {
 			let source = new Source(sourceData.url);
 			source.title = sourceData.title;
+			source.serverId = sourceData.id;
 			if (source.isUnique()) {
 				return source.save().then(() => source);
 			}

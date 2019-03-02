@@ -11,7 +11,7 @@ export default class Source extends Model {
 	constructor(url = 'http://example.com') {
 		super();
 		this._database = 'sources';
-		this.attributes = ['_id', 'id', 'url', 'title'];
+		this.attributes = ['_id', 'id', 'url', 'title', 'serverId'];
 		this.fillable = ['url', 'title', 'description', 'icon'];
 		this.url = url;
 		this.endpoint = config.backend + '/sources';
