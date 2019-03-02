@@ -31,3 +31,35 @@ Toda esta funcionalidad está contenida en el componente [Source Add Modal](src/
 
 La paginación de servidor solo ocurre si estamos autenticados en la aplicación.
 El desarrollo de esta funcionalidad se encuentra en el archivo [ajaxPaginator.js](src/ajaxPaginator.js) que se usa primariamente en la página [home.js](src/pages/home.js#L126)
+
+## Set up
+
+1. Descargar el proyecto
+2. `npm install` para instalar dependencias
+3. `npm run dev` para compilar los archivos
+4. `npm run start` para iniciar el servidor local
+5. Descargar el proyecto de servidor atomic-api (la url debe ser http://atomic-api.test, si no hay que cambiarlo en este proyecto en el archivo [config.js](src/config.js) líneas 20 y 21)
+6. Configurar las variables de entorno en .env
+7. `composer install` para instalar las dependencias del servidor (telescope necesita la extension php-bcmath)
+8. `php artisan migrate` para crear las tablas
+
+Podría haber hecho un seeder pero en este contexto es un poco lioso, por tanto el proceso que yo sigo para testar la aplicación pasando por todos los puntos es:
+
+Una vez haya cargado la aplicacion y sepas que el back funciona.
+1. Registrar un usuario en el boton de SignUp, una vez completado cerrar el modal y loguearse en el boton de Log In
+2. Añadir fuentes de noticias las que yo uso:
+    1. thenextweb.com
+    2. theverge.com
+    3. omgubuntu.co.uk
+    4. linuxhint.com
+    5. wired.com
+    6. engadget.com
+3. Momento perfecto para comprobar que el autocomplete funciona es volver haciendo click para añadir una fuente y escribir por ejemplo 'the'
+pues saldrian thenextweb y theverge
+3. Con esas fuentes tienes de sobra para realizar paginación (añadir las fuentes puede tardar hasta 30 segundos, paciencia, si dura mas de eso mira la consola y estaré suspenso XD)
+4. Recargar página y hacer scrolling para comprobar paginacion (puede tener abierta la pestaña de red para comprobarlo)
+5. CRUD
+    1. Añadir una categoría en el sidebar (click en +, create)
+    2. Entrar en la categoria (read)
+    3. Renombrar la categoria haciendo click en el boton de la barra con tres puntos y boton 'Renombrar categoria'
+    4. Lo mismo pero click en borrar
