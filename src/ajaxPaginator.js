@@ -78,7 +78,7 @@ export default class AjaxPaginator {
 	}
 
 	run() {
-		if (!this.isRendering) {
+		if (!this.isRendering && this.endpoint !== null) {
 			return this.beforeRender()
 				.then(this.render.bind(this))
 				.then(this.afterRender.bind(this));
