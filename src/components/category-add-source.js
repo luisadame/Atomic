@@ -7,8 +7,23 @@ export default class CategorySourceModal extends Modal {
 	async proceed() {
 		let category = await window.db.category(window.app.category.name);
 		category = Category.fromObject(category);
-		Category.renderCategoryPosts(category.sources);
-		this.close();
+		let sources = category.sources
+			.map(source => source.serverId)
+			.join(',');
+		let data = new FormData();
+		data.set('_method', 'PATCH');
+		data.set('sources', sources ? sources : null);
+		fetch(
+			category.endpoint + `/${category[category.routeKeyName]}`,
+			{
+				method: 'POST',
+				body: data,
+				...window.app.fetchOptions()
+			}
+		)
+			.then(r => r.json())
+			.then(Category.renderCategoryPosts(category.sources))
+			.then(this.close());
 	}
 
 	async addSourceToCategory(e) {
