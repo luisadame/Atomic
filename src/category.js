@@ -135,17 +135,17 @@ export default class Category extends Model {
 				.then(({data}) => {
 					category = Category.fromObject(data);
 					return window.db.category(data.name)
-							.then(doc => {
-								return window.db.categories.put({
-									_rev: doc._rev,
-									...category.toObject()
-								});
-							})
-							.then(result => {
-								if (result.ok) {
-									return category;
-								}
+						.then(doc => {
+							return window.db.categories.put({
+								_rev: doc._rev,
+								...category.toObject()
 							});
+						})
+						.then(result => {
+							if (result.ok) {
+								return category;
+							}
+						});
 				})
 				.then(result => {
 					if (!result) {
@@ -161,10 +161,9 @@ export default class Category extends Model {
 					window.app.state = 'category';
 					window.app.category = Category.fromObject(category);
 					Loader.toggle();
-				}).catch(e => {
-					console.error(e);
+				}).catch(() => {
 					return Home.init();
-				})
+				});
 		} else {
 			let category = await window.db.category(name);
 			if (!category) {

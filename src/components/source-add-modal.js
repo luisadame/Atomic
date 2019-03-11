@@ -66,7 +66,7 @@ export default class SourceModal extends Modal {
 								.then(this.close());
 						}
 					})
-					.catch(e => console.error);
+					.catch(e => e);
 			} else {
 				let source = new Source(this.selectedItem.url);
 				source.title = this.selectedItem.title;
@@ -137,7 +137,7 @@ export default class SourceModal extends Modal {
 					this.addSearchResults(data);
 					this.toggleLoader();
 				})
-				.catch(e => console.error);
+				.catch(e => e);
 		} else {
 			this.$feedInfo.classList.remove('show');
 		}

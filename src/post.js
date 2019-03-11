@@ -192,7 +192,7 @@ export default class Post extends Model {
 			})
 			.catch(() => {
 				return false;
-			})
+			});
 	}
 
 	/**

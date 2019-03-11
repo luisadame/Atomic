@@ -108,12 +108,12 @@ export default class Options {
 	static init(e) {
 		e.preventDefault();
 		switch(window.app.state) {
-			case 'source':
-				Options.source();
-				break;
-			case 'category':
-				Options.category();
-				break;
+		case 'source':
+			Options.source();
+			break;
+		case 'category':
+			Options.category();
+			break;
 		}
 		Options.render()
 			.then(Options.addListeners)

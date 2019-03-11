@@ -45,7 +45,7 @@ export default class Paginator {
 	}
 
 	set afterRender(callback) {
-        this._afterRender = callback.bind(this);
+		this._afterRender = callback.bind(this);
 	}
 
 	get afterRender() {
@@ -84,10 +84,10 @@ export default class Paginator {
 	}
 
 	run() {
-        if (!this.isRendering) {
-            this.beforeRender()
-                .then(this.render.bind(this))
-                .then(this.afterRender.bind(this));
-        }
+		if (!this.isRendering) {
+			this.beforeRender()
+				.then(this.render.bind(this))
+				.then(this.afterRender.bind(this));
+		}
 	}
 }

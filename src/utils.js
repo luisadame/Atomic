@@ -25,4 +25,4 @@ export const throttle = (fn, limit) => {
 			}, limit);
 		}
 	};
-}
+};

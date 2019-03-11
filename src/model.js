@@ -46,6 +46,7 @@ export default class Model {
 		try {
 			return await window.db[this._database].put(this.toObject());
 		} catch (e) {
+			e;
 		}
 	}
 
