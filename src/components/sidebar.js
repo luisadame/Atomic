@@ -64,20 +64,21 @@ export default class Sidebar {
 	addListeners() {
 		this.cloak.addEventListener('click', this.close.bind(this));
 		window.addEventListener('keypress', this.handleKeys.bind(this));
-		this.title.addEventListener('click', e => {
-			e.preventDefault();
-			if (window.app.state !== 'home') {
-				document.querySelector('.current-section').textContent = 'All articles';
-				Sidebar.get().close();
-				Router.home();
-				Home.init();
-			}
-		});
-		this.$links.forEach(link => {
-			link.addEventListener('click', () => {
-				Sidebar.get().close();
-			});
-		});
+	}
+
+	onLogoPressed(e) {
+		e.preventDefault();
+
+		if (this.opened) {
+			Sidebar.get().close();
+		}
+
+		if (window.app.state !== 'home') {
+			document.querySelector('.current-section').textContent = 'All articles';
+			Router.home();
+		}
+
+		Home.init(true);
 	}
 
 	static get() {
@@ -90,6 +91,12 @@ export default class Sidebar {
 		sidebar.btn.addEventListener('click', sidebar.toggle.bind(sidebar));
 		sidebar.btn.addEventListener('keypress', e => {
 			if (e.key === 'Enter') sidebar.toggle.bind(sidebar);
+		});
+		sidebar.title.addEventListener('click', sidebar.onLogoPressed.bind(sidebar));
+		sidebar.$links.forEach(link => {
+			link.addEventListener('click', () => {
+				Sidebar.get().close();
+			});
 		});
 	}
 }

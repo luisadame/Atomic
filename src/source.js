@@ -5,13 +5,17 @@ import Model from './model';
 import Loader from './components/Loader';
 import Home from './pages/home';
 import Options from './components/options';
+import config from './config';
 
 export default class Source extends Model {
 	constructor(url = 'http://example.com') {
 		super();
 		this._database = 'sources';
-		this.attributes = ['_id', 'url', 'title'];
+		this.attributes = ['_id', 'id', 'url', 'title', 'serverId'];
+		this.fillable = ['url', 'title', 'description', 'icon'];
 		this.url = url;
+		this.endpoint = config.backend + '/sources';
+		this.routeKeyName = 'url';
 	}
 
 	get _id() {
@@ -42,6 +46,22 @@ export default class Source extends Model {
 
 	get title() {
 		return this._title;
+	}
+
+	set description(description) {
+		this._description = description;
+	}
+
+	get description() {
+		return this._description;
+	}
+
+	set icon(icon) {
+		this._icon = icon;
+	}
+
+	get icon() {
+		return 'http://example.com';
 	}
 
 	/**
@@ -83,7 +103,7 @@ export default class Source extends Model {
 	static delete() {
 		if (window.app.source) {
 			let source = window.app.source;
-			source.delete()
+			source.delete(true)
 				.then(() => {
 					// delete them from posts
 					Loader.toggle();
@@ -91,7 +111,7 @@ export default class Source extends Model {
 						Loader.toggle();
 						window.app.source = null;
 						Options.toggle();
-						Home.init();
+						Home.init(true);
 						Sidebar.get().init();
 					});
 				});

@@ -5,10 +5,29 @@ import Category from '../category';
 export default class CategorySourceModal extends Modal {
 
 	async proceed() {
+		this.toggleLoader();
 		let category = await window.db.category(window.app.category.name);
 		category = Category.fromObject(category);
-		Category.renderCategoryPosts(category.sources);
-		this.close();
+		let sources = category.sources
+			.map(source => source.serverId)
+			.join(',');
+		let data = new FormData();
+		data.set('_method', 'PATCH');
+		data.set('sources', sources ? sources : null);
+		fetch(
+			category.endpoint + `/${category[category.routeKeyName]}`,
+			{
+				method: 'POST',
+				body: data,
+				...window.app.fetchOptions()
+			}
+		)
+			.then(r => r.json())
+			.then(Category.renderCategoryPosts(category.sources))
+			.then(() => {
+				this.toggleLoader();
+				this.close();
+			});
 	}
 
 	async addSourceToCategory(e) {
@@ -44,7 +63,10 @@ export default class CategorySourceModal extends Modal {
 				});
 
 				let markup = `
-                    <header><h2>Add sources to this category</h2></header>
+					<header>
+						<h2>Add sources to this category</h2>
+						<div class="loader"></div>
+					</header>
                     <div class="container">
                         ${sources.map(source => `
                             <div class="d-flex">

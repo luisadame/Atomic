@@ -2,6 +2,7 @@ import Model from './model';
 import Modal from './modal';
 import Source from './source';
 import { distanceInWords } from 'date-fns';
+import Paginator from './paginator';
 
 export default class Post extends Model {
 	constructor(title = null) {
@@ -10,6 +11,7 @@ export default class Post extends Model {
 		this.title = title;
 		this.isRead = false;
 		this.isFavorite = false;
+		this.paginator = null;
 		this.attributes = ['_id', 'title', 'image', 'timestamp', 'link', 'content', 'source', 'isRead', 'isFavorite'];
 	}
 
@@ -160,7 +162,7 @@ export default class Post extends Model {
 	 * It returns the markup to be injected in the posts section.
 	 */
 	async render() {
-		const size = await this.getPostSize();
+		const size = this.image ? await this.getPostSize() : 'wide';
 		return `
 			<article class="post ${size}" data-id="${this._id}">
 				${this.isRead ? '<div class="post__isReadLabel">Read</div>' : ''}
@@ -184,9 +186,13 @@ export default class Post extends Model {
 
 	/** Check if post is unique in the database */
 	isUnique() {
-		return window.db[this._database].get(this._id()).then(doc => {
-			return !!doc;
-		});
+		return window.db[this._database].get(this._id)
+			.then(() => {
+				return true;
+			})
+			.catch(() => {
+				return false;
+			})
 	}
 
 	/**
@@ -205,10 +211,25 @@ export default class Post extends Model {
 		post.title = object.title;
 		post.content = object.content;
 		post.image = object.image;
-		post.link = object.link;
-		post.timestamp = object.timestamp;
-		let source = new Source(object.source._url);
-		source.title = object.source._title;
+		post.link = object.link ? object.link : object.url;
+
+		if (object.timestamp) {
+			post.timestamp = object.timestamp;
+		} else if (object.created_at) {
+			post.timestamp = object.created_at;
+		} else {
+			post.timestamp = object.updated_at;
+		}
+
+		let source = null;
+		if (object.source._url) {
+			source = new Source(object.source._url);
+			source.title = object.source._title;
+		} else {
+			source = new Source(object.source.url);
+			source.title = object.source.title;
+		}
+
 		post.source = source;
 		post.isFavorite = object.isFavorite ? object.isFavorite : false;
 		post.isRead = object.isRead ? object.isRead : false;
@@ -221,7 +242,7 @@ export default class Post extends Model {
 
 	static all() {
 		return window.db.posts.allDocs({
-			include_docs: true
+			include_docs: true,
 		})
 			.then(result => {
 				let posts = result.rows.filter(row => row.doc.title).map(row => {
@@ -270,19 +291,56 @@ export default class Post extends Model {
 		});
 	}
 
+	static paginate(n) {
+		Post.isPaginated = true;
+		Post.itemsToPaginate = n;
+		return this;
+	}
+
 	static async render(posts) {
 		let $posts = document.querySelector('.posts');
+
 		if (!posts.length) {
 			$posts.innerHTML = '<img src="/assets/img/news.svg" alt="No articles or news added" />';
 			return;
 		}
-		let reg = new RegExp(/\r\n|\n|\r|\t|\\/, 'gm');
-		let promises = posts.map(post => post.render());
-		let result = await Promise.all(promises);
-		$posts.innerHTML = result.join('').trim().replace(reg, '');
-		const postTitles = document.querySelectorAll('.post__title');
-		postTitles.forEach(title =>
-			title.addEventListener('click', Post.loadPost, false)
-		);
+
+		if (Post.isPaginated) {
+			let paginator = new Paginator(
+				Post.itemsToPaginate,
+				$posts,
+				posts
+			);
+
+			paginator.beforeRender = function() {
+				this.isRendering = true;
+				let reg = new RegExp(/\r\n|\n|\r|\t|\\/, 'gm');
+				let items = this.items.slice(this.start, this.end);
+				let promises = items.map(post => post.render());
+				return Promise.all(promises).then(posts => {
+					return posts.join('').trim().replace(reg, '');
+				});
+			};
+
+			paginator.afterRender = function() {
+				const postTitles = document.querySelectorAll('.post__title');
+				postTitles.forEach(title =>
+					title.addEventListener('click', Post.loadPost, false)
+				);
+				this.isRendering = false;
+			};
+
+			paginator.listen().run();
+		} else {
+			let reg = new RegExp(/\r\n|\n|\r|\t|\\/, 'gm');
+			let promises = posts.map(post => post.render());
+			let result = await Promise.all(promises);
+			$posts.innerHTML = result.join('').trim().replace(reg, '');
+			const postTitles = document.querySelectorAll('.post__title');
+			postTitles.forEach(title =>
+				title.addEventListener('click', Post.loadPost, false)
+			);
+		}
+
 	}
 }

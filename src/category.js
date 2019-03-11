@@ -4,6 +4,10 @@ import Sidebar from './components/sidebar';
 import Model from './model';
 import Source from './source';
 import { desluggify } from './utils';
+import config from './config';
+import Loader from './components/Loader';
+import Options from './components/options';
+import Home from './pages/home';
 
 export default class Category extends Model {
 	constructor(name) {
@@ -12,15 +16,18 @@ export default class Category extends Model {
 		this.sources = [];
 		this.attributes = ['_id', 'name', 'sources'];
 		this._database = 'categories';
+		this.fillable = ['id', 'name'];
+		Category.endpoint = config.backend + '/categories';
+		Category.routeKeyName = 'name';
 	}
 
 	get _id() {
-		return this.name;
+		return String(this.id);
 	}
 
 	static get attributes() {
 		return {
-			_id: 'string',
+			_id: 'int',
 			name: 'string',
 			sources: 'array'
 		};
@@ -75,15 +82,20 @@ export default class Category extends Model {
 	}
 
 	isUnique() {
-		return window.db[this._database].get(this._id, (_, doc) => {
-			return !!doc;
-		});
+		return window.db[this._database].get(this._id)
+			.then(() => {
+				return true;
+			})
+			.catch(() => {
+				return false;
+			});
 	}
 
 	static fromObject(object) {
-		if (!object.name ||!object.sources) return;
+		if (!object.name) return;
 		let category = new Category(object.name);
-		category.sources = object.sources;
+		category.id = object._id ? object._id : object.id;
+		category.sources = object.sources ? object.sources : [];
 		return category;
 	}
 
@@ -115,15 +127,59 @@ export default class Category extends Model {
 	}
 
 	static async openCategory(name) {
-		let category = await window.db.category(name);
+		if (window.app.authenticated) {
+			Loader.toggle();
+			let category = null;
+			return fetch(this.endpoint + `/${name}`, window.app.fetchOptions())
+				.then(r => r.json())
+				.then(({data}) => {
+					category = Category.fromObject(data);
+					return window.db.category(data.name)
+							.then(doc => {
+								return window.db.categories.put({
+									_rev: doc._rev,
+									...category.toObject()
+								});
+							})
+							.then(result => {
+								if (result.ok) {
+									return category;
+								}
+							});
+				})
+				.then(result => {
+					if (!result) {
+						return Home.init();
+					} else {
+						category = result;
+						return this.renderCategoryPosts(result.sources);
+					}
+				})
+				.then(() => {
+					document.querySelector('.current-section').textContent = `Category: ${category.name}`;
+					// change app state
+					window.app.state = 'category';
+					window.app.category = Category.fromObject(category);
+					Loader.toggle();
+				}).catch(e => {
+					console.error(e);
+					return Home.init();
+				})
+		} else {
+			let category = await window.db.category(name);
+			if (!category) {
+				Home.init();
+			} else {
 
-		// fetch all posts by source
-		await this.renderCategoryPosts(category.sources);
-		document.querySelector('.current-section').textContent = `Category: ${name}`;
+				// fetch all posts by source
+				await this.renderCategoryPosts(category.sources);
+				document.querySelector('.current-section').textContent = `Category: ${name}`;
 
-		// change app state
-		window.app.state = 'category';
-		window.app.category = Category.fromObject(category);
+				// change app state
+				window.app.state = 'category';
+				window.app.category = Category.fromObject(category);
+			}
+		}
 	}
 
 	static addListeners() {
@@ -134,6 +190,7 @@ export default class Category extends Model {
 	}
 
 	static render(categories) {
+		categories = categories.filter(c => c !== undefined);
 		let $categories = document.querySelector('.categories');
 		if (categories.length) {
 			let fragment = [];
@@ -158,5 +215,21 @@ export default class Category extends Model {
 			.catch(e => {
 				throw new Error(e);
 			});
+	}
+
+	static delete() {
+		if (window.app.category) {
+			let category = window.app.category;
+			Loader.toggle();
+			category.delete(true)
+				.then(() => {
+					Loader.toggle();
+					window.app.category = null;
+					Options.toggle();
+					Category.all().then(Category.render);
+					Home.init(true);
+					Sidebar.get().init();
+				});
+		}
 	}
 }

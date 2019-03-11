@@ -8,9 +8,9 @@ import Post from './post';
 export default class Database {
 	constructor() {
 		this.driver = PouchDB;
-		const models = ['posts', 'categories', 'sources', 'saved'];
+		this.models = ['posts', 'categories', 'sources', 'saved'];
 		PouchDB.plugin(find);
-		models.forEach(model => {
+		this.models.forEach(model => {
 			this[model] = new PouchDB(model);
 		});
 		this.posts.createIndex({
@@ -24,6 +24,12 @@ export default class Database {
 				fields: ['title', 'url']
 			}
 		});
+
+		this.categories.createIndex({
+			index: {
+				fields: ['name']
+			}
+		});
 	}
 
 	set db(db) {
@@ -33,6 +39,16 @@ export default class Database {
 
 	get db() {
 		return this._db;
+	}
+
+	flush() {
+		// destroy databases and create them again
+		return Promise.all(this.models.map(model => this[model].destroy()))
+			.then(() => {
+				this.models.forEach(model => {
+					this[model] = new PouchDB(model);
+				});
+			});
 	}
 
 	validateDb(db) {
@@ -76,7 +92,10 @@ export default class Database {
 	}
 
 	category(name) {
-		return this.categories.get(name);
+		return this.categories.find({
+			selector: {name: name},
+			limit: 1
+		}).then(result => result.docs[0]);
 	}
 
 	categoryBySlug(slug) {

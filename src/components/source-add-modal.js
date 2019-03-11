@@ -2,10 +2,11 @@ import Modal from './modal';
 import {
 	debounce
 } from '../utils';
-import FeedValidator from '../validation/feed';
 import Source from '../source';
 import Home from '../pages/home';
 import CategorySourceModal from './category-add-source';
+import config from '../config';
+import Form from './Form';
 
 export default class SourceModal extends Modal {
 
@@ -24,63 +25,129 @@ export default class SourceModal extends Modal {
 		});
 	}
 
-	proceed() {
-		let source = new Source(this.info.url);
-		source.title = this.info.title;
-		if (source.isUnique()) {
-			source.save()
-				.then(Home.init(true))
-				.then(this.close);
+	afterOpen() {
+		this.$form = document.getElementById('source-add-modal');
+		this.rules = {
+			url: 'required|string'
+		};
+		this.form = new Form(this.$form, this.rules);
+	}
+
+	proceed(button) {
+		button.disabled = true;
+		this.toggleLoader();
+		if (this.form.validate()) {
+			if (window.app.authenticated) {
+				let data = new FormData();
+				Object.keys(this.selectedItem).forEach(key => {
+					data.set(key, this.selectedItem[key]);
+				});
+				fetch(`${config.backend}/sources`, {method: 'POST', body: data, ...window.app.fetchOptions()})
+					.then(r => r.json())
+					.then(data => {
+						let source = new Source(data.url);
+						source.title = data.title;
+
+						if (data.description) {
+							source.description = data.description;
+						}
+
+						data.items = data.items.map(item => {
+							item._id = item.url;
+							item.source = source.toObject();
+							return item;
+						});
+
+						if (source.isUnique()) {
+							this.toggleLoader();
+							source.save()
+								.then(window.db.posts.bulkDocs(data.items))
+								.then(Home.init(true))
+								.then(this.close());
+						}
+					})
+					.catch(e => console.error);
+			} else {
+				let source = new Source(this.selectedItem.url);
+				source.title = this.selectedItem.title;
+				source.description = this.selectedItem.description;
+
+				if (source.isUnique()) {
+					this.toggleLoader();
+					source.save()
+						.then(Home.init(true))
+						.then(this.close());
+				}
+			}
+		} else {
+			this.toggleLoader();
+			this.form.displayErrors();
+			button.disabled = false;
 		}
 	}
 
-	validate() {
-		let $sourceInput = document.getElementById('source-url');
-		let $feedInfo = document.querySelector('.feed-info');
-		if ($sourceInput.checkValidity()) {
-			this.toggleLoader();
-			FeedValidator.validate($sourceInput.value)
-				.then(data => {
-					let url;
-					if (typeof data === 'object') {
-						url = data.url;
-						data = data.data;
-					}
-					this.getFeedInfo(data)
-						.then(info => {
-							this.info = Object.assign({}, info, {
-								url: url ? url : $sourceInput.value
-							});
-							let image = false;
-							let markup = `
-								${image ? '<div class="image"></div>' : ''}
-								<div class="title">${info.title}</div>
-								${info.description ? `<div class="description">${info.description}</div>` : ''}
-							`;
-							$feedInfo.innerHTML = markup;
-							$feedInfo.classList.add('show');
-							this.toggleLoader();
-							this.$ok.removeAttribute('disabled');
-						})
-						.catch(error => {
-							this.toggleLoader();
-							throw new Error(error);
-						});
-				}).catch(error => {
-					this.toggleLoader();
-					throw new Error(error);
-				});
+	feedResultMarkup(feed) {
+		let $feed = document.createElement('div');
+		$feed.className = 'feed-result appear';
+		$feed.innerHTML = `
+			<div class="title">${feed.title}</div>
+			${feed.description && feed.description !== 'null' ? `<div class="description">${feed.description}</div>` : ''}
+		`;
+		return $feed;
+	}
 
+	selectFeedResult(item) {
+		this.selectedItem = item;
+		this.$sourceInput.value = item.url;
+		if (this.$sourceInput.checkValidity()) {
+			this.$ok.disabled = false;
+		}
+	}
+
+	createResultElement(item) {
+		let feedResult = this.feedResultMarkup(item);
+		feedResult.addEventListener(
+			'click',
+			this.selectFeedResult.bind(this, item),
+			false
+		);
+		feedResult.addEventListener('animationend', () => {
+			feedResult.classList.remove('appear');
+		});
+		return feedResult;
+	}
+
+	addSearchResults(data) {
+		let feedResults = document.createDocumentFragment();
+		data.forEach(item => {
+			feedResults.appendChild(this.createResultElement(item));
+		});
+		this.$feedInfo.innerHTML = '';
+		this.$feedInfo.appendChild(feedResults);
+		this.$feedInfo.classList.add('show');
+	}
+
+	search() {
+		if (this.$sourceInput.value.length > 0) {
+			this.toggleLoader();
+			fetch(`${config.backend}/feed/search?url=${this.$sourceInput.value}`)
+				.then(r => r.json())
+				.then(({data}) => {
+					this.search = data;
+					this.addSearchResults(data);
+					this.toggleLoader();
+				})
+				.catch(e => console.error);
 		} else {
-			// eslint-disable-next-line no-console
-			console.error('Feed not valid');
+			this.$feedInfo.classList.remove('show');
 		}
 	}
 
 	open() {
 		super.open();
-		let $sourceInput = document.getElementById('source-url');
-		$sourceInput.addEventListener('input', debounce(this.validate.bind(this), 600));
+		this.$sourceInput = document.getElementById('source-url');
+		this.$feedInfo = document.querySelector('.feed-info');
+		this.$sourceInput.addEventListener('input', debounce(this.search.bind(this), 600));
 	}
 
 	toggleLoader() {
@@ -106,17 +173,22 @@ export default class SourceModal extends Modal {
 			CategorySourceModal.open();
 		} else {
 			let markup = `
-				<header><h2>Add a source</h2></header>
+				<header>
+					<h2>Add a source</h2>
+					<div class="loader"></div>
+				</header>
 				<div class="container">
-					<div class="input-group">
-						<label for="source-url">
-							Source of news
-						</label>
-						<div class="flex">
-							<input required id="source-url" type="url">
-							<div class="loader"></div>
+					<form id="source-add-modal">
+						<div class="input-group">
+							<label for="source-url">
+								Source of news
+							</label>
+							<div class="flex">
+								<input required id="source-url" type="url" name="url" autocomplete="off">
+								<div class="loader"></div>
+							</div>
 						</div>
-					</div>
+					</form>
 					<div class="feed-info"></div>
 				</div>
 				<div class="submit">
@@ -125,6 +197,7 @@ export default class SourceModal extends Modal {
 				</div>
 			`;
 			let modal = new this(markup);
+			modal.classNames('add-source');
 			modal.open();
 		}
 	}

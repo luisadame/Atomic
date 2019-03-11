@@ -1,19 +1,48 @@
 import Modal from './modal';
 import Category from '../category';
+import Form from './Form';
 
 export default class CategoryModal extends Modal {
 
-	proceed() {
-		let $categoryInput = document.getElementById('category');
-		let category = new Category($categoryInput.value);
-		if (category.isUnique()) {
-			category.save().then(() => {
-				Category.all().then(categories => {
-					Category.render(categories);
-				});
-			});
+	afterOpen() {
+		this.$form = document.getElementById('category-add-modal');
+		this.rules = {
+			name: 'required|string'
+		};
+		this.form = new Form(this.$form, this.rules);
+	}
+
+	proceed(button) {
+		button.disabled = true;
+		this.toggleLoader();
+		if (this.form.validate()) {
+			let $categoryInput = document.getElementById('category');
+			let category = new Category($categoryInput.value);
+
+			let data = new FormData();
+			data.set('name', category.name);
+
+			fetch(category.endpoint, {method: 'post', body: data, ...window.app.fetchOptions()})
+				.then(r => r.json())
+				.then(({data}) => {
+					category.id = data.id;
+					category.sources = [];
+					if (category.isUnique()) {
+						return category.save();
+					}
+				})
+				.then(() => {
+					return Category.all()
+						.then(categories => {
+							return Category.render(categories);
+						});
+				})
+				.then(this.close());
+		} else {
+			this.toggleLoader();
+			this.form.displayErrors();
+			button.disabled = false;
 		}
-		this.close();
 	}
 
 	static listen() {
@@ -31,16 +60,21 @@ export default class CategoryModal extends Modal {
 
 	static open() {
 		let markup = `
-            <header><h2>Add a category</h2></header>
-            <div class="container">
-                <div class="input-group">
-                    <label for="category">
-                        Category
-					</label>
-					<div class="flex">
-						<input required id="category" type="text">
+			<header>
+				<h2>Add a category</h2>
+				<div class="loader"></div>
+			</header>
+			<div class="container">
+				<form id="category-add-modal">
+					<div class="input-group">
+						<label for="category">
+							Category
+						</label>
+						<div class="flex">
+							<input required id="category" type="text" name="name" autocomplete="off">
+						</div>
 					</div>
-                </div>
+				</form>
 			</div>
             <div class="submit">
                 <button class="js-ok modal__btn">Add</button>

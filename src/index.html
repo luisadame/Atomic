@@ -49,26 +49,32 @@
             <div class="sidebar__header">
                 <h1 class='notranslate' translate='no'><a href="<%= htmlWebpackPlugin.options.url %>">Atomic</a></h1>
             </div>
-            <div class="d-flex">
-                <div class="sidebar__pill">
-                    Categories
+            <div class="sidebar__sections">
+                <div class="d-flex">
+                    <div class="sidebar__pill">
+                        Categories
+                    </div>
+                    <button class="btn btn-pill js-add-category" aria-label="Add category"><i class="fa fa-plus"></i></button>
                 </div>
-                <button class="btn btn-pill js-add-category" aria-label="Add category"><i class="fa fa-plus"></i></button>
+                <div class="categories"></div>
+                <div class="sidebar__pill">
+                    Sources
+                </div>
+                <div class="sources"></div>
+                <div class="sidebar__pill">
+                    <a href="#/favorites">
+                        Favorites <i class="fa fa-star"></i>
+                    </a>
+                </div>
+                <div class="sidebar__pill">
+                    <a href="#/saved">
+                        Saved <i class="fa fa-hdd"></i>
+                    </a>
+                </div>
             </div>
-            <div class="categories"></div>
-            <div class="sidebar__pill">
-                Sources
-            </div>
-            <div class="sources"></div>
-            <div class="sidebar__pill">
-                <a href="#/favorites">
-                    Favorites <i class="fa fa-star"></i>
-                </a>
-            </div>
-            <div class="sidebar__pill">
-                <a href="#/saved">
-                    Saved <i class="fa fa-hdd"></i>
-                </a>
+            <div class="sidebar__user-area">
+                <button class="btn sidebar__user-area__login js-login">Log In</button>
+                <button class="btn sidebar__user-area__signup js-signup">Sign Up</button>
             </div>
         </nav>
     </header>
